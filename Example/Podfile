@@ -1,0 +1,10 @@
+platform :ios, '8.0'
+
+target 'MonarchRouterExample' do
+  use_frameworks!
+
+  # Diffs for collections
+  # https://github.com/jflinter/Dwifft
+  pod 'Dwifft', '~> 0.9'
+
+end

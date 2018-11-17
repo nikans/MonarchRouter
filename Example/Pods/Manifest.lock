@@ -1,0 +1,16 @@
+PODS:
+  - Dwifft (0.9)
+
+DEPENDENCIES:
+  - Dwifft (~> 0.9)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Dwifft
+
+SPEC CHECKSUMS:
+  Dwifft: 42912068ed2a8146077d1a1404df18625bd086e1
+
+PODFILE CHECKSUM: f3c7e67b5a356926693831c435838fae6d106fd7
+
+COCOAPODS: 1.5.3

@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   type = "0"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MonarchRouterExample/Presenters.swift"
+            timestampString = "564149349.452767"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "25"
+            endingLineNumber = "25"
+            landmarkName = "sectionsSwitcherRoutePresenter(_:)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MonarchRouterExample/Presenters.swift"
+            timestampString = "564149349.452859"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "20"
+            endingLineNumber = "20"
+            landmarkName = "sectionsSwitcherRoutePresenter(_:)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Source/Router.swift"
+            timestampString = "564149871.23742"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "80"
+            endingLineNumber = "80"
+            landmarkName = "stack(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #3 (Swift.String) -&gt; () in (extension in MonarchRouter):MonarchRouter.Router&lt; where A == MonarchRouter.RoutePresenterStack&gt;.stack(Swift.Array&lt;MonarchRouter.RouterType&gt;) -&gt; MonarchRouter.Router&lt;MonarchRouter.RoutePresenterStack&gt;"
+                  moduleName = "MonarchRouter"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nikans/Personal/Opensource/Monarch/MonarchRouterExample/Source/Router.swift"
+                  timestampString = "564143194.810187"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "81"
+                  endingLineNumber = "81"
+                  offsetFromSymbolStart = "71">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (MonarchRouter.RouterType) -&gt; Swift.Optional&lt;Swift.Array&lt;__C.UIViewController&gt;&gt; in closure #3 (Swift.String) -&gt; () in (extension in MonarchRouter):MonarchRouter.Router&lt; where A == MonarchRouter.RoutePresenterStack&gt;.stack(Swift.Array&lt;MonarchRouter.RouterType&gt;) -&gt; MonarchRouter.Router&lt;MonarchRouter.RoutePresenterStack&gt;"
+                  moduleName = "MonarchRouter"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nikans/Personal/Opensource/Monarch/MonarchRouterExample/Source/Router.swift"
+                  timestampString = "564143194.812205"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "81"
+                  endingLineNumber = "81"
+                  offsetFromSymbolStart = "30">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Source/Router.swift"
+            timestampString = "564149871.2379889"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "102"
+            endingLineNumber = "102"
+            landmarkName = "fork(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (Swift.String) -&gt; () in (extension in MonarchRouter):MonarchRouter.Router&lt; where A == MonarchRouter.RoutePresenterFork&gt;.fork(Swift.Array&lt;MonarchRouter.RouterType&gt;) -&gt; MonarchRouter.Router&lt;MonarchRouter.RoutePresenterFork&gt;"
+                  moduleName = "MonarchRouter"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nikans/Personal/Opensource/Monarch/MonarchRouterExample/Source/Router.swift"
+                  timestampString = "564143094.772947"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "103"
+                  endingLineNumber = "103"
+                  offsetFromSymbolStart = "61">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (MonarchRouter.RouterType) -&gt; __C.UIViewController in closure #2 (Swift.String) -&gt; () in (extension in MonarchRouter):MonarchRouter.Router&lt; where A == MonarchRouter.RoutePresenterFork&gt;.fork(Swift.Array&lt;MonarchRouter.RouterType&gt;) -&gt; MonarchRouter.Router&lt;MonarchRouter.RoutePresenterFork&gt;"
+                  moduleName = "MonarchRouter"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nikans/Personal/Opensource/Monarch/MonarchRouterExample/Source/Router.swift"
+                  timestampString = "564143094.7747509"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "103"
+                  endingLineNumber = "103"
+                  offsetFromSymbolStart = "22">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Source/Router.swift"
+            timestampString = "564149871.238348"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "137"
+            endingLineNumber = "137"
+            landmarkName = "switcher(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (Swift.String) -&gt; () in (extension in MonarchRouter):MonarchRouter.Router&lt; where A == MonarchRouter.RoutePresenterSwitcher&gt;.switcher(Swift.Array&lt;MonarchRouter.RouterType&gt;) -&gt; MonarchRouter.Router&lt;MonarchRouter.RoutePresenterSwitcher&gt;"
+                  moduleName = "MonarchRouter"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nikans/Personal/Opensource/Monarch/MonarchRouterExample/Source/Router.swift"
+                  timestampString = "564143094.7774301"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "137"
+                  endingLineNumber = "137"
+                  offsetFromSymbolStart = "180">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (MonarchRouter.RouterType) -&gt; Swift.Optional&lt;MonarchRouter.RouterType&gt; in closure #2 (Swift.String) -&gt; () in (extension in MonarchRouter):MonarchRouter.Router&lt; where A == MonarchRouter.RoutePresenterSwitcher&gt;.switcher(Swift.Array&lt;MonarchRouter.RouterType&gt;) -&gt; MonarchRouter.Router&lt;MonarchRouter.RoutePresenterSwitcher&gt;"
+                  moduleName = "MonarchRouter"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nikans/Personal/Opensource/Monarch/MonarchRouterExample/Source/Router.swift"
+                  timestampString = "564143094.779261"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "137"
+                  endingLineNumber = "137"
+                  offsetFromSymbolStart = "33">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Source/Router.swift"
+            timestampString = "564149871.2387"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "140"
+            endingLineNumber = "140"
+            landmarkName = "switcher(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MonarchRouterExample/ViewController.swift"
+            timestampString = "564149349.4532059"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "18"
+            endingLineNumber = "18"
+            landmarkName = "configure(title:buttonTitle:buttonAction:backgroundColor:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MonarchRouterExample/Presenters.swift"
+            timestampString = "564149349.453263"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "112"
+            endingLineNumber = "112"
+            landmarkName = "conditionalPresenter()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MonarchRouterExample/AppCoordinator.swift"
+            timestampString = "564149349.453321"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "39"
+            endingLineNumber = "39"
+            landmarkName = "createRouter(_:setRootView:)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Source/Presenter.swift"
+            timestampString = "564149349.453378"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "133"
+            endingLineNumber = "133"
+            landmarkName = "cachedPresenter(_:)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Source/Router.swift"
+            timestampString = "564149871.239153"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "35"
+            endingLineNumber = "35"
+            landmarkName = "getPresentable(parameters:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

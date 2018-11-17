@@ -1,0 +1,617 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9187C6D64BB2763E78C00E8D /* Pods_MonarchRouterExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1907EB298DF999B25DA1BB67 /* Pods_MonarchRouterExample.framework */; };
+		D0A7B9D4219F322C00B44C3D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7B9D3219F322C00B44C3D /* AppDelegate.swift */; };
+		D0A7B9D6219F322C00B44C3D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7B9D5219F322C00B44C3D /* ViewController.swift */; };
+		D0A7B9D9219F322C00B44C3D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D0A7B9D7219F322C00B44C3D /* Main.storyboard */; };
+		D0A7B9DB219F322D00B44C3D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0A7B9DA219F322D00B44C3D /* Assets.xcassets */; };
+		D0A7B9DE219F322D00B44C3D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D0A7B9DC219F322D00B44C3D /* LaunchScreen.storyboard */; };
+		D0A7B9EE219F324200B44C3D /* MonarchRouter.h in Headers */ = {isa = PBXBuildFile; fileRef = D0A7B9EC219F324200B44C3D /* MonarchRouter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D0A7B9F1219F324200B44C3D /* MonarchRouter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0A7B9EA219F324200B44C3D /* MonarchRouter.framework */; };
+		D0A7B9F2219F324200B44C3D /* MonarchRouter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D0A7B9EA219F324200B44C3D /* MonarchRouter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D0A7BA04219F332900B44C3D /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7BA03219F332900B44C3D /* AppRouter.swift */; };
+		D0A7BA0E219F363900B44C3D /* Array+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7BA0B219F363900B44C3D /* Array+extension.swift */; };
+		D0A7BA0F219F363900B44C3D /* Presenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7BA0C219F363900B44C3D /* Presenter.swift */; };
+		D0A7BA10219F363900B44C3D /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7BA0D219F363900B44C3D /* Router.swift */; };
+		D0A7BA12219F378B00B44C3D /* Presenters.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7BA11219F378B00B44C3D /* Presenters.swift */; };
+		D0A7BA14219F3C5900B44C3D /* EndpointBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7BA13219F3C5800B44C3D /* EndpointBuilder.swift */; };
+		D0A7BA16219F3EC500B44C3D /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7BA15219F3EC500B44C3D /* AppCoordinator.swift */; };
+		D0A7BA1821A0336200B44C3D /* String+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7BA1721A0336200B44C3D /* String+extension.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D0A7B9EF219F324200B44C3D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D0A7B9C8219F322C00B44C3D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D0A7B9E9219F324200B44C3D;
+			remoteInfo = MonarchRouter;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D0A7B9F6219F324200B44C3D /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				D0A7B9F2219F324200B44C3D /* MonarchRouter.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		1907EB298DF999B25DA1BB67 /* Pods_MonarchRouterExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MonarchRouterExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9707D0D9E10D27D00CF82C58 /* Pods-MonarchRouterExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MonarchRouterExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-MonarchRouterExample/Pods-MonarchRouterExample.release.xcconfig"; sourceTree = "<group>"; };
+		9E40EA1D4799DD2D0F3A8810 /* Pods-MonarchRouterExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MonarchRouterExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MonarchRouterExample/Pods-MonarchRouterExample.debug.xcconfig"; sourceTree = "<group>"; };
+		D0A7B9D0219F322C00B44C3D /* MonarchRouterExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MonarchRouterExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0A7B9D3219F322C00B44C3D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		D0A7B9D5219F322C00B44C3D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		D0A7B9D8219F322C00B44C3D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		D0A7B9DA219F322D00B44C3D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D0A7B9DD219F322D00B44C3D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		D0A7B9DF219F322D00B44C3D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D0A7B9EA219F324200B44C3D /* MonarchRouter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MonarchRouter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0A7B9EC219F324200B44C3D /* MonarchRouter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MonarchRouter.h; sourceTree = "<group>"; };
+		D0A7B9ED219F324200B44C3D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D0A7BA03219F332900B44C3D /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
+		D0A7BA0B219F363900B44C3D /* Array+extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Array+extension.swift"; path = "../../Source/Array+extension.swift"; sourceTree = "<group>"; };
+		D0A7BA0C219F363900B44C3D /* Presenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Presenter.swift; path = ../../Source/Presenter.swift; sourceTree = "<group>"; };
+		D0A7BA0D219F363900B44C3D /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Router.swift; path = ../../Source/Router.swift; sourceTree = "<group>"; };
+		D0A7BA11219F378B00B44C3D /* Presenters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presenters.swift; sourceTree = "<group>"; };
+		D0A7BA13219F3C5800B44C3D /* EndpointBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndpointBuilder.swift; sourceTree = "<group>"; };
+		D0A7BA15219F3EC500B44C3D /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		D0A7BA1721A0336200B44C3D /* String+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+extension.swift"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D0A7B9CD219F322C00B44C3D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D0A7B9F1219F324200B44C3D /* MonarchRouter.framework in Frameworks */,
+				9187C6D64BB2763E78C00E8D /* Pods_MonarchRouterExample.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D0A7B9E7219F324200B44C3D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6AF84D89FD4A2F1DFA8D0511 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9E40EA1D4799DD2D0F3A8810 /* Pods-MonarchRouterExample.debug.xcconfig */,
+				9707D0D9E10D27D00CF82C58 /* Pods-MonarchRouterExample.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		B86CEF11491226D8C778DA32 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1907EB298DF999B25DA1BB67 /* Pods_MonarchRouterExample.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D0A7B9C7219F322C00B44C3D = {
+			isa = PBXGroup;
+			children = (
+				D0A7B9D2219F322C00B44C3D /* MonarchRouterExample */,
+				D0A7B9EB219F324200B44C3D /* MonarchRouter */,
+				D0A7B9D1219F322C00B44C3D /* Products */,
+				6AF84D89FD4A2F1DFA8D0511 /* Pods */,
+				B86CEF11491226D8C778DA32 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		D0A7B9D1219F322C00B44C3D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D0A7B9D0219F322C00B44C3D /* MonarchRouterExample.app */,
+				D0A7B9EA219F324200B44C3D /* MonarchRouter.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D0A7B9D2219F322C00B44C3D /* MonarchRouterExample */ = {
+			isa = PBXGroup;
+			children = (
+				D0A7B9D3219F322C00B44C3D /* AppDelegate.swift */,
+				D0A7B9D5219F322C00B44C3D /* ViewController.swift */,
+				D0A7B9D7219F322C00B44C3D /* Main.storyboard */,
+				D0A7BA03219F332900B44C3D /* AppRouter.swift */,
+				D0A7BA15219F3EC500B44C3D /* AppCoordinator.swift */,
+				D0A7BA11219F378B00B44C3D /* Presenters.swift */,
+				D0A7BA13219F3C5800B44C3D /* EndpointBuilder.swift */,
+				D0A7BA1721A0336200B44C3D /* String+extension.swift */,
+				D0A7B9DA219F322D00B44C3D /* Assets.xcassets */,
+				D0A7B9DC219F322D00B44C3D /* LaunchScreen.storyboard */,
+				D0A7B9DF219F322D00B44C3D /* Info.plist */,
+			);
+			path = MonarchRouterExample;
+			sourceTree = "<group>";
+		};
+		D0A7B9EB219F324200B44C3D /* MonarchRouter */ = {
+			isa = PBXGroup;
+			children = (
+				D0A7BA0D219F363900B44C3D /* Router.swift */,
+				D0A7BA0C219F363900B44C3D /* Presenter.swift */,
+				D0A7BA0B219F363900B44C3D /* Array+extension.swift */,
+				D0A7B9EC219F324200B44C3D /* MonarchRouter.h */,
+				D0A7B9ED219F324200B44C3D /* Info.plist */,
+			);
+			path = MonarchRouter;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D0A7B9E5219F324200B44C3D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D0A7B9EE219F324200B44C3D /* MonarchRouter.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D0A7B9CF219F322C00B44C3D /* MonarchRouterExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D0A7B9E2219F322D00B44C3D /* Build configuration list for PBXNativeTarget "MonarchRouterExample" */;
+			buildPhases = (
+				10463D7E5657B5B4FA4F7DCB /* [CP] Check Pods Manifest.lock */,
+				D0A7B9CC219F322C00B44C3D /* Sources */,
+				D0A7B9CD219F322C00B44C3D /* Frameworks */,
+				D0A7B9CE219F322C00B44C3D /* Resources */,
+				D0A7B9F6219F324200B44C3D /* Embed Frameworks */,
+				5057FAC844D5C586325639DF /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D0A7B9F0219F324200B44C3D /* PBXTargetDependency */,
+			);
+			name = MonarchRouterExample;
+			productName = MonarchRouterExample;
+			productReference = D0A7B9D0219F322C00B44C3D /* MonarchRouterExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D0A7B9E9219F324200B44C3D /* MonarchRouter */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D0A7B9F3219F324200B44C3D /* Build configuration list for PBXNativeTarget "MonarchRouter" */;
+			buildPhases = (
+				D0A7B9E5219F324200B44C3D /* Headers */,
+				D0A7B9E6219F324200B44C3D /* Sources */,
+				D0A7B9E7219F324200B44C3D /* Frameworks */,
+				D0A7B9E8219F324200B44C3D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MonarchRouter;
+			productName = MonarchRouter;
+			productReference = D0A7B9EA219F324200B44C3D /* MonarchRouter.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D0A7B9C8219F322C00B44C3D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1010;
+				LastUpgradeCheck = 1010;
+				ORGANIZATIONNAME = nikans.com;
+				TargetAttributes = {
+					D0A7B9CF219F322C00B44C3D = {
+						CreatedOnToolsVersion = 10.1;
+					};
+					D0A7B9E9219F324200B44C3D = {
+						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1010;
+					};
+				};
+			};
+			buildConfigurationList = D0A7B9CB219F322C00B44C3D /* Build configuration list for PBXProject "MonarchRouterExample" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = D0A7B9C7219F322C00B44C3D;
+			productRefGroup = D0A7B9D1219F322C00B44C3D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D0A7B9CF219F322C00B44C3D /* MonarchRouterExample */,
+				D0A7B9E9219F324200B44C3D /* MonarchRouter */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D0A7B9CE219F322C00B44C3D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D0A7B9DE219F322D00B44C3D /* LaunchScreen.storyboard in Resources */,
+				D0A7B9DB219F322D00B44C3D /* Assets.xcassets in Resources */,
+				D0A7B9D9219F322C00B44C3D /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D0A7B9E8219F324200B44C3D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		10463D7E5657B5B4FA4F7DCB /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MonarchRouterExample-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5057FAC844D5C586325639DF /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-MonarchRouterExample/Pods-MonarchRouterExample-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Dwifft/Dwifft.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Dwifft.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MonarchRouterExample/Pods-MonarchRouterExample-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D0A7B9CC219F322C00B44C3D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D0A7BA16219F3EC500B44C3D /* AppCoordinator.swift in Sources */,
+				D0A7B9D6219F322C00B44C3D /* ViewController.swift in Sources */,
+				D0A7BA04219F332900B44C3D /* AppRouter.swift in Sources */,
+				D0A7BA12219F378B00B44C3D /* Presenters.swift in Sources */,
+				D0A7B9D4219F322C00B44C3D /* AppDelegate.swift in Sources */,
+				D0A7BA1821A0336200B44C3D /* String+extension.swift in Sources */,
+				D0A7BA14219F3C5900B44C3D /* EndpointBuilder.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D0A7B9E6219F324200B44C3D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D0A7BA0F219F363900B44C3D /* Presenter.swift in Sources */,
+				D0A7BA10219F363900B44C3D /* Router.swift in Sources */,
+				D0A7BA0E219F363900B44C3D /* Array+extension.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D0A7B9F0219F324200B44C3D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D0A7B9E9219F324200B44C3D /* MonarchRouter */;
+			targetProxy = D0A7B9EF219F324200B44C3D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		D0A7B9D7219F322C00B44C3D /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D0A7B9D8219F322C00B44C3D /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		D0A7B9DC219F322D00B44C3D /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D0A7B9DD219F322D00B44C3D /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		D0A7B9E0219F322D00B44C3D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		D0A7B9E1219F322D00B44C3D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D0A7B9E3219F322D00B44C3D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9E40EA1D4799DD2D0F3A8810 /* Pods-MonarchRouterExample.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 892UN3K9E3;
+				INFOPLIST_FILE = MonarchRouterExample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = NK.MonarchRouterExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D0A7B9E4219F322D00B44C3D /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9707D0D9E10D27D00CF82C58 /* Pods-MonarchRouterExample.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 892UN3K9E3;
+				INFOPLIST_FILE = MonarchRouterExample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = NK.MonarchRouterExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		D0A7B9F4219F324200B44C3D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 892UN3K9E3;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = MonarchRouter/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = NK.MonarchRouter;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		D0A7B9F5219F324200B44C3D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 892UN3K9E3;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = MonarchRouter/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = NK.MonarchRouter;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D0A7B9CB219F322C00B44C3D /* Build configuration list for PBXProject "MonarchRouterExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D0A7B9E0219F322D00B44C3D /* Debug */,
+				D0A7B9E1219F322D00B44C3D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D0A7B9E2219F322D00B44C3D /* Build configuration list for PBXNativeTarget "MonarchRouterExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D0A7B9E3219F322D00B44C3D /* Debug */,
+				D0A7B9E4219F322D00B44C3D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D0A7B9F3219F324200B44C3D /* Build configuration list for PBXNativeTarget "MonarchRouter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D0A7B9F4219F324200B44C3D /* Debug */,
+				D0A7B9F5219F324200B44C3D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D0A7B9C8219F322C00B44C3D /* Project object */;
+}
