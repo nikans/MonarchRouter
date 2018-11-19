@@ -32,7 +32,9 @@ public struct Router<Presenter: RoutePresenterType>: RouterType
     public func getPresentable(parameters: RouteParameters?) -> UIViewController
     {
         onGetPresentable(parameters)
-        return presenter.getPresentable(parameters ?? [:])
+        let presentable = presenter.getPresentable()
+        presenter.setParameters(presentable, parameters)
+        return presentable
     }
     
     public func getPresentable() -> UIViewController {
@@ -64,9 +66,9 @@ extension Router where Presenter == RoutePresenterStack
     {
         var router = self
         
-        router.onGetPresentable = { _ in
+        router.onGetPresentable = { parameters in
             // setting default root view controller if any
-            if let rootChild = stack.first?.getPresentable() {
+            if let rootChild = stack.first?.getPresentable(parameters: parameters) {
                 router.presenter.prepareRootPresentable(rootChild)
             }
         }

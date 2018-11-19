@@ -19,28 +19,37 @@ public typealias RouteParameters = Dictionary<String, Any>
 public protocol RoutePresenterType
 {
     /// Returns the actual presentable object.
-    var getPresentable: (_ parameters: RouteParameters?) -> (UIViewController) { get }
+    var getPresentable: () -> (UIViewController) { get }
+    
+    /// Allows to configure the presentable with parameters
+    var setParameters: (_ presentable: UIViewController, _ parameters: RouteParameters?) -> () { get }
 }
 
 
 public struct RoutePresenter: RoutePresenterType
 {
-    public let getPresentable: (_ parameters: RouteParameters?) -> (UIViewController)
+    public let getPresentable: () -> (UIViewController)
     
     /**
      Default initializer for RoutePresenter.
      - parameter getPresentable: callback receiving optional route parameters and returning a VC.
      */
-    public init(getPresentable: @escaping (_ parameters: RouteParameters?) -> (UIViewController))
+    public init(getPresentable: @escaping () -> (UIViewController), setParameters: ((_ presentable: UIViewController, _ parameters: RouteParameters?) -> ())? = nil)
     {
         self.getPresentable = getPresentable
+        if let setParameters = setParameters {
+            self.setParameters = setParameters
+        }
     }
+    
+    /// Allows to configure the presentable with parameters
+    public var setParameters: (_ presentable: UIViewController, _ parameters: RouteParameters?) -> () = { _,_ in }
 }
 
 
 public struct RoutePresenterStack: RoutePresenterType
 {
-    public let getPresentable: (_ parameters: RouteParameters?) -> (UIViewController)
+    public let getPresentable: () -> (UIViewController)
     
     /// Presets root presentable when the stack's own presentable is requested.
     public var prepareRootPresentable: (UIViewController) -> ()
@@ -55,7 +64,7 @@ public struct RoutePresenterStack: RoutePresenterType
      - parameter prepareRootPresentable: presets root presentable when the stack's own presentable is requested.
      */
     public init(
-        getPresentable: @escaping (_ parameters: RouteParameters?) -> (UIViewController),
+        getPresentable: @escaping () -> (UIViewController),
         setStack: @escaping  ([UIViewController]) -> (),
         prepareRootPresentable: @escaping  (UIViewController) -> ()
     ) {
@@ -63,12 +72,14 @@ public struct RoutePresenterStack: RoutePresenterType
         self.setStack = setStack
         self.prepareRootPresentable = prepareRootPresentable
     }
+    
+    public let setParameters: (_ presentable: UIViewController, _ parameters: RouteParameters?) -> () = { _,_ in }
 }
 
 
 public struct RoutePresenterFork: RoutePresenterType
 {
-    public let getPresentable: (_ parameters: RouteParameters?) -> (UIViewController)
+    public let getPresentable: () -> (UIViewController)
     
     /// Sets the options for router to choose from.
     public let setOptions: ([UIViewController]) -> ()
@@ -77,13 +88,13 @@ public struct RoutePresenterFork: RoutePresenterType
     public let setOptionSelected: (UIViewController) -> ()
     
     /**
-     Initializer for Stack type RoutePresenter.
+     Initializer for Fork type RoutePresenter.
      - parameter getPresentable: callback receiving optional route parameters and returning a VC.
      - parameter setOptions: sets the options for router to choose from.
      - parameter setOptionSelected: sets the specified option as currently selected.
      */
     public init(
-        getPresentable: @escaping (_ parameters: RouteParameters?) -> (UIViewController),
+        getPresentable: @escaping () -> (UIViewController),
         setOptions: @escaping  ([UIViewController]) -> (),
         setOptionSelected: @escaping  (UIViewController) -> ()
     ) {
@@ -91,28 +102,32 @@ public struct RoutePresenterFork: RoutePresenterType
         self.setOptions = setOptions
         self.setOptionSelected = setOptionSelected
     }
+    
+    public let setParameters: (_ presentable: UIViewController, _ parameters: RouteParameters?) -> () = { _,_ in }
 }
 
 
 public struct RoutePresenterSwitcher: RoutePresenterType
 {    
-    public let getPresentable: (_ parameters: RouteParameters?) -> (UIViewController)
+    public let getPresentable: () -> (UIViewController)
     
     /// Sets the specified option as currently selected.
     public let setOptionSelected: (UIViewController) -> ()
     
     /**
-     Initializer for Stack type RoutePresenter.
+     Initializer for Switcher type RoutePresenter.
      - parameter getPresentable: callback receiving optional route parameters and returning a VC.
      - parameter setOptionSelected: sets the specified option as currently selected.
      */
     public init(
-        getPresentable: @escaping (_ parameters: RouteParameters?) -> (UIViewController),
+        getPresentable: @escaping () -> (UIViewController),
         setOptionSelected: @escaping  (UIViewController) -> ()
     ) {
         self.getPresentable = getPresentable
         self.setOptionSelected = setOptionSelected
     }
+    
+    public let setParameters: (_ presentable: UIViewController, _ parameters: RouteParameters?) -> () = { _,_ in }
 }
 
 
@@ -124,20 +139,20 @@ public struct RoutePresenterSwitcher: RoutePresenterType
  - returns: RoutePresenter
  */
 public func cachedPresenter(
-    _ createPresentable: @escaping (_ parameters: RouteParameters?) -> (UIViewController))
-    -> RoutePresenter
+    _ createPresentable: @escaping () -> (UIViewController),
+    setParameters: ((_ presentable: UIViewController, _ parameters: RouteParameters?) -> ())? = nil
+) -> RoutePresenter
 {
     weak var presentable: UIViewController? = nil
     
-    let maybeCachedPresentable: (_ parameters: RouteParameters?) -> (UIViewController) = { params in
+    let maybeCachedPresentable: () -> (UIViewController) = {
         if let cachedPresentable = presentable {
             return cachedPresentable
         }
         
-        let newPresentable = createPresentable(params)
+        let newPresentable = createPresentable()
         presentable = newPresentable
         return newPresentable
     }
-    
-    return RoutePresenter(getPresentable: maybeCachedPresentable)
+    return RoutePresenter(getPresentable: maybeCachedPresentable, setParameters: setParameters)
 }

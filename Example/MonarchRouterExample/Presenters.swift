@@ -16,7 +16,7 @@ func sectionsSwitcherRoutePresenter(_ setRootView: @escaping (UIViewController)-
     var rootPresentable: UIViewController?
     
     return RoutePresenterSwitcher(
-        getPresentable: { _ in
+        getPresentable: {
             guard let vc = rootPresentable
                 else { fatalError("Cannot get presentable for root router. Probably there's no Router resolving the requested path?") }
             return vc
@@ -29,14 +29,37 @@ func sectionsSwitcherRoutePresenter(_ setRootView: @escaping (UIViewController)-
 }
 
 
-typealias TabBarItemDescription = (title: String, icon: UIImage?)
+typealias TabBarItemDescription = (title: String, icon: UIImage?, route: AppRoute)
 
-func tabBarRoutePresenter(optionsDescription: [TabBarItemDescription]) -> RoutePresenterFork
+class ExampleTabBarDelegate: NSObject, UITabBarControllerDelegate
+{
+    init(optionsDescriptions: [TabBarItemDescription], routeDispatcher: ProvidesRouteDispatch) {
+        self.optionsDescriptions = optionsDescriptions
+        self.routeDispatcher = routeDispatcher
+    }
+    
+    let optionsDescriptions: [TabBarItemDescription]
+    let routeDispatcher: ProvidesRouteDispatch
+    
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController)
+    {
+        let index = tabBarController.selectedIndex
+        guard optionsDescriptions.count > index else { return }
+        routeDispatcher.dispatchRoute(optionsDescriptions[index].route)
+    }
+}
+
+var tabBarDelegate: ExampleTabBarDelegate!
+
+
+func tabBarRoutePresenter(optionsDescription: [TabBarItemDescription], routeDispatcher: ProvidesRouteDispatch) -> RoutePresenterFork
 {
     let tabBarController = UITabBarController()
+    tabBarDelegate = ExampleTabBarDelegate(optionsDescriptions: optionsDescription, routeDispatcher: routeDispatcher)
+    tabBarController.delegate = tabBarDelegate
     
     return RoutePresenterFork(
-        getPresentable: { _ in
+        getPresentable: {
             tabBarController
         },
         setOptions: { setVCs in
@@ -59,7 +82,7 @@ func navigationRoutePresenter() -> RoutePresenterStack
     let navigationController = UINavigationController()
     
     return RoutePresenterStack(
-        getPresentable: { _ in
+        getPresentable: {
             navigationController
         },
         setStack: { replaceVCs in
@@ -104,18 +127,39 @@ func navigationRoutePresenter() -> RoutePresenterStack
 }
 
 
-func conditionalPresenter() -> RoutePresenter
+func conditionalPresenter(routeDispatcher: ProvidesRouteDispatch) -> RoutePresenter
 {
-    let presenter = cachedPresenter({ (arguments) -> UIViewController in
+    let presenter = cachedPresenter(
+    {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "GENERIC_VC") as! ViewController
-        
-        if let id = arguments?["id"] as? String
+        return storyboard.instantiateViewController(withIdentifier: "GENERIC_VC")
+    },
+    setParameters: { presentable, parameters in
+        if let presentable = presentable as? ViewController, let id = parameters?["id"] as? String
         {
-            vc.configure(title: "ID: \(id)", buttonTitle: nil, buttonAction: nil, backgroundColor: .green)
+            presentable.configure(title: "ID: \(id)", buttonTitle: "Second", buttonAction: {
+                routeDispatcher.dispatchRoute(AppRoute.second)
+            }, backgroundColor: .red)
         }
-        
-        return vc
+    })
+    
+    return presenter
+}
+
+func onboardingPresenter(routeDispatcher: ProvidesRouteDispatch) -> RoutePresenter
+{
+    let presenter = cachedPresenter(
+    {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        return storyboard.instantiateViewController(withIdentifier: "GENERIC_VC")
+    },
+    setParameters: { presentable, parameters in
+        if let presentable = presentable as? ViewController, let name = parameters?["name"] as? String
+        {
+            presentable.configure(title: "Welcome, \(name)", buttonTitle: "Okay", buttonAction: {
+                routeDispatcher.dispatchRoute(AppRoute.first)
+            }, backgroundColor: .red)
+        }
     })
     
     return presenter
@@ -124,7 +168,7 @@ func conditionalPresenter() -> RoutePresenter
 
 func cachedPresenter(for route: AppRoute, routeDispatcher: ProvidesRouteDispatch) -> RoutePresenter
 {
-    let presenter = cachedPresenter({ (arguments) -> UIViewController in
+    let presenter = cachedPresenter({
         return buildEndpoint(for: route, routeDispatcher: routeDispatcher)
     })
     

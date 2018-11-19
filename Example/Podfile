@@ -8,3 +8,13 @@ target 'MonarchRouterExample' do
   pod 'Dwifft', '~> 0.9'
 
 end
+
+
+target 'MonarchRouter' do
+    use_frameworks!
+    
+    # Diffs for collections
+    # https://github.com/jflinter/Dwifft
+    pod 'Dwifft', '~> 0.9'
+    
+end

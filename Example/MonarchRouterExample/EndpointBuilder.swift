@@ -18,21 +18,35 @@ func buildEndpoint(for route: AppRoute, routeDispatcher: ProvidesRouteDispatch) 
     switch route {
     case .login:
         vc.configure(title: "Login screen", buttonTitle: "Login", buttonAction: {
-            routeDispatcher.dispatchRoute(AppRoute.main)
+            routeDispatcher.dispatchRoute(AppRoute.onboarding(name: "USERNAME"))
         }, backgroundColor: .purple)
         
-    case .main:
+    case .first:
         vc.configure(title: "Main screen", buttonTitle: "Detail", buttonAction: {
-            routeDispatcher.dispatchRoute(AppRoute.detail)
+            routeDispatcher.dispatchRoute(AppRoute.firstDetail)
         }, backgroundColor: .magenta)
         
-    case .detail:
-        vc.configure(title: "Detail screen", buttonTitle: nil, buttonAction: nil, backgroundColor: .red)
+    case .firstDetail:
+        vc.configure(title: "First detail", buttonTitle: "Parametrized Detail", buttonAction: {
+            routeDispatcher.dispatchRoute(AppRoute.firstDetailParametrized(id: "-firstDetail"))
+        }, backgroundColor: .magenta)
         
     case .second:
-        vc.configure(title: "Second screen", buttonTitle: nil, buttonAction: nil, backgroundColor: .orange)
+        vc.configure(title: "Second screen", buttonTitle: "Second detail", buttonAction: {
+            routeDispatcher.dispatchRoute(AppRoute.secondDetail)
+        }, backgroundColor: .orange)
         
-    case .page(_):
+    case .secondDetail:
+        vc.configure(title: "Second detail", buttonTitle: "First detail", buttonAction: {
+            routeDispatcher.dispatchRoute(AppRoute.firstDetail)
+        }, backgroundColor: .orange)
+        
+    case .fifth:
+        vc.configure(title: "Fifth screen", buttonTitle: "Third", buttonAction: {
+            routeDispatcher.dispatchRoute(AppRoute.third(id: "-thirdScreen"))
+        }, backgroundColor: .darkGray)
+        
+    case .onboarding(_), .firstDetailParametrized(_), .third(_), .fourth(_):
         fatalError("This VC is built elsewhere")
     }
     

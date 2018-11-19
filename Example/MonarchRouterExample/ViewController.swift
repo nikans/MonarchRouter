@@ -15,7 +15,6 @@ class ViewController: UIViewController
     
     func configure(title: String, buttonTitle: String?, buttonAction: (()->())?, backgroundColor: UIColor)
     {
-        self.title = title
         self.titleString = title
         self.buttonTitleString = buttonTitle
         self.buttonAction = buttonAction
@@ -30,7 +29,8 @@ class ViewController: UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.titleLabel.text = title
+        self.titleLabel.text = titleString
+        self.navigationItem.title = titleString
         
         if let buttonTitle = buttonTitleString {
             self.button.setTitle(buttonTitle, for: .normal)

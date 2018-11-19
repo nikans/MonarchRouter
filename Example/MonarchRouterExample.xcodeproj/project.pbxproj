@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		17958E51AD3E4032D5A6C478 /* Pods_MonarchRouter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF23C904D963434DC0360A9D /* Pods_MonarchRouter.framework */; };
 		9187C6D64BB2763E78C00E8D /* Pods_MonarchRouterExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1907EB298DF999B25DA1BB67 /* Pods_MonarchRouterExample.framework */; };
 		D0A7B9D4219F322C00B44C3D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7B9D3219F322C00B44C3D /* AppDelegate.swift */; };
 		D0A7B9D6219F322C00B44C3D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7B9D5219F322C00B44C3D /* ViewController.swift */; };
@@ -51,9 +52,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		04723200C937FAE20F4CA6B7 /* Pods-MonarchRouter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MonarchRouter.release.xcconfig"; path = "Pods/Target Support Files/Pods-MonarchRouter/Pods-MonarchRouter.release.xcconfig"; sourceTree = "<group>"; };
 		1907EB298DF999B25DA1BB67 /* Pods_MonarchRouterExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MonarchRouterExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3770C317989A5BF236ED7EB3 /* Pods-MonarchRouter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MonarchRouter.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MonarchRouter/Pods-MonarchRouter.debug.xcconfig"; sourceTree = "<group>"; };
 		9707D0D9E10D27D00CF82C58 /* Pods-MonarchRouterExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MonarchRouterExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-MonarchRouterExample/Pods-MonarchRouterExample.release.xcconfig"; sourceTree = "<group>"; };
 		9E40EA1D4799DD2D0F3A8810 /* Pods-MonarchRouterExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MonarchRouterExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MonarchRouterExample/Pods-MonarchRouterExample.debug.xcconfig"; sourceTree = "<group>"; };
+		CF23C904D963434DC0360A9D /* Pods_MonarchRouter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MonarchRouter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0A7B9D0219F322C00B44C3D /* MonarchRouterExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MonarchRouterExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0A7B9D3219F322C00B44C3D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D0A7B9D5219F322C00B44C3D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -88,6 +92,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17958E51AD3E4032D5A6C478 /* Pods_MonarchRouter.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,6 +104,8 @@
 			children = (
 				9E40EA1D4799DD2D0F3A8810 /* Pods-MonarchRouterExample.debug.xcconfig */,
 				9707D0D9E10D27D00CF82C58 /* Pods-MonarchRouterExample.release.xcconfig */,
+				3770C317989A5BF236ED7EB3 /* Pods-MonarchRouter.debug.xcconfig */,
+				04723200C937FAE20F4CA6B7 /* Pods-MonarchRouter.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -107,6 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				1907EB298DF999B25DA1BB67 /* Pods_MonarchRouterExample.framework */,
+				CF23C904D963434DC0360A9D /* Pods_MonarchRouter.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -200,6 +208,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D0A7B9F3219F324200B44C3D /* Build configuration list for PBXNativeTarget "MonarchRouter" */;
 			buildPhases = (
+				00C88A8E1F32ECDCCCDEB3D8 /* [CP] Check Pods Manifest.lock */,
 				D0A7B9E5219F324200B44C3D /* Headers */,
 				D0A7B9E6219F324200B44C3D /* Sources */,
 				D0A7B9E7219F324200B44C3D /* Frameworks */,
@@ -273,6 +282,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		00C88A8E1F32ECDCCCDEB3D8 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MonarchRouter-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		10463D7E5657B5B4FA4F7DCB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -524,6 +551,7 @@
 		};
 		D0A7B9F4219F324200B44C3D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3770C317989A5BF236ED7EB3 /* Pods-MonarchRouter.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -554,6 +582,7 @@
 		};
 		D0A7B9F5219F324200B44C3D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 04723200C937FAE20F4CA6B7 /* Pods-MonarchRouter.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";

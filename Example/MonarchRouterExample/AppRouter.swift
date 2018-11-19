@@ -12,19 +12,38 @@ import MonarchRouter
 enum AppRoute
 {
     case login
-    case main
-    case detail
+    case onboarding(name: String)
+    case first
+    case firstDetail
+    case firstDetailParametrized(id: String)
     case second
-    case page(id: String)
+    case secondDetail
+    case third(id: String)
+    case fourth(id: String)
+    case fifth
     
     var route: String {
         switch self {
-        case .login:    return "login"
-        case .main:     return "main"
-        case .detail:   return "detail"
-        case .second:   return "second"
-        case .page(let id):
-                        return "page/" + id
+        case .login:
+            return "login"
+        case .onboarding(let name):
+            return "onboarding/" + name
+        case .first:
+            return "first"
+        case .firstDetail:
+            return "firstDetail"
+        case .firstDetailParametrized(let id):
+            return "firstDetailParametrized/" + id
+        case .second:
+            return "second"
+        case .secondDetail:
+            return "secondDetail"
+        case .third(let id):
+            return "third/" + id
+        case .fourth(let id):
+            return "fourth/" + id
+        case .fifth:
+            return "fifth"
         }
     }
 }
