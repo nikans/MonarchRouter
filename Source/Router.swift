@@ -6,9 +6,7 @@ public protocol RouterType
     var setPath: (_ path: String, _ routers: [RouterType]) -> [RouterType] { get }
     func unwind() -> ()
     
-    func getPresentable() -> UIViewController
-    func getPresentable(parameters: RouteParameters?) -> UIViewController
-    
+    func getPresentable() -> UIViewController    
     var shouldHandleRoute: (_ path: String) -> Bool { get }
 }
 
@@ -29,15 +27,8 @@ public struct Router<Presenter: RoutePresenterType>: RouterType
     internal var presenter: Presenter
     
     /// The presentable to return if this Router matches the path.
-    public func getPresentable(parameters: RouteParameters?) -> UIViewController
-    {
-        let presentable = presenter.getPresentable()
-        presenter.setParameters(presentable, parameters)
-        return presentable
-    }
-    
     public func getPresentable() -> UIViewController {
-        return getPresentable(parameters: nil)
+        return presenter.getPresentable()
     }
     
     /// Determines should this Router handle the given path.
