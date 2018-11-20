@@ -14,7 +14,6 @@ public protocol RouterType
 
 /**
  The Router is a structure that collects functions together that are related to the same routing unit.
- 
  Each Router also requires a Presenter, to which any required changes are passed.
  */
 public struct Router<Presenter: RoutePresenterType>: RouterType
@@ -47,6 +46,55 @@ public struct Router<Presenter: RoutePresenterType>: RouterType
 }
 
 
+extension Router where Presenter == RoutePresenter
+{
+    /// Endpoint router represents an actual target to navigate to.
+    public func endpoint(
+        predicate isMatching: @escaping ((_ path: String) -> Bool),
+        parameters: ((_ path: String) -> RouteParameters)? = nil,
+        children: [RouterType] = [],
+        modals: [RouterType] = []
+        ) -> Router
+    {
+        var router = self
+        
+        router.shouldHandleRoute = { path in
+            // checking if this router or any of the children can handle the route
+            return isMatching(path)
+                || children.contains { $0.shouldHandleRoute(path) }
+                || modals.contains { $0.shouldHandleRoute(path) }
+        }
+        
+        router.setPath = { path, routers in
+            let params = parameters?(path)
+            
+            if isMatching(path) {
+                // setting parameters
+                let presentable = router.getPresentable()
+                router.presenter.setParameters(presentable, params)
+                return routers + [router]
+            }
+                
+            else if let modal = modals.firstResult({ modal in modal.shouldHandleRoute(path) ? modal : nil })
+            {
+                let presentable = router.getPresentable()
+                router.presenter.presentModal(modal.getPresentable(), presentable)
+                return modal.setPath(path, routers + [router])
+            }
+                
+            else if let child = children.firstResult({ child in child.shouldHandleRoute(path) ? child : nil })
+            {
+                return child.setPath(path, routers + [router])
+            }
+            
+            return routers
+        }
+        
+        return router
+    }
+}
+
+
 extension Router where Presenter == RoutePresenterStack
 {
     /// Stack router can be used to organize routes in navigation stack.
@@ -62,10 +110,11 @@ extension Router where Presenter == RoutePresenterStack
         router.setPath = { path, routers in
             if let stackItem = stack.firstResult({ stackItem in stackItem.shouldHandleRoute(path) ? stackItem : nil })
             {
+                let presentable = router.presenter.getPresentable()
                 let stackRouters = stackItem.setPath(path, [])
                 
                 // passing the navigation stack to the presenter
-                router.presenter.setStack(stackRouters.map({ subRouter in subRouter.getPresentable() }))
+                router.presenter.setStack(stackRouters.map({ subRouter in subRouter.getPresentable() }), presentable)
 
                 return routers + [router] + stackRouters
             }
@@ -91,13 +140,15 @@ extension Router where Presenter == RoutePresenterFork
         }
         
         router.setPath = { path, routers in
+            let presentable = router.presenter.getPresentable()
+            
             // passing children as options for the presenter
-            router.presenter.setOptions(options.map { option in option.getPresentable() })
+            router.presenter.setOptions(options.map { option in option.getPresentable() }, presentable)
             
             if let option = options.firstResult({ option in option.shouldHandleRoute(path) ? option : nil })
             {
                 // setup the presenter for matching Router and set it as an active option
-                router.presenter.setOptionSelected(option.getPresentable())
+                router.presenter.setOptionSelected(option.getPresentable(), presentable)
                 return option.setPath(path, routers + [router])
             }
             
@@ -134,59 +185,6 @@ extension Router where Presenter == RoutePresenterSwitcher
             }
             
             return routers + [router]
-        }
-        
-        return router
-    }
-}
-
-
-extension Router where Presenter == RoutePresenter
-{
-    /// Endpoint router represents an actual target to navigate to.
-    public func endpoint(
-        predicate isMatching: @escaping ((_ path: String) -> Bool),
-        parameters: ((_ path: String) -> RouteParameters)? = nil,
-        children: [RouterType] = [],
-        modals: [RouterType] = []
-    ) -> Router
-    {
-        var router = self
-        
-        router.shouldHandleRoute = { path in
-            // checking if this router or any of the children can handle the route
-            return isMatching(path)
-                || children.contains { $0.shouldHandleRoute(path) }
-                || modals.contains { $0.shouldHandleRoute(path) }
-        }
-        
-        router.setPath = { path, routers in
-            let params = parameters?(path)
-            
-            if isMatching(path) {
-                // setting parameters
-                let presentable = router.getPresentable()
-                router.presenter.setParameters(presentable, params)
-                
-                // dismissing modal if needed
-                router.presenter.presentModal(nil, presentable)
-                
-                return routers + [router]
-            }
-            
-            else if let modal = modals.firstResult({ modal in modal.shouldHandleRoute(path) ? modal : nil })
-            {
-                let presentable = router.getPresentable()
-                router.presenter.presentModal(modal.getPresentable(), presentable)
-                return modal.setPath(path, routers + [router])
-            }
-            
-            else if let child = children.firstResult({ child in child.shouldHandleRoute(path) ? child : nil })
-            {
-                return child.setPath(path, routers + [router])
-            }
-            
-            return routers
         }
         
         return router

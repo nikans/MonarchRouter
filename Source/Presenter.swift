@@ -21,11 +21,14 @@ public protocol RoutePresenterType
     /// Returns the actual presentable object.
     var getPresentable: () -> (UIViewController) { get }
     
-    /// Allows to configure the presentable with parameters
+    /// Allows to configure the presentable with parameters.
     var setParameters: (_ presentable: UIViewController, _ parameters: RouteParameters?) -> () { get }
     
+    /// Clears up when the router is no longer selected.
+    /// For example used to dismiss presented modals.
     var unwind: (_ presentable: UIViewController) -> () { get }
 }
+
 
 
 public struct RoutePresenter: RoutePresenterType
@@ -48,136 +51,43 @@ public struct RoutePresenter: RoutePresenterType
         }
     }
     
+    
+    /**
+     Creates a lazy wrapper around a presenter creation function that wraps presenter scope, but does not get created until invoked.
+     
+     - parameter createPresentable: callable that returns the presentable item (UIViewController)
+     - returns: RoutePresenter
+     */
+    public static func lazyPresenter(
+        _ createPresentable: @escaping () -> (UIViewController),
+        setParameters: ((_ presentable: UIViewController, _ parameters: RouteParameters?) -> ())? = nil,
+        presentModal: ((_ modal: UIViewController?, _ over: UIViewController) -> ())? = nil,
+        unwind: ((_ presentable: UIViewController) -> ())? = nil
+    ) -> RoutePresenter
+    {
+        weak var presentable: UIViewController? = nil
+        
+        let maybeCachedPresentable: () -> (UIViewController) = {
+            if let cachedPresentable = presentable {
+                return cachedPresentable
+            }
+            
+            let newPresentable = createPresentable()
+            presentable = newPresentable
+            return newPresentable
+        }
+        var presenter = RoutePresenter(getPresentable: maybeCachedPresentable, setParameters: setParameters, unwind: unwind)
+        if let presentModal = presentModal {
+            presenter.presentModal = presentModal
+        }
+        return presenter
+    }
+    
+    
     public let getPresentable: () -> (UIViewController)
     public var setParameters: (_ presentable: UIViewController, _ parameters: RouteParameters?) -> () = { _,_ in }
-    
     public var unwind: (_ presentable: UIViewController) -> () = { _ in }
     
-    public var presentModal: (_ modal: UIViewController?, _ over: UIViewController) -> () = { _,_ in }
-    public var presentedModal: UIViewController? = nil
-}
-
-
-extension RoutePresenter: Equatable
-{
-    public static func == (lhs: RoutePresenter, rhs: RoutePresenter) -> Bool {
-        return lhs.getPresentable() == rhs.getPresentable()
-    }
-}
-
-
-public struct RoutePresenterStack: RoutePresenterType
-{
-    /// Presets root presentable when the stack's own presentable is requested.
-    public var prepareRootPresentable: (UIViewController) -> ()
-    
-    /// Sets the navigation stack.
-    public let setStack: ([UIViewController]) -> ()
-    
-    /**
-     Initializer for Stack type RoutePresenter.
-     - parameter getPresentable: callback receiving optional route parameters and returning a VC.
-     - parameter setStack: sets the navigation stack.
-     - parameter prepareRootPresentable: presets root presentable when the stack's own presentable is requested.
-     */
-    public init(
-        getPresentable: @escaping () -> (UIViewController),
-        setStack: @escaping  ([UIViewController]) -> (),
-        prepareRootPresentable: @escaping  (UIViewController) -> ()
-    ) {
-        self.getPresentable = getPresentable
-        self.setStack = setStack
-        self.prepareRootPresentable = prepareRootPresentable
-    }
-    
-    public let getPresentable: () -> (UIViewController)
-    public let setParameters: (_ presentable: UIViewController, _ parameters: RouteParameters?) -> () = { _,_ in }
-    public let unwind: (_ presentable: UIViewController) -> () = { _ in }
-}
-
-
-public struct RoutePresenterFork: RoutePresenterType
-{
-    /// Sets the options for router to choose from.
-    public let setOptions: ([UIViewController]) -> ()
-    
-    /// Sets the specified option as currently selected.
-    public let setOptionSelected: (UIViewController) -> ()
-    
-    /**
-     Initializer for Fork type RoutePresenter.
-     - parameter getPresentable: callback receiving optional route parameters and returning a VC.
-     - parameter setOptions: sets the options for router to choose from.
-     - parameter setOptionSelected: sets the specified option as currently selected.
-     */
-    public init(
-        getPresentable: @escaping () -> (UIViewController),
-        setOptions: @escaping  ([UIViewController]) -> (),
-        setOptionSelected: @escaping  (UIViewController) -> ()
-    ) {
-        self.getPresentable = getPresentable
-        self.setOptions = setOptions
-        self.setOptionSelected = setOptionSelected
-    }
-    
-    public let getPresentable: () -> (UIViewController)
-    public let setParameters: (_ presentable: UIViewController, _ parameters: RouteParameters?) -> () = { _,_ in }
-    public let unwind: (_ presentable: UIViewController) -> () = { _ in }
-}
-
-
-public struct RoutePresenterSwitcher: RoutePresenterType
-{
-    /// Sets the specified option as currently selected.
-    public let setOptionSelected: (UIViewController) -> ()
-    
-    /**
-     Initializer for Switcher type RoutePresenter.
-     - parameter getPresentable: callback receiving optional route parameters and returning a VC.
-     - parameter setOptionSelected: sets the specified option as currently selected.
-     */
-    public init(
-        getPresentable: @escaping () -> (UIViewController),
-        setOptionSelected: @escaping  (UIViewController) -> ()
-    ) {
-        self.getPresentable = getPresentable
-        self.setOptionSelected = setOptionSelected
-    }
-    
-    public let getPresentable: () -> (UIViewController)
-    public let setParameters: (_ presentable: UIViewController, _ parameters: RouteParameters?) -> () = { _,_ in }
-    public let unwind: (_ presentable: UIViewController) -> () = { _ in }
-}
-
-
-
-/**
- Creates a lazy wrapper around a presenter creation function that wraps presenter scope, but does not get created until invoked.
- 
- - parameter createPresentable: callable that returns the presentable item (UIViewController)
- - returns: RoutePresenter
- */
-public func cachedPresenter(
-    _ createPresentable: @escaping () -> (UIViewController),
-    setParameters: ((_ presentable: UIViewController, _ parameters: RouteParameters?) -> ())? = nil,
-    presentModal: ((_ modal: UIViewController?, _ over: UIViewController) -> ())? = nil,
-    unwind: ((_ presentable: UIViewController) -> ())? = nil
-) -> RoutePresenter
-{
-    weak var presentable: UIViewController? = nil
-    
-    let maybeCachedPresentable: () -> (UIViewController) = {
-        if let cachedPresentable = presentable {
-            return cachedPresentable
-        }
-        
-        let newPresentable = createPresentable()
-        presentable = newPresentable
-        return newPresentable
-    }
-    var presenter = RoutePresenter(getPresentable: maybeCachedPresentable, setParameters: setParameters, unwind: unwind)
-    if let presentModal = presentModal {
-        presenter.presentModal = presentModal
-    }
-    return presenter
+    /// Callback when a modal view is requested to be presented.
+    public var presentModal: (_ modal: UIViewController, _ over: UIViewController) -> () = { _,_ in }
 }

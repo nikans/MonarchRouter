@@ -10,10 +10,16 @@ import UIKit
 import MonarchRouter
 
 
-func buildEndpoint(for route: AppRoute, routeDispatcher: ProvidesRouteDispatch) -> UIViewController
+func mockVC() -> MockViewController
 {
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
-    let vc = storyboard.instantiateViewController(withIdentifier: "GENERIC_VC") as! ViewController
+    return storyboard.instantiateInitialViewController() as! MockViewController
+}
+
+
+func buildEndpoint(for route: AppRoute, routeDispatcher: ProvidesRouteDispatch) -> UIViewController
+{
+    let vc = mockVC()
     
     switch route {
     case .login:

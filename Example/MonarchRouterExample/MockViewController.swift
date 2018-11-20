@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MockViewController.swift
 //  MonarchRouterExample
 //
 //  Created by Eliah Snakin on 16/11/2018.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController
+class MockViewController: UIViewController
 {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var button: UIButton!

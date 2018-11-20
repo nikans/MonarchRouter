@@ -21,9 +21,9 @@ func sectionsSwitcherRoutePresenter(_ setRootView: @escaping (UIViewController)-
                 else { fatalError("Cannot get presentable for root router. Probably there's no Router resolving the requested path?") }
             return vc
         },
-        setOptionSelected: {
-            rootPresentable = $0
-            setRootView($0)
+        setOptionSelected: { option in
+            rootPresentable = option
+            setRootView(option)
         }
     )
 }
@@ -52,108 +52,103 @@ class ExampleTabBarDelegate: NSObject, UITabBarControllerDelegate
 var tabBarDelegate: ExampleTabBarDelegate!
 
 
-func tabBarRoutePresenter(optionsDescription: [TabBarItemDescription], routeDispatcher: ProvidesRouteDispatch) -> RoutePresenterFork
+func lazyTabBarRoutePresenter(optionsDescription: [TabBarItemDescription], routeDispatcher: ProvidesRouteDispatch) -> RoutePresenterFork
 {
-    let tabBarController = UITabBarController()
-    tabBarDelegate = ExampleTabBarDelegate(optionsDescriptions: optionsDescription, routeDispatcher: routeDispatcher)
-    tabBarController.delegate = tabBarDelegate
-    
-    return RoutePresenterFork(
-        getPresentable: {
-            tabBarController
+    return RoutePresenterFork.lazyPresenter({
+            let tabBarController = UITabBarController()
+            tabBarDelegate = ExampleTabBarDelegate(optionsDescriptions: optionsDescription, routeDispatcher: routeDispatcher)
+            tabBarController.delegate = tabBarDelegate
+            return tabBarController
         },
-        setOptions: { setVCs in
-            tabBarController.setViewControllers(setVCs, animated: true)
+        setOptions: { options, container in
+            let tabBarController = container as! UITabBarController
+            tabBarController.setViewControllers(options, animated: true)
             optionsDescription.enumerated().forEach { i, description in
-                guard setVCs.count > i else { return }
-                setVCs[i].tabBarItem.title = description.title
-                setVCs[i].tabBarItem.image = description.icon
+                guard options.count > i else { return }
+                options[i].tabBarItem.title = description.title
+                options[i].tabBarItem.image = description.icon
             }
         },
-        setOptionSelected: { setVC in
-            tabBarController.selectedViewController = setVC
+        setOptionSelected: { option, container in
+            let tabBarController = container as! UITabBarController
+            tabBarController.selectedViewController = option
         }
     )
 }
 
 
-func unenchancedTabBarRoutePresenter() -> RoutePresenterFork
+func unenchancedLazyTabBarRoutePresenter() -> RoutePresenterFork
 {
-    let tabBarController = UITabBarController()
-    
-    return RoutePresenterFork(
-        getPresentable: {
-            tabBarController
+    return RoutePresenterFork.lazyPresenter({
+            UITabBarController()
         },
-        setOptions: { setVCs in
-            tabBarController.setViewControllers(setVCs, animated: true)
+        setOptions: { options, container in
+            let tabBarController = container as! UITabBarController
+            tabBarController.setViewControllers(options, animated: true)
         },
-        setOptionSelected: { setVC in
-            tabBarController.selectedViewController = setVC
+        setOptionSelected: { option, container in
+            let tabBarController = container as! UITabBarController
+            tabBarController.selectedViewController = option
         }
     )
 }
 
 
-func navigationRoutePresenter() -> RoutePresenterStack
+func lazyNavigationRoutePresenter() -> RoutePresenterStack
 {
-    let navigationController = UINavigationController()
-    
-    return RoutePresenterStack(
-        getPresentable: {
-            navigationController
-        },
-        setStack: { replaceVCs in
-            let currentStack = navigationController.viewControllers
-            
-            // same, do nothing
-            if currentStack.count == replaceVCs.count, currentStack.last == replaceVCs.last {
-                return
-            }
-            
-            // only one, pop to root
-            if replaceVCs.count == 1 && currentStack.count > 1 {
-                navigationController.popToRootViewController(animated: true)
-            }
-            
-            // pop
-            if currentStack.count > replaceVCs.count {
-                navigationController.setViewControllers(replaceVCs, animated: true)
-            }
+    return RoutePresenterStack.lazyPresenter({
+        UINavigationController()
+    },
+    setStack: { (stack, container) in
+        let navigationController = container as! UINavigationController
+        let currentStack = navigationController.viewControllers
+        
+        // same, do nothing
+        if currentStack.count == stack.count, currentStack.last == stack.last {
+            return
+        }
+        
+        // only one, pop to root
+        if stack.count == 1 && currentStack.count > 1 {
+            navigationController.popToRootViewController(animated: true)
+        }
+        
+        // pop
+        if currentStack.count > stack.count {
+            navigationController.setViewControllers(stack, animated: true)
+        }
             // push
-            else {
-                let diff = Dwifft.diff(currentStack, replaceVCs)
-                diff.forEach({ (step) in
-                    switch step {
-                    case .delete(let idx, _):
-                        navigationController.viewControllers.remove(at: idx)
-                    case .insert(let idx, let vc):
-                        if idx == replaceVCs.count-1 {
-                            navigationController.pushViewController(vc, animated: true)
-                        } else {
-                            navigationController.viewControllers.insert(vc, at: idx)
-                        }
+        else {
+            let diff = Dwifft.diff(currentStack, stack)
+            diff.forEach({ (step) in
+                switch step {
+                case .delete(let idx, _):
+                    navigationController.viewControllers.remove(at: idx)
+                case .insert(let idx, let vc):
+                    if idx == stack.count-1 {
+                        navigationController.pushViewController(vc, animated: true)
+                    } else {
+                        navigationController.viewControllers.insert(vc, at: idx)
                     }
-                })
-            }
-        },
-        prepareRootPresentable: { setVC in
-            guard navigationController.viewControllers.count == 0 else { return }
-            navigationController.setViewControllers([setVC], animated: false)
+                }
+            })
         }
-    )
+    },
+    prepareRootPresentable: { (rootPresentable, container) in
+        let navigationController = container as! UINavigationController
+        guard navigationController.viewControllers.count == 0 else { return }
+        navigationController.setViewControllers([rootPresentable], animated: false)
+    })
 }
 
 
-func conditionalPresenter(routeDispatcher: ProvidesRouteDispatch) -> RoutePresenter
+func lazyParametrizedPresenter(routeDispatcher: ProvidesRouteDispatch) -> RoutePresenter
 {
-    let presenter = cachedPresenter(
-    {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        return storyboard.instantiateViewController(withIdentifier: "GENERIC_VC")
+    let presenter = RoutePresenter.lazyPresenter({
+        return mockVC()
     },
     setParameters: { presentable, parameters in
-        if let presentable = presentable as? ViewController, let id = parameters?["id"] as? String
+        if let presentable = presentable as? MockViewController, let id = parameters?["id"] as? String
         {
             presentable.configure(title: "ID: \(id)", buttonTitle: "Second", buttonAction: {
                 routeDispatcher.dispatchRoute(AppRoute.second)
@@ -164,15 +159,13 @@ func conditionalPresenter(routeDispatcher: ProvidesRouteDispatch) -> RoutePresen
     return presenter
 }
 
-func onboardingPresenter(routeDispatcher: ProvidesRouteDispatch) -> RoutePresenter
+func lazyOnboardingPresenter(routeDispatcher: ProvidesRouteDispatch) -> RoutePresenter
 {
-    let presenter = cachedPresenter(
-    {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        return storyboard.instantiateViewController(withIdentifier: "GENERIC_VC")
+    let presenter = RoutePresenter.lazyPresenter({
+        mockVC()
     },
     setParameters: { presentable, parameters in
-        if let presentable = presentable as? ViewController, let name = parameters?["name"] as? String
+        if let presentable = presentable as? MockViewController, let name = parameters?["name"] as? String
         {
             presentable.configure(title: "Welcome, \(name)", buttonTitle: "Okay", buttonAction: {
                 routeDispatcher.dispatchRoute(AppRoute.first)
@@ -184,22 +177,17 @@ func onboardingPresenter(routeDispatcher: ProvidesRouteDispatch) -> RoutePresent
 }
 
 
-func cachedPresenter(for route: AppRoute, routeDispatcher: ProvidesRouteDispatch) -> RoutePresenter
+func lazyMockPresenter(for route: AppRoute, routeDispatcher: ProvidesRouteDispatch) -> RoutePresenter
 {
-    var presenter = cachedPresenter({
+    var presenter = RoutePresenter.lazyPresenter({
         return buildEndpoint(for: route, routeDispatcher: routeDispatcher)
     })
     
     weak var presentedModal: UIViewController? = nil
     presenter.presentModal = { modal, parent in
-        if let modal = modal {
-            guard modal != presentedModal else { return }
-            parent.present(modal, animated: true)
-            presentedModal = modal
-        } else {
-//            presentedModal?.dismiss(animated: true, completion: nil)
-//            presentedModal = nil
-        }
+        guard modal != presentedModal else { return }
+        parent.present(modal, animated: true)
+        presentedModal = modal
     }
     presenter.unwind = { presentable in
         presentedModal?.dismiss(animated: true, completion: nil)

@@ -26,37 +26,25 @@ enum AppRoute
     
     var path: String {
         switch self {
-        case .login:
-            return "login"
-        case .onboarding(let name):
-            return "onboarding/" + name
-        case .first:
-            return "first"
-        case .firstDetail:
-            return "firstDetail"
-        case .firstDetailParametrized(let id):
-            return "firstDetailParametrized/" + id
-        case .second:
-            return "second"
-        case .secondDetail:
-            return "secondDetail"
-        case .third(let id):
-            return "third/" + id
-        case .fourth(let id):
-            return "fourth/" + id
-        case .fifth:
-            return "fifth"
-        case .modal:
-            return "modal"
-        case .modalParametrized(let id):
-            return "modalParametrized/" + id
+        case .login:                            return "login"
+        case .onboarding(let name):             return "onboarding/" + name
+        case .first:                            return "first"
+        case .firstDetail:                      return "firstDetail"
+        case .firstDetailParametrized(let id):  return "firstDetailParametrized/" + id
+        case .second:                           return "second"
+        case .secondDetail:                     return "secondDetail"
+        case .third(let id):                    return "third/" + id
+        case .fourth(let id):                   return "fourth/" + id
+        case .fifth:                            return "fifth"
+        case .modal:                            return "modal"
+        case .modalParametrized(let id):        return "modalParametrized/" + id
         }
     }
 }
 
 
 
-func appCoordinator(setRootView: @escaping (UIViewController)->()) -> UIViewController
+func appCoordinator(setRootView: @escaping (UIViewController)->())
 {
     var router: RouterType!
     var routersStack = [RouterType]()
@@ -73,16 +61,14 @@ func appCoordinator(setRootView: @escaping (UIViewController)->()) -> UIViewCont
             routersStack[firstDifferenceIndex..<routersStack.count].reversed().forEach { $0.unwind() }
         }
         routersStack = routers
-        
-//        routers.forEach { print(type(of: $0)) }
-//        print("\n\n--------\n\n")
     }
+    
     router = createRouter(store, setRootView: setRootView)
-    
     store.setRoute(.login)
-    
-    return router.getPresentable()
+
+    setRootView(router.getPresentable())
 }
+
 
 
 protocol ProvidesRouteDispatch
