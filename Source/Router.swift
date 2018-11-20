@@ -104,11 +104,7 @@ extension Router where Presenter == RoutePresenterFork
         
         router.setPath = { path in
             // passing children as options for the presenter
-            router.presenter.setOptions(options.map { option in
-                let presentable = option.getPresentable()
-//                option
-                return presentable
-            })
+            router.presenter.setOptions(options.map { option in option.getPresentable() })
             
             if let option = options.firstResult({ option in option.shouldHandleRoute(path) ? option : nil })
             {
@@ -155,27 +151,37 @@ extension Router where Presenter == RoutePresenterSwitcher
 }
 
 
-extension Router
+extension Router where Presenter == RoutePresenter
 {
     /// Endpoint router represents an actual target to navigate to.
     public func endpoint(
         predicate isMatching: @escaping ((_ path: String) -> Bool),
+        parameters: ((_ path: String) -> RouteParameters)? = nil,
         children: [RouterType] = [],
-        parameters: ((_ path: String) -> RouteParameters)? = nil
+        modals: [RouterType] = []
     ) -> Router
     {
         var router = self
         
         router.shouldHandleRoute = { path in
             // checking if this router or any of the children can handle the route
-            return isMatching(path) || children.contains { $0.shouldHandleRoute(path) }
+            return isMatching(path)
+                || children.contains { $0.shouldHandleRoute(path) }
+                || modals.contains { $0.shouldHandleRoute(path) }
         }
         
         router.setPath = { path in
-            // setting parameters
-            let presentable = router.getPresentable()
-            let params = parameters?(path)
-            router.presenter.setParameters(presentable, params)
+            if isMatching(path) {
+                // setting parameters
+                let presentable = router.getPresentable()
+                let params = parameters?(path)
+                router.presenter.setParameters(presentable, params)
+            }
+            
+            else if let modal = modals.firstResult({ modal in modal.shouldHandleRoute(path) ? modal : nil }) {
+                let presentable = router.getPresentable()
+                router.presenter.presentModal(modal.getPresentable(), presentable)
+            }
         }
         
         router.presentablesChain = { path in

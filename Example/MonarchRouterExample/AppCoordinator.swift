@@ -95,7 +95,11 @@ func createRouter(_ store: RouterStore, setRootView: @escaping (UIViewController
             }),
             
             // Fifth
-            Router(cachedPresenter(for: .fifth, routeDispatcher: store)).endpoint(predicate: { $0 == AppRoute.fifth.path })
+            Router(cachedPresenter(for: .fifth, routeDispatcher: store)).endpoint(predicate: { $0 == AppRoute.fifth.path }, modals: [
+                
+                // Modal
+                Router(cachedPresenter(for: .modal, routeDispatcher: store)).endpoint(predicate: { $0 == AppRoute.modal.path })
+            ])
         ])
     ])
 }

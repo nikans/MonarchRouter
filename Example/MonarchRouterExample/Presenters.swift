@@ -170,6 +170,8 @@ func cachedPresenter(for route: AppRoute, routeDispatcher: ProvidesRouteDispatch
 {
     let presenter = cachedPresenter({
         return buildEndpoint(for: route, routeDispatcher: routeDispatcher)
+    }, presentModal: { modal, parent in
+        parent.present(modal, animated: true)
     })
     
     return presenter

@@ -32,16 +32,23 @@ public struct RoutePresenter: RoutePresenterType
      Default initializer for RoutePresenter.
      - parameter getPresentable: callback receiving optional route parameters and returning a VC.
      */
-    public init(getPresentable: @escaping () -> (UIViewController), setParameters: ((_ presentable: UIViewController, _ parameters: RouteParameters?) -> ())? = nil)
-    {
+    public init(
+        getPresentable: @escaping () -> (UIViewController),
+        setParameters: ((_ presentable: UIViewController, _ parameters: RouteParameters?) -> ())? = nil,
+        presentModal: ((_ modal: UIViewController, _ over: UIViewController) -> ())? = nil
+    ) {
         self.getPresentable = getPresentable
         if let setParameters = setParameters {
             self.setParameters = setParameters
+        }
+        if let presentModal = presentModal {
+            self.presentModal = presentModal
         }
     }
     
     public let getPresentable: () -> (UIViewController)
     public var setParameters: (_ presentable: UIViewController, _ parameters: RouteParameters?) -> () = { _,_ in }
+    internal var presentModal: (_ modal: UIViewController, _ over: UIViewController) -> () = { _,_ in }
 }
 
 
@@ -135,7 +142,8 @@ public struct RoutePresenterSwitcher: RoutePresenterType
  */
 public func cachedPresenter(
     _ createPresentable: @escaping () -> (UIViewController),
-    setParameters: ((_ presentable: UIViewController, _ parameters: RouteParameters?) -> ())? = nil
+    setParameters: ((_ presentable: UIViewController, _ parameters: RouteParameters?) -> ())? = nil,
+    presentModal: ((_ modal: UIViewController, _ over: UIViewController) -> ())? = nil
 ) -> RoutePresenter
 {
     weak var presentable: UIViewController? = nil
@@ -149,5 +157,5 @@ public func cachedPresenter(
         presentable = newPresentable
         return newPresentable
     }
-    return RoutePresenter(getPresentable: maybeCachedPresentable, setParameters: setParameters)
+    return RoutePresenter(getPresentable: maybeCachedPresentable, setParameters: setParameters, presentModal: presentModal)
 }

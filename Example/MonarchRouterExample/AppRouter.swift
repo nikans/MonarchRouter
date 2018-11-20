@@ -21,6 +21,7 @@ enum AppRoute
     case third(id: String)
     case fourth(id: String)
     case fifth
+    case modal, modal2
     
     var path: String {
         switch self {
@@ -44,6 +45,10 @@ enum AppRoute
             return "fourth/" + id
         case .fifth:
             return "fifth"
+        case .modal:
+            return "modal"
+        case .modal2:
+            return "modal2"
         }
     }
 }
