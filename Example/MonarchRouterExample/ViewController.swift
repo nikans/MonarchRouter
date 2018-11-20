@@ -19,6 +19,8 @@ class ViewController: UIViewController
         self.buttonTitleString = buttonTitle
         self.buttonAction = buttonAction
         self.backgroundColor = backgroundColor
+        
+        applyConfig()
     }
     
     private var titleString: String!
@@ -29,6 +31,15 @@ class ViewController: UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        didLoad = true
+        applyConfig()
+    }
+    
+    private var didLoad: Bool = false
+    
+    private func applyConfig() {
+        guard didLoad else { return }
+        
         self.titleLabel.text = titleString
         self.navigationItem.title = titleString
         

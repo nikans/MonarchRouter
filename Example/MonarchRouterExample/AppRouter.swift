@@ -22,7 +22,7 @@ enum AppRoute
     case fourth(id: String)
     case fifth
     
-    var route: String {
+    var path: String {
         switch self {
         case .login:
             return "login"
@@ -53,7 +53,7 @@ enum AppRoute
 func appCoordinator(setRootView: @escaping (UIViewController)->()) -> UIViewController
 {
     var router: RouterType!
-    let store = RouterStore() { _ = router.setPath($0.route) }
+    let store = RouterStore() { _ = router.setPath($0.path) }
     router = createRouter(store, setRootView: setRootView)
     
     store.setRoute(.login)

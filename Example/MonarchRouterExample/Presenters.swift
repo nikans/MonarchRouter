@@ -70,8 +70,8 @@ func tabBarRoutePresenter(optionsDescription: [TabBarItemDescription], routeDisp
                 setVCs[i].tabBarItem.image = description.icon
             }
         },
-        setOptionSelected: {
-            tabBarController.selectedViewController = $0
+        setOptionSelected: { setVC in
+            tabBarController.selectedViewController = setVC
         }
     )
 }

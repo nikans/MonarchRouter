@@ -28,8 +28,6 @@ public protocol RoutePresenterType
 
 public struct RoutePresenter: RoutePresenterType
 {
-    public let getPresentable: () -> (UIViewController)
-    
     /**
      Default initializer for RoutePresenter.
      - parameter getPresentable: callback receiving optional route parameters and returning a VC.
@@ -42,15 +40,13 @@ public struct RoutePresenter: RoutePresenterType
         }
     }
     
-    /// Allows to configure the presentable with parameters
+    public let getPresentable: () -> (UIViewController)
     public var setParameters: (_ presentable: UIViewController, _ parameters: RouteParameters?) -> () = { _,_ in }
 }
 
 
 public struct RoutePresenterStack: RoutePresenterType
 {
-    public let getPresentable: () -> (UIViewController)
-    
     /// Presets root presentable when the stack's own presentable is requested.
     public var prepareRootPresentable: (UIViewController) -> ()
     
@@ -73,14 +69,13 @@ public struct RoutePresenterStack: RoutePresenterType
         self.prepareRootPresentable = prepareRootPresentable
     }
     
+    public let getPresentable: () -> (UIViewController)
     public let setParameters: (_ presentable: UIViewController, _ parameters: RouteParameters?) -> () = { _,_ in }
 }
 
 
 public struct RoutePresenterFork: RoutePresenterType
 {
-    public let getPresentable: () -> (UIViewController)
-    
     /// Sets the options for router to choose from.
     public let setOptions: ([UIViewController]) -> ()
     
@@ -103,14 +98,13 @@ public struct RoutePresenterFork: RoutePresenterType
         self.setOptionSelected = setOptionSelected
     }
     
+    public let getPresentable: () -> (UIViewController)
     public let setParameters: (_ presentable: UIViewController, _ parameters: RouteParameters?) -> () = { _,_ in }
 }
 
 
 public struct RoutePresenterSwitcher: RoutePresenterType
-{    
-    public let getPresentable: () -> (UIViewController)
-    
+{
     /// Sets the specified option as currently selected.
     public let setOptionSelected: (UIViewController) -> ()
     
@@ -127,6 +121,7 @@ public struct RoutePresenterSwitcher: RoutePresenterType
         self.setOptionSelected = setOptionSelected
     }
     
+    public let getPresentable: () -> (UIViewController)
     public let setParameters: (_ presentable: UIViewController, _ parameters: RouteParameters?) -> () = { _,_ in }
 }
 

@@ -15,11 +15,11 @@ func createRouter(_ store: RouterStore, setRootView: @escaping (UIViewController
     return Router(sectionsSwitcherRoutePresenter(setRootView)).switcher([
         
         // Login
-        Router(cachedPresenter(for: .login, routeDispatcher: store)).endpoint(predicate: { $0 == AppRoute.login.route }),
+        Router(cachedPresenter(for: .login, routeDispatcher: store)).endpoint(predicate: { $0 == AppRoute.login.path }),
         
         // Onboarding
         Router(navigationRoutePresenter()).stack([
-//            Router(cachedPresenter(for: .onboarding, routeDispatcher: store)).endpoint(predicate: { $0 == AppRoute.onboarding.route })
+//            Router(cachedPresenter(for: .onboarding, routeDispatcher: store)).endpoint(predicate: { $0 == AppRoute.onboarding.path })
             
             // Parametrized welcome page (just for test)
             Router(onboardingPresenter(routeDispatcher: store)).endpoint(predicate: { path in path.matches("onboarding/(?<name>[\\w\\-\\.]+)") }, parameters: { (path) -> RouteParameters in
@@ -44,10 +44,10 @@ func createRouter(_ store: RouterStore, setRootView: @escaping (UIViewController
             Router(navigationRoutePresenter()).stack([
                 
                 // First
-                Router(cachedPresenter(for: .first, routeDispatcher: store)).endpoint(predicate: { $0 == AppRoute.first.route }, children: [
+                Router(cachedPresenter(for: .first, routeDispatcher: store)).endpoint(predicate: { $0 == AppRoute.first.path }, children: [
                     
                     // Detail
-                    Router(cachedPresenter(for: .firstDetail, routeDispatcher: store)).endpoint(predicate: { $0 == AppRoute.firstDetail.route }, children: [
+                    Router(cachedPresenter(for: .firstDetail, routeDispatcher: store)).endpoint(predicate: { $0 == AppRoute.firstDetail.path }, children: [
                         
                         // Parametrized Detail
                         Router(conditionalPresenter(routeDispatcher: store)).endpoint(predicate: { path in path.matches("firstDetailParametrized/(?<id>[\\w\\-\\.]+)") }, parameters: { (path) -> RouteParameters in
@@ -65,10 +65,10 @@ func createRouter(_ store: RouterStore, setRootView: @escaping (UIViewController
             Router(navigationRoutePresenter()).stack([
             
                 // Second
-                Router(cachedPresenter(for: .second, routeDispatcher: store)).endpoint(predicate: { $0 == AppRoute.second.route }, children: [
+                Router(cachedPresenter(for: .second, routeDispatcher: store)).endpoint(predicate: { $0 == AppRoute.second.path }, children: [
                     
                     // Detail
-                    Router(cachedPresenter(for: .secondDetail, routeDispatcher: store)).endpoint(predicate: { $0 == AppRoute.secondDetail.route })
+                    Router(cachedPresenter(for: .secondDetail, routeDispatcher: store)).endpoint(predicate: { $0 == AppRoute.secondDetail.path })
                 ])
             ]),
             
@@ -95,7 +95,7 @@ func createRouter(_ store: RouterStore, setRootView: @escaping (UIViewController
             }),
             
             // Fifth
-            Router(cachedPresenter(for: .fifth, routeDispatcher: store)).endpoint(predicate: { $0 == AppRoute.fifth.route })
+            Router(cachedPresenter(for: .fifth, routeDispatcher: store)).endpoint(predicate: { $0 == AppRoute.fifth.path })
         ])
     ])
 }

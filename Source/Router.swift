@@ -46,10 +46,12 @@ public struct Router<Presenter: RoutePresenterType>: RouterType
         = { _ in }
     
     /// Determines should this Router handle the given path.
+    /// Configured for each respective Router type.
     public internal(set) var shouldHandleRoute: (_ path: String) -> Bool
         = { _ in false }
     
     /// Passes actions to the Presenter to update the view for the provided path.
+    /// Configured for each respective Router type.
     public var setPath: (_ path: String) -> ()
         = { _ in }
     
@@ -102,7 +104,11 @@ extension Router where Presenter == RoutePresenterFork
         
         router.setPath = { path in
             // passing children as options for the presenter
-            router.presenter.setOptions(options.map { option in option.getPresentable() })
+            router.presenter.setOptions(options.map { option in
+                let presentable = option.getPresentable()
+//                option
+                return presentable
+            })
             
             if let option = options.firstResult({ option in option.shouldHandleRoute(path) ? option : nil })
             {
@@ -134,8 +140,7 @@ extension Router where Presenter == RoutePresenterSwitcher
         }
         
         router.setPath = { path in
-//            options.map { $0.shouldHandleRoute(path) }
-            
+            // finding an option to handle the route
             if let option = options.firstResult({ option in option.shouldHandleRoute(path) ? option : nil })
             {
                 // setup the presenter for matching Router
@@ -164,6 +169,13 @@ extension Router
         router.shouldHandleRoute = { path in
             // checking if this router or any of the children can handle the route
             return isMatching(path) || children.contains { $0.shouldHandleRoute(path) }
+        }
+        
+        router.setPath = { path in
+            // setting parameters
+            let presentable = router.getPresentable()
+            let params = parameters?(path)
+            router.presenter.setParameters(presentable, params)
         }
         
         router.presentablesChain = { path in
