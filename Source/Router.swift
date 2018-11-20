@@ -3,13 +3,13 @@ import UIKit
 
 public protocol RouterType
 {
-    var setPath: (_ path: String) -> () { get }
+    var setPath: (_ path: String, _ routers: [RouterType]) -> [RouterType] { get }
+    func unwind() -> ()
     
     func getPresentable() -> UIViewController
     func getPresentable(parameters: RouteParameters?) -> UIViewController
     
     var shouldHandleRoute: (_ path: String) -> Bool { get }
-    var presentablesChain: (_ path: String) -> [UIViewController]? { get }
 }
 
 
@@ -52,13 +52,21 @@ public struct Router<Presenter: RoutePresenterType>: RouterType
     
     /// Passes actions to the Presenter to update the view for the provided path.
     /// Configured for each respective Router type.
-    public var setPath: (_ path: String) -> ()
-        = { _ in }
+    public var setPath: (_ path: String, _ routers: [RouterType]) -> [RouterType]
+        = { _,_ in [] }
     
-    /// Returns an array of presentables that match the path. The actual array returned can vary depending on Router type.
-    public internal(set) var presentablesChain: (_ path: String) -> [UIViewController]?
-        = { _ in nil }
+    public func unwind() -> () {
+        presenter.unwind(presenter.getPresentable())
+    }
 }
+
+
+//extension Router: Equatable
+//{
+//    public static func == (lhs: Router<Presenter>, rhs: Router<Presenter>) -> Bool {
+//        return lhs.presenter != rhs.presenter
+//    }
+//}
 
 
 extension Router where Presenter == RoutePresenterStack
@@ -80,9 +88,18 @@ extension Router where Presenter == RoutePresenterStack
             return stack.contains { subRouter in subRouter.shouldHandleRoute(path) }
         }
         
-        router.setPath = { path in
-            // passing the navigation stack to the presenter
-            router.presenter.setStack(stack.firstResult({ subRouter in subRouter.presentablesChain(path) }) ?? [])
+        router.setPath = { path, routers in
+            if let stackItem = stack.firstResult({ stackItem in stackItem.shouldHandleRoute(path) ? stackItem : nil })
+            {
+                let stackRouters = stackItem.setPath(path, [])
+                
+                // passing the navigation stack to the presenter
+                router.presenter.setStack(stackRouters.map({ subRouter in subRouter.getPresentable() }))
+
+                return routers + [router] + stackRouters
+            }
+            
+            return routers + [router]
         }
         
         return router
@@ -102,17 +119,18 @@ extension Router where Presenter == RoutePresenterFork
             return options.contains { option in option.shouldHandleRoute(path) }
         }
         
-        router.setPath = { path in
+        router.setPath = { path, routers in
             // passing children as options for the presenter
             router.presenter.setOptions(options.map { option in option.getPresentable() })
             
             if let option = options.firstResult({ option in option.shouldHandleRoute(path) ? option : nil })
             {
-                // setup the presenter for matching Router
-                option.setPath(path)
-                // and set it as an active option
+                // setup the presenter for matching Router and set it as an active option
                 router.presenter.setOptionSelected(option.getPresentable())
+                return option.setPath(path, routers + [router])
             }
+            
+            return routers + [router]
         }
         
         return router
@@ -135,15 +153,16 @@ extension Router where Presenter == RoutePresenterSwitcher
             return options.contains { option in option.shouldHandleRoute(path) }
         }
         
-        router.setPath = { path in
+        router.setPath = { path, routers in
             // finding an option to handle the route
             if let option = options.firstResult({ option in option.shouldHandleRoute(path) ? option : nil })
             {
-                // setup the presenter for matching Router
-                option.setPath(path)
-                // and set it as an active option
+                // setup the presenter for matching Router and set it as an active option
                 router.presenter.setOptionSelected(option.getPresentable())
+                return option.setPath(path, routers + [router])
             }
+            
+            return routers + [router]
         }
         
         return router
@@ -170,37 +189,33 @@ extension Router where Presenter == RoutePresenter
                 || modals.contains { $0.shouldHandleRoute(path) }
         }
         
-        router.setPath = { path in
+        router.setPath = { path, routers in
+            let params = parameters?(path)
+            
             if isMatching(path) {
                 // setting parameters
                 let presentable = router.getPresentable()
-                let params = parameters?(path)
                 router.presenter.setParameters(presentable, params)
+                
+                // dismissing modal if needed
+                router.presenter.presentModal(nil, presentable)
+                
+                return routers + [router]
             }
             
-            else if let modal = modals.firstResult({ modal in modal.shouldHandleRoute(path) ? modal : nil }) {
+            else if let modal = modals.firstResult({ modal in modal.shouldHandleRoute(path) ? modal : nil })
+            {
                 let presentable = router.getPresentable()
                 router.presenter.presentModal(modal.getPresentable(), presentable)
-            }
-        }
-        
-        router.presentablesChain = { path in
-            let routeParameters = parameters?(path)
-            
-            // this Router is the required endpoint
-            if isMatching(path) {
-                return [router.getPresentable(parameters: routeParameters)]
+                return modal.setPath(path, routers + [router])
             }
             
-            // the child of this Router is the endpoint
-            for child in children {
-                if let stack = child.presentablesChain(path) {
-                    return [router.getPresentable(parameters: routeParameters)] + stack
-                }
+            else if let child = children.firstResult({ child in child.shouldHandleRoute(path) ? child : nil })
+            {
+                return child.setPath(path, routers + [router])
             }
             
-            // no match
-            return nil
+            return routers
         }
         
         return router

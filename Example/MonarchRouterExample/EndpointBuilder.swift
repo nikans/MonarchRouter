@@ -43,21 +43,15 @@ func buildEndpoint(for route: AppRoute, routeDispatcher: ProvidesRouteDispatch) 
         
     case .fifth:
         vc.configure(title: "Fifth screen", buttonTitle: "Modal", buttonAction: {
-            routeDispatcher.dispatchRoute(AppRoute.modal)
+            routeDispatcher.dispatchRoute(AppRoute.modalParametrized(id: "-someModal"))
         }, backgroundColor: .darkGray)
       
     case .modal:
-        vc.configure(title: "Modal screen", buttonTitle: "Dismiss", buttonAction: {
-            vc.dismiss(animated: true, completion: nil)
-//            routeDispatcher.dispatchRoute(AppRoute.fifth)
+        vc.configure(title: "Modal screen", buttonTitle: "Fifth", buttonAction: {
+            routeDispatcher.dispatchRoute(AppRoute.fifth)
         }, backgroundColor: .blue)
         
-    case .modal2:
-        vc.configure(title: "Modal screen", buttonTitle: "Back to fifth", buttonAction: {
-//            routeDispatcher.dispatchRoute(AppRoute.fifth)
-        }, backgroundColor: .red)
-        
-    case .onboarding(_), .firstDetailParametrized(_), .third(_), .fourth(_):
+    case .onboarding(_), .firstDetailParametrized(_), .third(_), .fourth(_), .modalParametrized(_):
         fatalError("This VC is built elsewhere")
     }
     

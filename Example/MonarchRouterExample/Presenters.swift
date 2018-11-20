@@ -77,6 +77,24 @@ func tabBarRoutePresenter(optionsDescription: [TabBarItemDescription], routeDisp
 }
 
 
+func unenchancedTabBarRoutePresenter() -> RoutePresenterFork
+{
+    let tabBarController = UITabBarController()
+    
+    return RoutePresenterFork(
+        getPresentable: {
+            tabBarController
+        },
+        setOptions: { setVCs in
+            tabBarController.setViewControllers(setVCs, animated: true)
+        },
+        setOptionSelected: { setVC in
+            tabBarController.selectedViewController = setVC
+        }
+    )
+}
+
+
 func navigationRoutePresenter() -> RoutePresenterStack
 {
     let navigationController = UINavigationController()
@@ -168,11 +186,25 @@ func onboardingPresenter(routeDispatcher: ProvidesRouteDispatch) -> RoutePresent
 
 func cachedPresenter(for route: AppRoute, routeDispatcher: ProvidesRouteDispatch) -> RoutePresenter
 {
-    let presenter = cachedPresenter({
+    var presenter = cachedPresenter({
         return buildEndpoint(for: route, routeDispatcher: routeDispatcher)
-    }, presentModal: { modal, parent in
-        parent.present(modal, animated: true)
     })
+    
+    weak var presentedModal: UIViewController? = nil
+    presenter.presentModal = { modal, parent in
+        if let modal = modal {
+            guard modal != presentedModal else { return }
+            parent.present(modal, animated: true)
+            presentedModal = modal
+        } else {
+//            presentedModal?.dismiss(animated: true, completion: nil)
+//            presentedModal = nil
+        }
+    }
+    presenter.unwind = { presentable in
+        presentedModal?.dismiss(animated: true, completion: nil)
+        presentedModal = nil
+    }
     
     return presenter
 }

@@ -21,7 +21,8 @@ enum AppRoute
     case third(id: String)
     case fourth(id: String)
     case fifth
-    case modal, modal2
+    case modal
+    case modalParametrized(id: String)
     
     var path: String {
         switch self {
@@ -47,8 +48,8 @@ enum AppRoute
             return "fifth"
         case .modal:
             return "modal"
-        case .modal2:
-            return "modal2"
+        case .modalParametrized(let id):
+            return "modalParametrized/" + id
         }
     }
 }
@@ -58,7 +59,24 @@ enum AppRoute
 func appCoordinator(setRootView: @escaping (UIViewController)->()) -> UIViewController
 {
     var router: RouterType!
-    let store = RouterStore() { _ = router.setPath($0.path) }
+    var routersStack = [RouterType]()
+    
+    let store = RouterStore() {
+        let routers = router.setPath($0.path, [])
+        
+        let firstDifferenceIndex = routersStack.enumerated().first(where: { (i, element) -> Bool in
+            guard routers.count > i else { return true }
+            return element.getPresentable() != routers[i].getPresentable()
+        })?.offset
+        
+        if let firstDifferenceIndex = firstDifferenceIndex {
+            routersStack[firstDifferenceIndex..<routersStack.count].reversed().forEach { $0.unwind() }
+        }
+        routersStack = routers
+        
+//        routers.forEach { print(type(of: $0)) }
+//        print("\n\n--------\n\n")
+    }
     router = createRouter(store, setRootView: setRootView)
     
     store.setRoute(.login)

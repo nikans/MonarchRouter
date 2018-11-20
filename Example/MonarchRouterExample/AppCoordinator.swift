@@ -98,7 +98,19 @@ func createRouter(_ store: RouterStore, setRootView: @escaping (UIViewController
             Router(cachedPresenter(for: .fifth, routeDispatcher: store)).endpoint(predicate: { $0 == AppRoute.fifth.path }, modals: [
                 
                 // Modal
-                Router(cachedPresenter(for: .modal, routeDispatcher: store)).endpoint(predicate: { $0 == AppRoute.modal.path })
+                Router(unenchancedTabBarRoutePresenter()).fork([
+                    Router(navigationRoutePresenter()).stack([
+                        Router(conditionalPresenter(routeDispatcher: store)).endpoint(predicate: { path in path.matches("modalParametrized/(?<id>[\\w\\-\\.]+)") }, parameters: { (path) -> RouteParameters in
+                            var arguments = RouteParameters()
+                            if let id = path.capturedGroups(withRegex: "modalParametrized/(?<id>[\\w\\-\\.]+)").first {
+                                arguments["id"] = id
+                            }
+                            return arguments
+                        }),
+                        
+                        Router(cachedPresenter(for: .modal, routeDispatcher: store)).endpoint(predicate: { $0 == AppRoute.modal.path })
+                    ])
+                ])
             ])
         ])
     ])

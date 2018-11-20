@@ -23,6 +23,8 @@ public protocol RoutePresenterType
     
     /// Allows to configure the presentable with parameters
     var setParameters: (_ presentable: UIViewController, _ parameters: RouteParameters?) -> () { get }
+    
+    var unwind: (_ presentable: UIViewController) -> () { get }
 }
 
 
@@ -35,20 +37,32 @@ public struct RoutePresenter: RoutePresenterType
     public init(
         getPresentable: @escaping () -> (UIViewController),
         setParameters: ((_ presentable: UIViewController, _ parameters: RouteParameters?) -> ())? = nil,
-        presentModal: ((_ modal: UIViewController, _ over: UIViewController) -> ())? = nil
+        unwind: ((_ presentable: UIViewController) -> ())? = nil
     ) {
         self.getPresentable = getPresentable
         if let setParameters = setParameters {
             self.setParameters = setParameters
         }
-        if let presentModal = presentModal {
-            self.presentModal = presentModal
+        if let unwind = unwind {
+            self.unwind = unwind
         }
     }
     
     public let getPresentable: () -> (UIViewController)
     public var setParameters: (_ presentable: UIViewController, _ parameters: RouteParameters?) -> () = { _,_ in }
-    internal var presentModal: (_ modal: UIViewController, _ over: UIViewController) -> () = { _,_ in }
+    
+    public var unwind: (_ presentable: UIViewController) -> () = { _ in }
+    
+    public var presentModal: (_ modal: UIViewController?, _ over: UIViewController) -> () = { _,_ in }
+    public var presentedModal: UIViewController? = nil
+}
+
+
+extension RoutePresenter: Equatable
+{
+    public static func == (lhs: RoutePresenter, rhs: RoutePresenter) -> Bool {
+        return lhs.getPresentable() == rhs.getPresentable()
+    }
 }
 
 
@@ -78,6 +92,7 @@ public struct RoutePresenterStack: RoutePresenterType
     
     public let getPresentable: () -> (UIViewController)
     public let setParameters: (_ presentable: UIViewController, _ parameters: RouteParameters?) -> () = { _,_ in }
+    public let unwind: (_ presentable: UIViewController) -> () = { _ in }
 }
 
 
@@ -107,6 +122,7 @@ public struct RoutePresenterFork: RoutePresenterType
     
     public let getPresentable: () -> (UIViewController)
     public let setParameters: (_ presentable: UIViewController, _ parameters: RouteParameters?) -> () = { _,_ in }
+    public let unwind: (_ presentable: UIViewController) -> () = { _ in }
 }
 
 
@@ -130,6 +146,7 @@ public struct RoutePresenterSwitcher: RoutePresenterType
     
     public let getPresentable: () -> (UIViewController)
     public let setParameters: (_ presentable: UIViewController, _ parameters: RouteParameters?) -> () = { _,_ in }
+    public let unwind: (_ presentable: UIViewController) -> () = { _ in }
 }
 
 
@@ -143,7 +160,8 @@ public struct RoutePresenterSwitcher: RoutePresenterType
 public func cachedPresenter(
     _ createPresentable: @escaping () -> (UIViewController),
     setParameters: ((_ presentable: UIViewController, _ parameters: RouteParameters?) -> ())? = nil,
-    presentModal: ((_ modal: UIViewController, _ over: UIViewController) -> ())? = nil
+    presentModal: ((_ modal: UIViewController?, _ over: UIViewController) -> ())? = nil,
+    unwind: ((_ presentable: UIViewController) -> ())? = nil
 ) -> RoutePresenter
 {
     weak var presentable: UIViewController? = nil
@@ -157,5 +175,9 @@ public func cachedPresenter(
         presentable = newPresentable
         return newPresentable
     }
-    return RoutePresenter(getPresentable: maybeCachedPresentable, setParameters: setParameters, presentModal: presentModal)
+    var presenter = RoutePresenter(getPresentable: maybeCachedPresentable, setParameters: setParameters, unwind: unwind)
+    if let presentModal = presentModal {
+        presenter.presentModal = presentModal
+    }
+    return presenter
 }
