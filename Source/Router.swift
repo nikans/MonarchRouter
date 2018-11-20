@@ -31,7 +31,6 @@ public struct Router<Presenter: RoutePresenterType>: RouterType
     /// The presentable to return if this Router matches the path.
     public func getPresentable(parameters: RouteParameters?) -> UIViewController
     {
-        onGetPresentable(parameters)
         let presentable = presenter.getPresentable()
         presenter.setParameters(presentable, parameters)
         return presentable
@@ -40,10 +39,6 @@ public struct Router<Presenter: RoutePresenterType>: RouterType
     public func getPresentable() -> UIViewController {
         return getPresentable(parameters: nil)
     }
-    
-    /// Called when `getPresentable(_:)` for this Router is called.
-    internal var onGetPresentable: (_ parameters: RouteParameters?) -> ()
-        = { _ in }
     
     /// Determines should this Router handle the given path.
     /// Configured for each respective Router type.
@@ -61,27 +56,12 @@ public struct Router<Presenter: RoutePresenterType>: RouterType
 }
 
 
-//extension Router: Equatable
-//{
-//    public static func == (lhs: Router<Presenter>, rhs: Router<Presenter>) -> Bool {
-//        return lhs.presenter != rhs.presenter
-//    }
-//}
-
-
 extension Router where Presenter == RoutePresenterStack
 {
     /// Stack router can be used to organize routes in navigation stack.
     public func stack(_ stack: [RouterType]) -> Router
     {
         var router = self
-        
-        router.onGetPresentable = { parameters in
-            // setting default root view controller if any
-            if let rootChild = stack.first?.getPresentable(parameters: parameters) {
-                router.presenter.prepareRootPresentable(rootChild)
-            }
-        }
         
         router.shouldHandleRoute = { path in
             // checking if any of the children can handle the route
