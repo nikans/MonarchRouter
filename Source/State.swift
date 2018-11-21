@@ -3,7 +3,7 @@
 //  MonarchRouter
 //
 //  Created by Eliah Snakin on 21/11/2018.
-//  Copyright © 2018 nikans.com. All rights reserved.
+//  nikans.com
 //
 
 import Foundation

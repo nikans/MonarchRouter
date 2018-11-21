@@ -1,3 +1,11 @@
+//
+//  Store.swift
+//  MonarchRouter
+//
+//  Created by Eliah Snakin on 21/11/2018.
+//  nikans.com
+//
+
 import UIKit
 
 

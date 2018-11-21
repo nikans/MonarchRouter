@@ -3,12 +3,13 @@
 //  MonarchRouter
 //
 //  Created by Eliah Snakin on 20/11/2018.
-//  Copyright © 2018 nikans.com. All rights reserved.
+//  nikans.com
 //
 
 import UIKit
 
 
+/// Can be used to organize other Presenters in a navigation stack.
 public struct RoutePresenterStack: RoutePresenterType
 {
     /// Initializer for Stack type RoutePresenter.

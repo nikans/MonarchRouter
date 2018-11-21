@@ -3,11 +3,10 @@
 //  MonarchRouter
 //
 //  Created by Eliah Snakin on 15/11/2018.
-//  Copyright © 2018 AtlasBiomed. All rights reserved.
+//  nikans.com
 //
 
 import UIKit
-
 
 
 /// Represents arguments parsed from Path string
@@ -30,6 +29,7 @@ public protocol RoutePresenterType
 
 
 
+/// Used to present a route endpoint.
 public struct RoutePresenter: RoutePresenterType
 {
     /// Default initializer for RoutePresenter.

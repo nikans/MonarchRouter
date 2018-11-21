@@ -3,7 +3,7 @@
 //  MonarchRouter
 //
 //  Created by Eliah Snakin on 16/11/2018.
-//  Copyright © 2018 AtlasBiomed. All rights reserved.
+//  nikans.com
 //
 
 import Foundation
