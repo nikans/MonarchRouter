@@ -11,18 +11,10 @@ import UIKit
 
 public struct RoutePresenterFork: RoutePresenterType
 {
-    /// Sets the options for router to choose from.
-    public let setOptions: (_ options: [UIViewController], _ container: UIViewController) -> ()
-    
-    /// Sets the specified option as currently selected.
-    public let setOptionSelected: (_ option: UIViewController, _ container: UIViewController) -> ()
-    
-    /**
-     Initializer for Fork type RoutePresenter.
-     - parameter getPresentable: callback receiving optional route parameters and returning a VC.
-     - parameter setOptions: sets the options for router to choose from.
-     - parameter setOptionSelected: sets the specified option as currently selected.
-     */
+    /// Initializer for Fork type RoutePresenter.
+    /// - parameter getPresentable: Callback returning a Presentable.
+    /// - parameter setOptions: Sets the options for Router to choose from.
+    /// - parameter setOptionSelected: Sets the specified option as currently selected.
     public init(
         getPresentable: @escaping () -> (UIViewController),
         setOptions: @escaping  (_ options: [UIViewController], _ container: UIViewController) -> (),
@@ -34,12 +26,19 @@ public struct RoutePresenterFork: RoutePresenterType
     }
     
     
-    /**
-     Creates a lazy wrapper around a presenter creation function that wraps presenter scope, but does not get created until invoked.
-     
-     - parameter createPresentable: callable that returns the presentable item (UIViewController)
-     - returns: RoutePresenter
-     */
+    /// Sets the options for Router to choose from.
+    public let setOptions: (_ options: [UIViewController], _ container: UIViewController) -> ()
+    
+    /// Sets the specified option as currently selected.
+    public let setOptionSelected: (_ option: UIViewController, _ container: UIViewController) -> ()
+    
+    
+    
+    /// Creates a lazy wrapper around a presenter creation function that wraps presenter scope, but does not get created until invoked.
+    /// - parameter createPresentable: Callback that returns the Presentable item.
+    /// - parameter setOptions: Sets the options for Router to choose from.
+    /// - parameter setOptionSelected: Sets the specified option as currently selected.
+    /// - returns: RoutePresenter
     public static func lazyPresenter(
         _ createPresentable: @escaping () -> (UIViewController),
         setOptions: @escaping  (_ options: [UIViewController], _ container: UIViewController) -> (),

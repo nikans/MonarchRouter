@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate
             window.rootViewController = vc
         }
         
-        // initializing router and setting root VC
+        // Initializing Router and setting root VC
         appCoordinator(setRootView: setRootViewController)
         window?.makeKeyAndVisible()
         

@@ -9,25 +9,15 @@
 import Foundation
 
 
+// A set of operations for parametrized routes handling.
 extension String
 {
+    /// Returns whether a String matches a given regex.
     func matches(_ regex: String) -> Bool {
         return self.range(of: regex, options: .regularExpression, range: nil, locale: nil) != nil
     }
     
-    func matched(for regex: String, in text: String) -> [String] {
-        
-        do {
-            let regex = try NSRegularExpression(pattern: regex)
-            let nsString = text as NSString
-            let results = regex.matches(in: text, range: NSRange(location: 0, length: nsString.length))
-            return results.map { nsString.substring(with: $0.range)}
-        } catch let error {
-            print("invalid regex: \(error.localizedDescription)")
-            return []
-        }
-    }
-    
+    /// Returns substrings captured by regex groups.
     func capturedGroups(withRegex pattern: String) -> [String] {
         var results = [String]()
         

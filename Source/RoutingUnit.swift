@@ -1,43 +1,48 @@
 import UIKit
 
 
-public protocol RouterType
+/// Any `RoutingUnit` object.
+public protocol RoutingUnitType
 {
-    var setPath: (_ path: String, _ routers: [RouterType]) -> [RouterType] { get }
-    func unwind() -> ()
+    /// Passes actions to the Presenter to update the view for the provided Path.
+    /// Configured for each respective `RoutingUnit` type.
+    var setPath: (_ path: String, _ routers: [RoutingUnitType]) -> [RoutingUnitType] { get }
     
-    func getPresentable() -> UIViewController    
+    /// Called when the `RoutingUnit` no handles a new Path.
+    func unwind()
+    
+    /// The Presentable to return if this `RoutingUnit` matches the path.
+    /// - returns: A Presentable object.
+    func getPresentable() -> UIViewController
+    
+    /// Determines should this `RoutingUnit` handle the given Path.
+    /// Configured for each respective `RoutingUnit` type.
     var shouldHandleRoute: (_ path: String) -> Bool { get }
 }
 
 
 
-/**
- The Router is a structure that collects functions together that are related to the same routing unit.
- Each Router also requires a Presenter, to which any required changes are passed.
- */
-public struct Router<Presenter: RoutePresenterType>: RouterType
+/// The `RoutingUnit` is a structure that collects functions together that are related to the same endpoint or intermidiate routing point.
+/// Each `RoutingUnit` also requires a Presenter, to which any required changes are passed.
+public struct RoutingUnit<Presenter: RoutePresenterType>: RoutingUnitType
 {
+    /// Primary initializer for a `RoutingUnit`.
+    /// - parameter presenter: A Presenter object to pass UI changes to.
     public init(_ presenter: Presenter) {
         self.presenter = presenter
     }
     
-    /// Presenter to pass UI actions to.
+    /// Presenter to pass UI changes to.
     internal var presenter: Presenter
     
-    /// The presentable to return if this Router matches the path.
     public func getPresentable() -> UIViewController {
         return presenter.getPresentable()
     }
     
-    /// Determines should this Router handle the given path.
-    /// Configured for each respective Router type.
     public internal(set) var shouldHandleRoute: (_ path: String) -> Bool
         = { _ in false }
     
-    /// Passes actions to the Presenter to update the view for the provided path.
-    /// Configured for each respective Router type.
-    public var setPath: (_ path: String, _ routers: [RouterType]) -> [RouterType]
+    public var setPath: (_ path: String, _ routers: [RoutingUnitType]) -> [RoutingUnitType]
         = { _,_ in [] }
     
     public func unwind() -> () {
@@ -46,20 +51,25 @@ public struct Router<Presenter: RoutePresenterType>: RouterType
 }
 
 
-extension Router where Presenter == RoutePresenter
+extension RoutingUnit where Presenter == RoutePresenter
 {
-    /// Endpoint router represents an actual target to navigate to.
+    /// Endpoint `RoutingUnit` representing an actual target to navigate to.
+    /// - parameter predicate: A closure to determine whether this `RoutingUnit` should handle the Path.
+    /// - parameter parameters: An optional closure to parse the Path into `RouteParameters` to configure a Presentable with.
+    /// - parameter children: `RoutingUnit`s you can navigate to from this unit, i.e. in navigation stack.
+    /// - parameter modals: `RoutingUnit`s you can present as modals from this one.
+    /// - returns: Modified `RoutingUnit`
     public func endpoint(
         predicate isMatching: @escaping ((_ path: String) -> Bool),
         parameters: ((_ path: String) -> RouteParameters)? = nil,
-        children: [RouterType] = [],
-        modals: [RouterType] = []
-        ) -> Router
+        children: [RoutingUnitType] = [],
+        modals: [RoutingUnitType] = []
+    ) -> RoutingUnit
     {
         var router = self
         
         router.shouldHandleRoute = { path in
-            // checking if this router or any of the children can handle the route
+            // checking if this RoutingUnit or any of the children or modals can handle the Path
             return isMatching(path)
                 || children.contains { $0.shouldHandleRoute(path) }
                 || modals.contains { $0.shouldHandleRoute(path) }
@@ -68,6 +78,7 @@ extension Router where Presenter == RoutePresenter
         router.setPath = { path, routers in
             let params = parameters?(path)
             
+            // this RoutingUnit handles the Path
             if isMatching(path) {
                 // setting parameters
                 let presentable = router.getPresentable()
@@ -75,6 +86,7 @@ extension Router where Presenter == RoutePresenter
                 return routers + [router]
             }
                 
+            // should present a modal to handle the Path
             else if let modal = modals.firstResult({ modal in modal.shouldHandleRoute(path) ? modal : nil })
             {
                 let presentable = router.getPresentable()
@@ -82,6 +94,7 @@ extension Router where Presenter == RoutePresenter
                 return modal.setPath(path, routers + [router])
             }
                 
+            // this RoutingUnit's child handles the Path
             else if let child = children.firstResult({ child in child.shouldHandleRoute(path) ? child : nil })
             {
                 return child.setPath(path, routers + [router])
@@ -95,30 +108,34 @@ extension Router where Presenter == RoutePresenter
 }
 
 
-extension Router where Presenter == RoutePresenterStack
+extension RoutingUnit where Presenter == RoutePresenterStack
 {
-    /// Stack router can be used to organize routes in navigation stack.
-    public func stack(_ stack: [RouterType]) -> Router
+    /// Stack `RoutingUnit` can be used to organize other `RoutingUnit`s in a navigation stack.
+    /// - parameter stack: `RoutingUnit`s in this navigation stack.
+    /// - returns: Modified `RoutingUnit`
+    public func stack(_ stack: [RoutingUnitType]) -> RoutingUnit
     {
         var router = self
         
         router.shouldHandleRoute = { path in
-            // checking if any of the children can handle the route
+            // checking if any of the children can handle the Path
             return stack.contains { subRouter in subRouter.shouldHandleRoute(path) }
         }
         
         router.setPath = { path, routers in
+            // some item in stack handles the Path
             if let stackItem = stack.firstResult({ stackItem in stackItem.shouldHandleRoute(path) ? stackItem : nil })
             {
                 let presentable = router.presenter.getPresentable()
                 let stackRouters = stackItem.setPath(path, [])
                 
-                // passing the navigation stack to the presenter
+                // passing the navigation stack to the Presenter
                 router.presenter.setStack(stackRouters.map({ subRouter in subRouter.getPresentable() }), presentable)
 
                 return routers + [router] + stackRouters
             }
             
+            // no item found
             return routers + [router]
         }
         
@@ -127,10 +144,12 @@ extension Router where Presenter == RoutePresenterStack
 }
 
 
-extension Router where Presenter == RoutePresenterFork
+extension RoutingUnit where Presenter == RoutePresenterFork
 {
-    /// Fork router can be used for tabbar-like navigation.
-    public func fork(_ options: [RouterType]) -> Router
+    /// Fork `RoutingUnit` can be used for tabbar-like navigation.
+    /// - parameter options: `RoutingUnit`s in this navigation set.
+    /// - returns: Modified `RoutingUnit`
+    public func fork(_ options: [RoutingUnitType]) -> RoutingUnit
     {
         var router = self
         
@@ -142,16 +161,17 @@ extension Router where Presenter == RoutePresenterFork
         router.setPath = { path, routers in
             let presentable = router.presenter.getPresentable()
             
-            // passing children as options for the presenter
+            // passing children as options for the Presenter
             router.presenter.setOptions(options.map { option in option.getPresentable() }, presentable)
             
             if let option = options.firstResult({ option in option.shouldHandleRoute(path) ? option : nil })
             {
-                // setup the presenter for matching Router and set it as an active option
+                // setup the Presenter for matching RoutingUnit and set it as an active option
                 router.presenter.setOptionSelected(option.getPresentable(), presentable)
                 return option.setPath(path, routers + [router])
             }
             
+            // no option found
             return routers + [router]
         }
         
@@ -160,13 +180,13 @@ extension Router where Presenter == RoutePresenterFork
 }
 
 
-extension Router where Presenter == RoutePresenterSwitcher
+extension RoutingUnit where Presenter == RoutePresenterSwitcher
 {
-    /// Switcher router can be used to switch sections of your app,
-    /// like onboarding/login/main, by the means of changing
-    /// rootViewController of a window or similar.
-    /// This Router's presenter doesn't have an actual view.
-    public func switcher(_ options: [RouterType]) -> Router
+    /// Switcher `RoutingUnit` can be used to switch sections of your app, like onboarding/login/main, by the means of changing `rootViewController` of a window or similar.
+    /// This RoutingUnit's Presenter doesn't have an actual view.
+    /// - parameter options: `RoutingUnit`s in this navigation set.
+    /// - returns: Modified `RoutingUnit`
+    public func switcher(_ options: [RoutingUnitType]) -> RoutingUnit
     {
         var router = self
         
@@ -184,6 +204,7 @@ extension Router where Presenter == RoutePresenterSwitcher
                 return option.setPath(path, routers + [router])
             }
             
+            // no option found
             return routers + [router]
         }
         

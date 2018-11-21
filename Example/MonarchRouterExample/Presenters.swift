@@ -11,6 +11,11 @@ import MonarchRouter
 import Dwifft
 
 
+// MARK: - App sections' switcher
+
+/// Presenter for top level app sections' switcher.
+/// It doesn't actually have any Presentable, setting the window's rootViewController via a callback instead.
+/// This one is not lazy, because it's unnecessasy.
 func sectionsSwitcherRoutePresenter(_ setRootView: @escaping (UIViewController)->()) -> RoutePresenterSwitcher
 {
     var rootPresentable: UIViewController?
@@ -18,7 +23,7 @@ func sectionsSwitcherRoutePresenter(_ setRootView: @escaping (UIViewController)-
     return RoutePresenterSwitcher(
         getPresentable: {
             guard let vc = rootPresentable
-                else { fatalError("Cannot get presentable for root router. Probably there's no Router resolving the requested path?") }
+                else { fatalError("Cannot get Presentable for root Router. Probably there's no RoutingUnit resolving the requested Path?") }
             return vc
         },
         setOptionSelected: { option in
@@ -29,8 +34,13 @@ func sectionsSwitcherRoutePresenter(_ setRootView: @escaping (UIViewController)-
 }
 
 
+
+// MARK: - Tab bar
+
+/// Describes the view and action for a tab bar item.
 typealias TabBarItemDescription = (title: String, icon: UIImage?, route: AppRoute)
 
+/// Mock Tab Bar Controller delegate that dispatch routes on tap.
 class ExampleTabBarDelegate: NSObject, UITabBarControllerDelegate
 {
     init(optionsDescriptions: [TabBarItemDescription], routeDispatcher: ProvidesRouteDispatch) {
@@ -52,6 +62,7 @@ class ExampleTabBarDelegate: NSObject, UITabBarControllerDelegate
 var tabBarDelegate: ExampleTabBarDelegate!
 
 
+/// Lazy Presenter for a Tab Bar Controller with a delegate.
 func lazyTabBarRoutePresenter(optionsDescription: [TabBarItemDescription], routeDispatcher: ProvidesRouteDispatch) -> RoutePresenterFork
 {
     return RoutePresenterFork.lazyPresenter({
@@ -77,6 +88,7 @@ func lazyTabBarRoutePresenter(optionsDescription: [TabBarItemDescription], route
 }
 
 
+/// Lazy Presenter for a Tab Bar Controller without a delegate.
 func unenchancedLazyTabBarRoutePresenter() -> RoutePresenterFork
 {
     return RoutePresenterFork.lazyPresenter({
@@ -94,6 +106,10 @@ func unenchancedLazyTabBarRoutePresenter() -> RoutePresenterFork
 }
 
 
+
+// MARK: - Navigation stack
+
+// Lazy Presenter for a Navigation Controller.
 func lazyNavigationRoutePresenter() -> RoutePresenterStack
 {
     return RoutePresenterStack.lazyPresenter({
@@ -117,7 +133,8 @@ func lazyNavigationRoutePresenter() -> RoutePresenterStack
         if currentStack.count > stack.count {
             navigationController.setViewControllers(stack, animated: true)
         }
-            // push
+        
+        // push
         else {
             let diff = Dwifft.diff(currentStack, stack)
             diff.forEach({ (step) in
@@ -142,6 +159,10 @@ func lazyNavigationRoutePresenter() -> RoutePresenterStack
 }
 
 
+
+// MARK: - General
+
+/// Lazy Presenter for a VC that is configured based on a Route.
 func lazyParametrizedPresenter(routeDispatcher: ProvidesRouteDispatch) -> RoutePresenter
 {
     let presenter = RoutePresenter.lazyPresenter({
@@ -159,6 +180,7 @@ func lazyParametrizedPresenter(routeDispatcher: ProvidesRouteDispatch) -> RouteP
     return presenter
 }
 
+/// Lazy Presenter for a VC that is configured based on a Route.
 func lazyOnboardingPresenter(routeDispatcher: ProvidesRouteDispatch) -> RoutePresenter
 {
     let presenter = RoutePresenter.lazyPresenter({
@@ -176,7 +198,7 @@ func lazyOnboardingPresenter(routeDispatcher: ProvidesRouteDispatch) -> RoutePre
     return presenter
 }
 
-
+/// Lazy Presenter for a mock VC. Implements modals presentation.
 func lazyMockPresenter(for route: AppRoute, routeDispatcher: ProvidesRouteDispatch) -> RoutePresenter
 {
     var presenter = RoutePresenter.lazyPresenter({
@@ -187,6 +209,29 @@ func lazyMockPresenter(for route: AppRoute, routeDispatcher: ProvidesRouteDispat
     presenter.presentModal = { modal, parent in
         guard modal != presentedModal else { return }
         parent.present(modal, animated: true)
+        presentedModal = modal
+    }
+    presenter.unwind = { presentable in
+        presentedModal?.dismiss(animated: true, completion: nil)
+        presentedModal = nil
+    }
+    
+    return presenter
+}
+
+/// Not lazy Presenter for a mock VC, just to notice the difference. Implements modals presentation.
+func mockPresenter(for route: AppRoute, routeDispatcher: ProvidesRouteDispatch) -> RoutePresenter
+{
+    let vc = buildEndpoint(for: route, routeDispatcher: routeDispatcher)
+    
+    var presenter = RoutePresenter.lazyPresenter({
+        return vc
+    })
+    
+    weak var presentedModal: UIViewController? = nil
+    presenter.presentModal = { modal, _ in
+        guard modal != presentedModal else { return }
+        vc.present(modal, animated: true)
         presentedModal = modal
     }
     presenter.unwind = { presentable in

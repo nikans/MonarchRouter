@@ -9,13 +9,12 @@
 import UIKit
 
 
-/**
- Represents arguments parsed from Path string
- */
+
+/// Represents arguments parsed from Path string
 public typealias RouteParameters = Dictionary<String, Any>
 
 
-
+/// Any `RoutePresenter` object.
 public protocol RoutePresenterType
 {
     /// Returns the actual presentable object.
@@ -33,10 +32,10 @@ public protocol RoutePresenterType
 
 public struct RoutePresenter: RoutePresenterType
 {
-    /**
-     Default initializer for RoutePresenter.
-     - parameter getPresentable: callback receiving optional route parameters and returning a VC.
-     */
+    /// Default initializer for RoutePresenter.
+    /// - parameter getPresentable: Callback returning a Presentable object.
+    /// - parameter setParameters: Optional callback to configure a Presentable with given `RouteParameters`.
+    /// - parameter unwind: Optional callback executed when the Presentable is no longer presented. You can use it to dissmiss modals, etc.
     public init(
         getPresentable: @escaping () -> (UIViewController),
         setParameters: ((_ presentable: UIViewController, _ parameters: RouteParameters?) -> ())? = nil,
@@ -52,12 +51,20 @@ public struct RoutePresenter: RoutePresenterType
     }
     
     
-    /**
-     Creates a lazy wrapper around a presenter creation function that wraps presenter scope, but does not get created until invoked.
-     
-     - parameter createPresentable: callable that returns the presentable item (UIViewController)
-     - returns: RoutePresenter
-     */
+    /// Callback executed when a modal view is requested to be presented.
+    public var presentModal: (_ modal: UIViewController, _ over: UIViewController) -> () = { _,_ in }
+    
+    public let getPresentable: () -> (UIViewController)
+    public var setParameters: (_ presentable: UIViewController, _ parameters: RouteParameters?) -> () = { _,_ in }
+    public var unwind: (_ presentable: UIViewController) -> () = { _ in }
+    
+    
+    /// Creates a lazy wrapper around a presenter creation function that wraps presenter scope, but does not get created until invoked.
+    /// - parameter createPresentable: Callback returning a Presentable object.
+    /// - parameter setParameters: Optional callback to configure a Presentable with given `RouteParameters`.
+    /// - parameter presentModal: Optional callback to handle modals presentation.
+    /// - parameter unwind: Optional callback executed when the Presentable is no longer presented. You can use it to dissmiss modals, etc.
+    /// - returns: RoutePresenter
     public static func lazyPresenter(
         _ createPresentable: @escaping () -> (UIViewController),
         setParameters: ((_ presentable: UIViewController, _ parameters: RouteParameters?) -> ())? = nil,
@@ -82,12 +89,4 @@ public struct RoutePresenter: RoutePresenterType
         }
         return presenter
     }
-    
-    
-    public let getPresentable: () -> (UIViewController)
-    public var setParameters: (_ presentable: UIViewController, _ parameters: RouteParameters?) -> () = { _,_ in }
-    public var unwind: (_ presentable: UIViewController) -> () = { _ in }
-    
-    /// Callback when a modal view is requested to be presented.
-    public var presentModal: (_ modal: UIViewController, _ over: UIViewController) -> () = { _,_ in }
 }

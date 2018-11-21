@@ -8,13 +8,11 @@
 
 import Foundation
 
-extension Array {
-    
-    /**
-     Returns the first non-nil result passed through the predicate.
-     - parameter predicate: Closure that accepts an element and returns an optional value.
-     - returns: The first non-nil value returned by the predicate, else nil.
-     */
+extension Array
+{
+    /// Returns the first non-nil result passed through the predicate.
+    /// - parameter predicate: Closure that accepts an element and returns an optional value.
+    /// - returns: The first non-nil value returned by the predicate, else nil.
     func firstResult<T>(_ predicate: (Element) -> T?) -> T? {
         for item in self {
             if let result = predicate(item) {

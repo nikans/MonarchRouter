@@ -10,6 +10,7 @@ import UIKit
 import MonarchRouter
 
 
+/// Creates a mock VC.
 func mockVC() -> MockViewController
 {
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -17,6 +18,7 @@ func mockVC() -> MockViewController
 }
 
 
+/// Creates VCs for non-parametrized Routes.
 func buildEndpoint(for route: AppRoute, routeDispatcher: ProvidesRouteDispatch) -> UIViewController
 {
     let vc = mockVC()

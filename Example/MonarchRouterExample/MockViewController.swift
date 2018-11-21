@@ -8,11 +8,14 @@
 
 import UIKit
 
+
+/// Just a dummy UIViewController to test the router.
 class MockViewController: UIViewController
 {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var button: UIButton!
     
+    /// Call this method to configure VC right after the initialization or getting the `RouteParameters`.
     func configure(title: String, buttonTitle: String?, buttonAction: (()->())?, backgroundColor: UIColor)
     {
         self.titleString = title

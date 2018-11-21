@@ -1,5 +1,5 @@
 //
-//  Router.swift
+//  RoutingUnit.swift
 //  MonarchRouterExample
 //
 //  Created by Eliah Snakin on 16/11/2018.
@@ -9,6 +9,8 @@
 import Foundation
 import MonarchRouter
 
+
+/// Your app custom Routes enum and Paths for them.
 enum AppRoute
 {
     case login
@@ -43,53 +45,34 @@ enum AppRoute
 }
 
 
-
+/// Sets up the Router and root view controller.
 func appCoordinator(setRootView: @escaping (UIViewController)->())
 {
-    var router: RouterType!
-    var routersStack = [RouterType]()
+    var router: RoutingUnitType!
     
-    let store = RouterStore() {
-        let routers = router.setPath($0.path, [])
-        
-        let firstDifferenceIndex = routersStack.enumerated().first(where: { (i, element) -> Bool in
-            guard routers.count > i else { return true }
-            return element.getPresentable() != routers[i].getPresentable()
-        })?.offset
-        
-        if let firstDifferenceIndex = firstDifferenceIndex {
-            routersStack[firstDifferenceIndex..<routersStack.count].reversed().forEach { $0.unwind() }
-        }
-        routersStack = routers
-    }
+    // creating a Store for the Router and passing a callback to get a RoutingUnits hierarchy to it
+    let store = RouterStore(router: router)
     
-    router = createRouter(store, setRootView: setRootView)
-    store.setRoute(.login)
-
-    setRootView(router.getPresentable())
+    // creating a hierarchy for the Router
+    router = createRouter(dispatcher: store, setRootView: setRootView)
+    
+    // presenting the default Route
+    store.dispatchRoute(.login)
 }
 
 
-
+/// Describes the object capable of Routes switching.
 protocol ProvidesRouteDispatch
 {
+    /// Extension method to change the route.
+    /// - parameter route: `AppRoute` to navigate to.
     func dispatchRoute(_ route: AppRoute)
 }
 
-
-/// State for the router
-struct RouterStore: ProvidesRouteDispatch
+// Extending `RouterStore` to accept `AppRoute` instead of string Path.
+extension RouterStore: ProvidesRouteDispatch
 {
-//    var setPath: (String) -> ()
-    
-    var setRoute: ((AppRoute) ->())!
-    
-    init(setPath: @escaping (AppRoute) ->()) {
-        self.setRoute = setPath
-    }
-    
     func dispatchRoute(_ route: AppRoute) {
-        setRoute(route)
+        dispatchRoute(route.path)
     }
 }
-
