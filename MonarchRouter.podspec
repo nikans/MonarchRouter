@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MonarchRouter'
-  s.version          = '0.1.0'
+  s.version          = '0.9.0'
   s.summary          = 'A lightweight yet powerful state-based router written in Swift.'
 
   s.description      = <<-DESC
@@ -18,7 +18,7 @@ Monarch Router makes an excellent MVVM companion and fits right in with Redux st
 
 The Coordinator is constructed by declaring a route hierarchy mapped with a URL structure.
 
-Monarch Router is inspired by Featherweight Router.
+Monarch Router is inspired by Featherweight Router. Currently, it works only with iOS/iPhone.
                        DESC
 
   s.homepage         = 'https://github.com/nikans/MonarchRouter'
