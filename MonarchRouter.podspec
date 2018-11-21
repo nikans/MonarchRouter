@@ -1,11 +1,3 @@
-#
-# Be sure to run `pod lib lint MonarchRouter.podspec' to ensure this is a
-# valid spec before submitting.
-#
-# Any lines starting with a # are optional, but their use is encouraged
-# To learn more about a Podspec see https://guides.cocoapods.org/syntax/podspec.html
-#
-
 Pod::Spec.new do |s|
   s.name             = 'MonarchRouter'
   s.version          = '0.9.0'
@@ -22,7 +14,6 @@ Monarch Router is inspired by Featherweight Router. Currently, it works only wit
                        DESC
 
   s.homepage         = 'https://github.com/nikans/MonarchRouter'
-  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'nikans' => 'ilya@nikans.com' }
   s.source           = { :git => 'https://github.com/nikans/MonarchRouter.git', :tag => s.version.to_s }
