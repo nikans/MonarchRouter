@@ -24,4 +24,5 @@ Monarch Router is inspired by Featherweight Router. Currently, it works only wit
   s.frameworks = 'UIKit'
   s.requires_arc  = true
   s.swift_version = '4.2'
+  s.screenshots = [ 'https://github.com/nikans/MonarchRouter/blob/master/Media/logo.png' ]
 end
