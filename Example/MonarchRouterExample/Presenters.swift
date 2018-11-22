@@ -168,8 +168,8 @@ func lazyParametrizedPresenter(routeDispatcher: ProvidesRouteDispatch) -> RouteP
     let presenter = RoutePresenter.lazyPresenter({
         return mockVC()
     },
-    setParameters: { presentable, parameters in
-        if let presentable = presentable as? MockViewController, let id = parameters?["id"] as? String
+    setParameters: { parameters, presentable in
+        if let presentable = presentable as? MockViewController, let id = parameters["id"] as? String
         {
             presentable.configure(title: "ID: \(id)", buttonTitle: "Second", buttonAction: {
                 routeDispatcher.dispatchRoute(AppRoute.second)
@@ -186,8 +186,8 @@ func lazyOnboardingPresenter(routeDispatcher: ProvidesRouteDispatch) -> RoutePre
     let presenter = RoutePresenter.lazyPresenter({
         mockVC()
     },
-    setParameters: { presentable, parameters in
-        if let presentable = presentable as? MockViewController, let name = parameters?["name"] as? String
+    setParameters: { parameters, presentable in
+        if let presentable = presentable as? MockViewController, let name = parameters["name"] as? String
         {
             presentable.configure(title: "Welcome, \(name)", buttonTitle: "Okay", buttonAction: {
                 routeDispatcher.dispatchRoute(AppRoute.first)

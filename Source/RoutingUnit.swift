@@ -90,7 +90,7 @@ extension RoutingUnit where Presenter == RoutePresenter
             if isMatching(path) {
                 // setting parameters
                 let presentable = router.getPresentable()
-                router.presenter.setParameters(presentable, params)
+                router.presenter.setParameters(params ?? [:], presentable)
                 return routers + [router]
             }
                 

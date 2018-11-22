@@ -56,6 +56,6 @@ public struct RoutePresenterSwitcher: RoutePresenterType
     
     // Immutable, since either configured during init, or doesn't apply.
     public let getPresentable: () -> (UIViewController)
-    public let setParameters: (_ presentable: UIViewController, _ parameters: RouteParameters?) -> () = { _,_ in }
+    public let setParameters: (_ parameters: RouteParameters, _ presentable: UIViewController) -> () = { _,_ in }
     public let unwind: (_ presentable: UIViewController) -> () = { _ in }
 }
