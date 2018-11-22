@@ -53,6 +53,8 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 TODO
 
+See Example App, it's pretty well documented.
+
 ## Glossary
 
 TODO
