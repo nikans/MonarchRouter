@@ -18,11 +18,12 @@ The Coordinator is constructed by declaring a route hierarchy mapped with a URL 
 ## Features
 
 - [x] Navigating complex ViewControlles hierarchy and unwinding on path change.
-- [x] Switching top-level app sections via setting the window's rootViewController.
+- [x] Deeplinking to handle Push Notifications, Shortcuts and Universal Links.
+- [x] Switching top-level app sections via changing the window's rootViewController.
 - [x] Navigating forks (tab bar like presenters).
 - [x] Navigating stacks (i.e. navigation controller).
-- [x] Opening and dismissing modals.
-- [x] Passing and parsing route parameters to endpoints.
+- [x] Opening and dismissing modals, with their own hierarchy.
+- [x] Parsing and passing route parameters to endpoints.
 - [ ] Handling navigation in universal apps. *(PRs welcome!)*
 - [ ] Properly abstracting Router layer to handle navigation in macOS apps.
 
