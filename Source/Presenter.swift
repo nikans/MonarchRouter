@@ -29,7 +29,7 @@ public protocol RoutePresenterType
 
 
 
-/// Used to present a route endpoint.
+/// Used to present the endpoint.
 public struct RoutePresenter: RoutePresenterType
 {
     /// Default initializer for RoutePresenter.
@@ -59,7 +59,7 @@ public struct RoutePresenter: RoutePresenterType
     public var unwind: (_ presentable: UIViewController) -> () = { _ in }
     
     
-    /// Creates a lazy wrapper around a presenter creation function that wraps presenter scope, but does not get created until invoked.
+    /// A lazy wrapper around a Presenter creation function that wraps presenter scope, but the Presentable does not get created until invoked.
     /// - parameter createPresentable: Callback returning a Presentable object.
     /// - parameter setParameters: Optional callback to configure a Presentable with given `RouteParameters`.
     /// - parameter presentModal: Optional callback to handle modals presentation.

@@ -35,7 +35,7 @@ public struct RoutePresenterFork: RoutePresenterType
     
     
     
-    /// Creates a lazy wrapper around a presenter creation function that wraps presenter scope, but does not get created until invoked.
+    /// A lazy wrapper around a Presenter creation function that wraps presenter scope, but the Presentable does not get created until invoked.
     /// - parameter createPresentable: Callback that returns the Presentable item.
     /// - parameter setOptions: Sets the options for Router to choose from.
     /// - parameter setOptionSelected: Sets the specified option as currently selected.

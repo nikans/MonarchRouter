@@ -9,8 +9,8 @@
 import UIKit
 import MonarchRouter
 
-/// Creating the app's Router hierarchy.
-func createRouter(dispatcher: ProvidesRouteDispatch, setRootView: @escaping (UIViewController)->()) -> RoutingUnitType
+/// Creating the app's Coordinator hierarchy.
+func createCoordinator(dispatcher: ProvidesRouteDispatch, setRootView: @escaping (UIViewController)->()) -> RoutingUnitType
 {
     return
         // Top level app sections' switcher

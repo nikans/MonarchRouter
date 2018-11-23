@@ -162,7 +162,7 @@ extension RoutingUnit where Presenter == RoutePresenterFork
         var router = self
         
         router.shouldHandleRoute = { path in
-            // checking if any of the children can handle the route
+            // checking if any of the children can handle the Path
             return options.contains { option in option.shouldHandleRoute(path) }
         }
         
@@ -199,12 +199,12 @@ extension RoutingUnit where Presenter == RoutePresenterSwitcher
         var router = self
         
         router.shouldHandleRoute = { path in
-            // checking if any of the children can handle the route
+            // checking if any of the children can handle the Path
             return options.contains { option in option.shouldHandleRoute(path) }
         }
         
         router.setPath = { path, routers in
-            // finding an option to handle the route
+            // finding an option to handle the Path
             if let option = options.firstResult({ option in option.shouldHandleRoute(path) ? option : nil })
             {
                 // setup the presenter for matching Router and set it as an active option

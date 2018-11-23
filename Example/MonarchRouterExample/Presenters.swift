@@ -23,7 +23,7 @@ func sectionsSwitcherRoutePresenter(_ setRootView: @escaping (UIViewController)-
     return RoutePresenterSwitcher(
         getPresentable: {
             guard let vc = rootPresentable
-                else { fatalError("Cannot get Presentable for root Router. Probably there's no RoutingUnit resolving the requested Path?") }
+                else { fatalError("Cannot get Presentable for the Switcher type root RoutingUnit. Probably there's no other RoutingUnit resolving the requested Path?") }
             return vc
         },
         setOptionSelected: { option in
@@ -183,7 +183,7 @@ func lazyParametrizedPresenter(routeDispatcher: ProvidesRouteDispatch) -> RouteP
 /// Lazy Presenter for a VC that is configured based on a Route.
 func lazyOnboardingPresenter(routeDispatcher: ProvidesRouteDispatch) -> RoutePresenter
 {
-    let presenter = RoutePresenter.lazyPresenter({
+    var presenter = RoutePresenter.lazyPresenter({
         mockVC()
     },
     setParameters: { parameters, presentable in
@@ -194,6 +194,17 @@ func lazyOnboardingPresenter(routeDispatcher: ProvidesRouteDispatch) -> RoutePre
             }, backgroundColor: .red)
         }
     })
+    
+    weak var presentedModal: UIViewController? = nil
+    presenter.presentModal = { modal, parent in
+        guard modal != presentedModal else { return }
+        parent.present(modal, animated: true)
+        presentedModal = modal
+    }
+    presenter.unwind = { presentable in
+        presentedModal?.dismiss(animated: true, completion: nil)
+        presentedModal = nil
+    }
     
     return presenter
 }

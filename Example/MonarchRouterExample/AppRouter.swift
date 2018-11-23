@@ -46,15 +46,15 @@ enum AppRoute
 
 
 /// Sets up the Router and root view controller.
-func appCoordinator(setRootView: @escaping (UIViewController)->())
+func appRouter(setRootView: @escaping (UIViewController)->())
 {
     var router: RoutingUnitType!
     
-    // creating a Store for the Router and passing a callback to get a RoutingUnits hierarchy to it
+    // creating a Store for the Router and passing a callback to get a Coordinator (RoutingUnits hierarchy) to it
     let store = RouterStore(router: router)
     
-    // creating a hierarchy for the Router
-    router = createRouter(dispatcher: store, setRootView: setRootView)
+    // creating a Coordinator hierarchy for the Router
+    router = createCoordinator(dispatcher: store, setRootView: setRootView)
     
     // presenting the default Route
     store.dispatchRoute(.login)

@@ -13,27 +13,25 @@ import Foundation
 /// Initialize one to change routes via `dispatchRoute(_ path: String)`.
 public final class RouterStore
 {
-    /// Describes the Router hierarchy for the current application.
-    let router: () -> RoutingUnitType
+    /// Primary method to change the path.
+    /// You can extend `RouterStore` with a method to accept your routes enum and delegate paths switching to this method.
+    /// - parameter path: String Path to navigate to.
+    public func dispatchRoute(_ path: String) {
+        self.state = routerReducer(path: path, router: router(), state: self.state)
+    }
     
-    /// State holds the current `RoutingUnits` stack.
-    var state: RouterStateType
-    
-    /// Function to calculate a new State.
-    /// Implements Route switching via `RoutingUnitType`'s `setPath` callback.
-    /// Unwinds unused RouteUnits (see `RoutingUnitType`'s `unwind()` function).
-    let reducer: (_ path: String, _ router: RoutingUnitType, _ state: RouterStateType) -> RouterStateType
     
     /// Primary initializer for a new `RouterStore`.
-    /// - parameter router: Describes the Router hierarchy for the current application. Autoclosure.
+    /// - parameter router: Describes the Coordinator hierarchy for the current application. Autoclosure.
     public init(router: @autoclosure @escaping () -> RoutingUnitType) {
         self.router = router
         self.state = RouterState()
         self.reducer = routerReducer(path:router:state:)
     }
+
     
     /// Initializer allowing for overriding the State and Reducer.
-    /// - parameter router: Describes the Router hierarchy for the current application. Autoclosure.
+    /// - parameter router: Describes the Coordinator hierarchy for the current application. Autoclosure.
     /// - parameter state: State holds the current `RoutingUnits` stack.
     /// - parameter reducer: Function to calculate a new State.
     public init(
@@ -46,12 +44,17 @@ public final class RouterStore
         self.reducer = reducer
     }
     
-    /// Primary method to change the route.
-    /// You can extend `RouterStore` with a method to accept your routes enum and delegate route switching to this method.
-    /// - parameter path: String Path to route to.
-    public func dispatchRoute(_ path: String) {
-        self.state = routerReducer(path: path, router: router(), state: self.state)
-    }
+    
+    /// Describes the Coordinator hierarchy for the current application.
+    let router: () -> RoutingUnitType
+    
+    /// State holds the current `RoutingUnits` stack.
+    var state: RouterStateType
+    
+    /// Function to calculate a new State.
+    /// Implements navigation via `RoutingUnitType`'s `setPath` callback.
+    /// Unwinds unused `RoutingUnits` (see `RoutingUnitType`'s `unwind()` function).
+    let reducer: (_ path: String, _ router: RoutingUnitType, _ state: RouterStateType) -> RouterStateType
 }
 
 
@@ -71,14 +74,14 @@ struct RouterState: RouterStateType
 
 
 /// Function to calculate a new State.
-/// Implements route switching via `RoutingUnitType`'s `setPath` callback.
-/// Unwinds unused Routers (see `RoutingUnitType`'s `unwind()` function).
-/// - parameter path: String Path to route to.
-/// - parameter router: Describes the Router hierarchy for the current application.
+/// Implements navigation via `RoutingUnitType`'s `setPath` callback.
+/// Unwinds unused `RoutingUnit`s (see `RoutingUnitType`'s `unwind()` function).
+/// - parameter path: String Path to navigate to.
+/// - parameter router: Describes the Coordinator hierarchy for the current application.
 /// - parameter state: State holds the current `RoutingUnits` stack.
 func routerReducer(path: String, router: RoutingUnitType, state: RouterStateType) -> RouterStateType
 {
-    // Switching the route and returns a new Routers stack
+    // Changes the Path and returns a new Routers stack
     let newRoutersStack = router.setPath(path, [])
     
     // Finding the first RoutingUnit in the stack that is not the same as in the previous Routers stack

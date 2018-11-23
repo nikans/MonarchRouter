@@ -9,7 +9,7 @@
 import UIKit
 
 
-/// Just a dummy UIViewController to test the router.
+/// Just a dummy UIViewController to test the Router.
 class MockViewController: UIViewController
 {
     @IBOutlet weak var titleLabel: UILabel!
