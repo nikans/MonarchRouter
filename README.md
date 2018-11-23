@@ -15,16 +15,19 @@ The Coordinator is constructed by declaring a route hierarchy mapped with a URL 
 
 *Monarch butterflies weight less than 1 gram but cover thousands of miles during their migration. It's considered an iconic pollinator and one of the most beautiful butterfly species.*
 
+
 ## Features
 
 - [x] Navigating complex ViewControlles hierarchy and unwinding on path change.
-- [x] Switching top-level app sections via setting the window's rootViewController.
+- [x] Deeplinking to handle Push Notifications, Shortcuts and Universal Links.
+- [x] Switching top-level app sections via changing the window's rootViewController.
 - [x] Navigating forks (tab bar like presenters).
 - [x] Navigating stacks (i.e. navigation controller).
-- [x] Opening and dismissing modals.
-- [x] Passing and parsing route parameters to endpoints.
+- [x] Opening and dismissing modals, with their own hierarchy.
+- [x] Parsing and passing route parameters to endpoints.
 - [ ] Handling navigation in universal apps. *(PRs welcome!)*
 - [ ] Properly abstracting Router layer to handle navigation in macOS apps.
+
 
 ## Installation
 
@@ -36,6 +39,7 @@ pod 'MonarchRouter'
 ```
 
 You may find the last release version [here](https://github.com/nikans/MonarchRouter/releases).
+
 
 ## Requirements
 
@@ -49,15 +53,108 @@ Currently only iOS/iPhone 8.0+ is properly supported, but theoretically it's eas
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
-## How to use
-
-TODO
-
-See Example App, it's pretty well documented.
 
 ## Glossary
 
-TODO
+- **Router:** your app's routing Coordinator (root RoutingUnit with children); or more broadly speaking, this whole thing. 
+- **RoutingUnit:** a structure that collects functions together that are related to the same endpoint or intermidiate routing point. Each RoutingUnit also requires a Presenter, to which any required changes are passed.
+- **RoutePresenter** or simply a Presenter: a structure used to create and configure a Presentable.
+- **Lazy presenter:** a lazy wrapper around a presenter creation function that wraps presenter scope, but the Presentable does not get created until invoked.
+- **Presentable:** an actual object to be displayed (i.e. UIViewController).
+- **Path:** a string used to define the endpoint you want to navigate to.
+- **Route:** your app's decorator for Path (i.e. enum)
+- **RouterStore:** holds the State for the Router. Provides a method to dispatch (change) Path and modify State via a Reducer.
+- **RouterState:** holds the RoutingUnits stack for current Path
+- **RouterReducer:** a function to calculate a new State. Implements navigation via RoutingUnit's callback. Unwinds unused RoutingUnits.
+
+
+## How to use
+
+**See [Example App](https://github.com/nikans/MonarchRouter/tree/master/Example).**
+
+You may start with creating a enum for your app Routes.
+
+```
+enum AppRoute
+{
+    case first
+    case second(id: String)
+    
+    var path: String {
+        switch self {
+        case .first: return "first" 
+        case .second(let id): return "second/" + id
+        }
+    }
+}
+```
+
+Create your app's Coordinator
+
+```
+/// Creating the app's Coordinator hierarchy.
+func createCoordinator() -> RoutingUnitType
+{
+    // Navigation Presenter
+    return RoutingUnit(lazyNavigationRoutePresenter()).stack([
+        
+        // First
+        RoutingUnit(lazyMockPresenter(for: .first))
+            .endpoint(
+                predicate: { $0 == AppRoute.first.path },
+                children: [
+            
+            // Second
+            RoutingUnit(lazyParametrizedPresenter())
+                .endpoint(
+                    predicate: { path in
+                        path.matches("second/(?<id>[\\w\\-\\.]+)") },
+                    parameters: { (path) -> RouteParameters in
+                        var arguments = RouteParameters()
+                        if let id = path.capturedGroups(withRegex: "second/(?<id>[\\w\\-\\.]+)").first { 
+                            arguments["id"] = id 
+                        }
+                        return arguments
+                    }
+                )
+        ])
+    ])
+}
+```
+
+Create Presenters
+
+```
+/// Lazy Presenter for a VC that is configured based on a Route.
+func lazyParametrizedPresenter() -> RoutePresenter
+{
+    var presenter = RoutePresenter.lazyPresenter({
+        mockVC()
+    },
+    setParameters: { parameters, presentable in
+        if let presentable = presentable as? MockViewController, let id = parameters["id"] as? String
+        {
+            presentable.configure(id: id)
+        }
+    })
+    return presenter
+}
+```
+
+Create a Store, Coordinator and dispatch your first Route.
+
+```
+var router: RoutingUnitType!
+    
+// creating a Store for the Router and passing a callback to get a Coordinator (RoutingUnits hierarchy) to it
+let store = RouterStore(router: router)
+
+// creating a Coordinator hierarchy for the Router
+router = createCoordinator(dispatcher: store, setRootView: setRootView)
+
+// presenting the default Route
+store.dispatchRoute(.login)
+```
 
 
 ## Principle concepts
