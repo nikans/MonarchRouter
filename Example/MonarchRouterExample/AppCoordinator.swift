@@ -67,7 +67,10 @@ func createCoordinator(dispatcher: ProvidesRouteDispatch, setRootView: @escaping
                             },
                             parameters: { (path) -> RouteParameters in
                                 var arguments = RouteParameters()
-                                if let id = path.capturedGroups(withRegex: "firstDetailParametrized/(?<id>[\\w\\-\\.]+)").first { arguments["id"] = id }
+                                if let id = path.capturedGroups(withRegex: "firstDetailParametrized/(?<id>[\\w\\-\\.]+)").first {
+                                    arguments["id"] = id
+                                    arguments["route"] = AppRoute.firstDetailParametrized(id: id)
+                                }
                                 return arguments
                             }
                         )
@@ -100,7 +103,10 @@ func createCoordinator(dispatcher: ProvidesRouteDispatch, setRootView: @escaping
                     },
                     parameters: { (path) -> RouteParameters in
                         var arguments = RouteParameters()
-                        if let id = path.capturedGroups(withRegex: "third/(?<id>[\\w\\-\\.]+)").first { arguments["id"] = id }
+                        if let id = path.capturedGroups(withRegex: "third/(?<id>[\\w\\-\\.]+)").first {
+                            arguments["id"] = id
+                            arguments["route"] = AppRoute.third(id: id)
+                        }
                         return arguments
                     }
                 )
@@ -112,7 +118,10 @@ func createCoordinator(dispatcher: ProvidesRouteDispatch, setRootView: @escaping
                     path.matches("fourth/(?<id>[\\w\\-\\.]+)")
                 }, parameters: { (path) -> RouteParameters in
                     var arguments = RouteParameters()
-                    if let id = path.capturedGroups(withRegex: "fourth/(?<id>[\\w\\-\\.]+)").first { arguments["id"] = id }
+                    if let id = path.capturedGroups(withRegex: "fourth/(?<id>[\\w\\-\\.]+)").first {
+                        arguments["id"] = id
+                        arguments["route"] = AppRoute.fourth(id: id)
+                    }
                     return arguments
                 }
             ),
@@ -130,7 +139,10 @@ func createCoordinator(dispatcher: ProvidesRouteDispatch, setRootView: @escaping
                                 path.matches("modalParametrized/(?<id>[\\w\\-\\.]+)")
                             }, parameters: { (path) -> RouteParameters in
                                 var arguments = RouteParameters()
-                                if let id = path.capturedGroups(withRegex: "modalParametrized/(?<id>[\\w\\-\\.]+)").first { arguments["id"] = id }
+                                if let id = path.capturedGroups(withRegex: "modalParametrized/(?<id>[\\w\\-\\.]+)").first {
+                                    arguments["id"] = id
+                                    arguments["route"] = AppRoute.modalParametrized(id: id)
+                                }
                                 return arguments
                             }
                         ),

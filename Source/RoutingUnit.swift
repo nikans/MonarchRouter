@@ -12,9 +12,13 @@ import UIKit
 /// Any `RoutingUnit` object.
 public protocol RoutingUnitType
 {
-    /// Passes actions to the Presenter to update the view for the provided Path.
+    /// Returns Routers stack for provided Path.
     /// Configured for each respective `RoutingUnit` type.
-    var setPath: (_ path: String, _ routers: [RoutingUnitType]) -> [RoutingUnitType] { get }
+    var testPath: (_ path: String, _ routers: [RoutingUnitType]) -> [RoutingUnitType] { get }
+    
+    /// Passes actions to the Presenter to update the view for provided Path.
+    /// Configured for each respective `RoutingUnit` type.
+    var setPath: (_ path: String, _ routers: [RoutingUnitType], _ keepSubroutes: Bool) -> () { get }
     
     /// Called when the `RoutingUnit` no handles a new Path.
     func unwind()
@@ -50,12 +54,19 @@ public struct RoutingUnit<Presenter: RoutePresenterType>: RoutingUnitType
     public internal(set) var shouldHandleRoute: (_ path: String) -> Bool
         = { _ in false }
     
-    public var setPath: (_ path: String, _ routers: [RoutingUnitType]) -> [RoutingUnitType]
-        = { _,_ in [] }
+    public var testPath: (String, [RoutingUnitType]) -> [RoutingUnitType] = { _,_ in [] }
+    
+    public var setPath: (_ path: String, _ routers: [RoutingUnitType], _ keepSubroutes: Bool) -> ()
+        = { _,_,_ in }
     
     public func unwind() -> () {
         presenter.unwind(presenter.getPresentable())
     }
+    
+    /// Paths that Router currently serve.
+    /// Fork Router can serve several Paths simultaniously.
+    /// This property should be set in `setPath` closure.
+    internal var servedPaths: Set<String> = []
 }
 
 
@@ -83,7 +94,28 @@ extension RoutingUnit where Presenter == RoutePresenter
                 || modals.contains { $0.shouldHandleRoute(path) }
         }
         
-        router.setPath = { path, routers in
+        router.testPath = { path, routers in
+            // this RoutingUnit handles the Path
+            if isMatching(path) {
+                return routers + [router]
+            }
+            
+            // should present a modal to handle the Path
+            else if let modal = modals.firstResult({ modal in modal.shouldHandleRoute(path) ? modal : nil })
+            {
+                return modal.testPath(path, routers + [router])
+            }
+                
+            // this RoutingUnit's child handles the Path
+            else if let child = children.firstResult({ child in child.shouldHandleRoute(path) ? child : nil })
+            {
+                return child.testPath(path, routers + [router])
+            }
+            
+            return routers
+        }
+        
+        router.setPath = { path, routers, keepSubroutes in
             let params = parameters?(path)
             
             // this RoutingUnit handles the Path
@@ -91,7 +123,7 @@ extension RoutingUnit where Presenter == RoutePresenter
                 // setting parameters
                 let presentable = router.getPresentable()
                 router.presenter.setParameters(params ?? [:], presentable)
-                return routers + [router]
+                router.servedPaths = [path]
             }
                 
             // should present a modal to handle the Path
@@ -99,16 +131,21 @@ extension RoutingUnit where Presenter == RoutePresenter
             {
                 let presentable = router.getPresentable()
                 router.presenter.presentModal(modal.getPresentable(), presentable)
-                return modal.setPath(path, routers + [router])
+                router.servedPaths = [path]
+                modal.setPath(path, routers + [router], keepSubroutes)
             }
                 
             // this RoutingUnit's child handles the Path
             else if let child = children.firstResult({ child in child.shouldHandleRoute(path) ? child : nil })
             {
-                return child.setPath(path, routers + [router])
+                router.servedPaths = [path]
+                child.setPath(path, routers + [router], keepSubroutes)
             }
             
-            return routers
+            // this RoutingUnit cannot handle the Path
+            else {
+                router.servedPaths = []
+            }
         }
         
         return router
@@ -127,24 +164,40 @@ extension RoutingUnit where Presenter == RoutePresenterStack
         
         router.shouldHandleRoute = { path in
             // checking if any of the children can handle the Path
+            router.servedPaths = [path]
             return stack.contains { subRouter in subRouter.shouldHandleRoute(path) }
         }
         
-        router.setPath = { path, routers in
+        router.testPath = { path, routers in
             // some item in stack handles the Path
             if let stackItem = stack.firstResult({ stackItem in stackItem.shouldHandleRoute(path) ? stackItem : nil })
             {
-                let presentable = router.presenter.getPresentable()
-                let stackRouters = stackItem.setPath(path, [])
-                
-                // passing the navigation stack to the Presenter
-                router.presenter.setStack(stackRouters.map({ subRouter in subRouter.getPresentable() }), presentable)
-
+                let stackRouters = stackItem.testPath(path, [])
                 return routers + [router] + stackRouters
             }
             
             // no item found
             return routers + [router]
+        }
+        
+        router.setPath = { path, routers, keepSubroutes in
+            // some item in stack handles the Path
+            if let stackItem = stack.firstResult({ stackItem in stackItem.shouldHandleRoute(path) ? stackItem : nil })
+            {
+                let presentable = router.presenter.getPresentable()
+                let stackRouters = stackItem.testPath(path, [])
+                stackItem.setPath(path, [], keepSubroutes)
+                
+                // passing the navigation stack to the Presenter
+                router.presenter.setStack(stackRouters.map({ subRouter in subRouter.getPresentable() }), presentable)
+
+                router.servedPaths = [path]
+            }
+            
+            // no item found
+            else {
+                router.servedPaths = [path]
+            }
         }
         
         return router
@@ -166,21 +219,57 @@ extension RoutingUnit where Presenter == RoutePresenterFork
             return options.contains { option in option.shouldHandleRoute(path) }
         }
         
-        router.setPath = { path, routers in
+        router.testPath = { path, routers in
+            // this RoutingUnit's option handles the Path
+            if let option = options.firstResult({ option in option.shouldHandleRoute(path) ? option : nil })
+            {
+                return option.testPath(path, routers + [router])
+            }
+            
+            // no option found
+            return routers + [router]
+        }
+        
+        router.setPath = { path, routers, keepSubroutes in
             let presentable = router.presenter.getPresentable()
             
             // passing children as options for the Presenter
             router.presenter.setOptions(options.map { option in option.getPresentable() }, presentable)
             
+            // this RoutingUnit's option handles the Path
             if let option = options.firstResult({ option in option.shouldHandleRoute(path) ? option : nil })
             {
                 // setup the Presenter for matching RoutingUnit and set it as an active option
                 router.presenter.setOptionSelected(option.getPresentable(), presentable)
-                return option.setPath(path, routers + [router])
+                
+                guard keepSubroutes else {
+                    // it's not required to keep presented Subroutes
+                    router.servedPaths.remove(matching: { option.shouldHandleRoute($0) })
+                    router.servedPaths.insert(path)
+                    option.setPath(path, routers + [router], keepSubroutes)
+                    return
+                }
+                
+                // keep presented Subroutes and Path if currently presented Path is "longer" then requested Path
+                // TODO: check if just count is enough
+                if  let servedPathHandlingOption = router.servedPaths.filter({ option.shouldHandleRoute($0) }).first,
+                    option.testPath(servedPathHandlingOption, routers + [router]).count > option.testPath(path, routers + [router]).count
+                {
+                    option.setPath(servedPathHandlingOption, routers + [router], keepSubroutes)
+                }
+                
+                // set new Path
+                else {
+                    router.servedPaths.remove(matching: { option.shouldHandleRoute($0) })
+                    router.servedPaths.insert(path)
+                    option.setPath(path, routers + [router], keepSubroutes)
+                }                
             }
             
             // no option found
-            return routers + [router]
+            else {
+                router.servedPaths.remove(path)
+            }
         }
         
         return router
@@ -203,17 +292,32 @@ extension RoutingUnit where Presenter == RoutePresenterSwitcher
             return options.contains { option in option.shouldHandleRoute(path) }
         }
         
-        router.setPath = { path, routers in
+        router.testPath = { path, routers in
+            // finding an option to handle the Path
+            if let option = options.firstResult({ option in option.shouldHandleRoute(path) ? option : nil })
+            {
+                return option.testPath(path, routers + [router])
+            }
+            
+            // no option found
+            return routers + [router]
+        }
+        
+        router.setPath = { path, routers, keepSubroutes in
             // finding an option to handle the Path
             if let option = options.firstResult({ option in option.shouldHandleRoute(path) ? option : nil })
             {
                 // setup the presenter for matching Router and set it as an active option
                 router.presenter.setOptionSelected(option.getPresentable())
-                return option.setPath(path, routers + [router])
+                
+                router.servedPaths = [path]
+                option.setPath(path, routers + [router], keepSubroutes)
             }
             
             // no option found
-            return routers + [router]
+            else {
+                router.servedPaths = [path]
+            }
         }
         
         return router

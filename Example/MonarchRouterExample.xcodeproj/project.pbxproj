@@ -22,7 +22,7 @@
 		D0A7B9F1219F324200B44C3D /* MonarchRouter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0A7B9EA219F324200B44C3D /* MonarchRouter.framework */; };
 		D0A7B9F2219F324200B44C3D /* MonarchRouter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D0A7B9EA219F324200B44C3D /* MonarchRouter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D0A7BA04219F332900B44C3D /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7BA03219F332900B44C3D /* AppRouter.swift */; };
-		D0A7BA0E219F363900B44C3D /* Array+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7BA0B219F363900B44C3D /* Array+extension.swift */; };
+		D0A7BA0E219F363900B44C3D /* Collection+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7BA0B219F363900B44C3D /* Collection+extension.swift */; };
 		D0A7BA0F219F363900B44C3D /* Presenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7BA0C219F363900B44C3D /* Presenter.swift */; };
 		D0A7BA10219F363900B44C3D /* RoutingUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7BA0D219F363900B44C3D /* RoutingUnit.swift */; };
 		D0A7BA12219F378B00B44C3D /* Presenters.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7BA11219F378B00B44C3D /* Presenters.swift */; };
@@ -77,7 +77,7 @@
 		D0A7B9EC219F324200B44C3D /* MonarchRouter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MonarchRouter.h; sourceTree = "<group>"; };
 		D0A7B9ED219F324200B44C3D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D0A7BA03219F332900B44C3D /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
-		D0A7BA0B219F363900B44C3D /* Array+extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Array+extension.swift"; path = "../../Source/Array+extension.swift"; sourceTree = "<group>"; };
+		D0A7BA0B219F363900B44C3D /* Collection+extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Collection+extension.swift"; path = "../../Source/Collection+extension.swift"; sourceTree = "<group>"; };
 		D0A7BA0C219F363900B44C3D /* Presenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Presenter.swift; path = ../../Source/Presenter.swift; sourceTree = "<group>"; };
 		D0A7BA0D219F363900B44C3D /* RoutingUnit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RoutingUnit.swift; path = ../../Source/RoutingUnit.swift; sourceTree = "<group>"; };
 		D0A7BA11219F378B00B44C3D /* Presenters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presenters.swift; sourceTree = "<group>"; };
@@ -174,7 +174,7 @@
 				D09D0DEE21A46FE300601258 /* PresenterStack.swift */,
 				D09D0DF021A4703100601258 /* PresenterFork.swift */,
 				D09D0DF221A470C300601258 /* PresenterSwitcher.swift */,
-				D0A7BA0B219F363900B44C3D /* Array+extension.swift */,
+				D0A7BA0B219F363900B44C3D /* Collection+extension.swift */,
 				D0A7B9EC219F324200B44C3D /* MonarchRouter.h */,
 				D0A7B9ED219F324200B44C3D /* Info.plist */,
 			);
@@ -375,7 +375,7 @@
 				D09D0DEF21A46FE300601258 /* PresenterStack.swift in Sources */,
 				D09D0DF121A4703100601258 /* PresenterFork.swift in Sources */,
 				D0A7BA10219F363900B44C3D /* RoutingUnit.swift in Sources */,
-				D0A7BA0E219F363900B44C3D /* Array+extension.swift in Sources */,
+				D0A7BA0E219F363900B44C3D /* Collection+extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -460,7 +460,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -515,7 +515,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -534,6 +534,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 892UN3K9E3;
 				INFOPLIST_FILE = MonarchRouterExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -554,6 +555,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 892UN3K9E3;
 				INFOPLIST_FILE = MonarchRouterExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -580,6 +582,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = MonarchRouter/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -611,6 +614,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = MonarchRouter/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

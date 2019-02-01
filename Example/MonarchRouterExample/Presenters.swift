@@ -55,7 +55,7 @@ class ExampleTabBarDelegate: NSObject, UITabBarControllerDelegate
     {
         let index = tabBarController.selectedIndex
         guard optionsDescriptions.count > index else { return }
-        routeDispatcher.dispatchRoute(optionsDescriptions[index].route)
+        routeDispatcher.dispatchRoute(optionsDescriptions[index].route, keepSubroutes: true)
     }
 }
 
@@ -169,9 +169,13 @@ func lazyParametrizedPresenter(routeDispatcher: ProvidesRouteDispatch) -> RouteP
         return mockVC()
     },
     setParameters: { parameters, presentable in
-        if let presentable = presentable as? MockViewController, let id = parameters["id"] as? String
+        if  let presentable = presentable as? MockViewController,
+            let id = parameters["id"] as? String,
+            let route = parameters["route"] as? AppRoute
         {
-            presentable.configure(title: "ID: \(id)", buttonTitle: "Second", buttonAction: {
+            presentable.configure(title: "ID: \(id)", didAppearAction: {
+                routeDispatcher.dispatchRoute(route)
+            }, buttonTitle: "Second", buttonAction: {
                 routeDispatcher.dispatchRoute(AppRoute.second)
             }, backgroundColor: .red)
         }
@@ -189,7 +193,9 @@ func lazyOnboardingPresenter(routeDispatcher: ProvidesRouteDispatch) -> RoutePre
     setParameters: { parameters, presentable in
         if let presentable = presentable as? MockViewController, let name = parameters["name"] as? String
         {
-            presentable.configure(title: "Welcome, \(name)", buttonTitle: "Okay", buttonAction: {
+            presentable.configure(title: "Welcome, \(name)", didAppearAction: {
+                routeDispatcher.dispatchRoute(AppRoute.onboarding(name: name))
+            }, buttonTitle: "Okay", buttonAction: {
                 routeDispatcher.dispatchRoute(AppRoute.first)
             }, backgroundColor: .red)
         }

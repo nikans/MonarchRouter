@@ -16,8 +16,9 @@ class MockViewController: UIViewController
     @IBOutlet weak var button: UIButton!
     
     /// Call this method to configure VC right after the initialization or getting the `RouteParameters`.
-    func configure(title: String, buttonTitle: String?, buttonAction: (()->())?, backgroundColor: UIColor)
+    func configure(title: String, didAppearAction: (()->())?, buttonTitle: String?, buttonAction: (()->())?, backgroundColor: UIColor)
     {
+        self.didAppearAction = didAppearAction
         self.titleString = title
         self.buttonTitleString = buttonTitle
         self.buttonAction = buttonAction
@@ -26,6 +27,7 @@ class MockViewController: UIViewController
         applyConfig()
     }
     
+    private var didAppearAction: (()->())?
     private var titleString: String!
     private var buttonTitleString: String?
     private var buttonAction: (()->())?
@@ -53,6 +55,14 @@ class MockViewController: UIViewController
         
         self.view.backgroundColor = backgroundColor
     }
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        didAppearAction?()
+    }
+    
 
     @IBAction func buttonAction(_ sender: Any) {
         buttonAction?()

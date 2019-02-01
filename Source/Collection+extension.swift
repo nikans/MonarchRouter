@@ -22,3 +22,15 @@ extension Array
         return nil
     }
 }
+
+
+extension Set
+{
+    mutating func remove(matching: (_ element: Element) -> Bool)
+    {
+        var set = self
+        let removeElements = set.filter { matching($0) }
+        removeElements.forEach { set.remove($0) }
+        self = set
+    }
+}
