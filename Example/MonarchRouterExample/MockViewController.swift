@@ -16,6 +16,7 @@ class MockViewController: UIViewController
     @IBOutlet weak var button: UIButton!
     
     /// Call this method to configure VC right after the initialization or getting the `RouteParameters`.
+    /// You can dispatch the route for this VC in `viewDidAppear(:)` for navigation consistency.
     func configure(title: String, didAppearAction: (()->())?, buttonTitle: String?, buttonAction: (()->())?, backgroundColor: UIColor)
     {
         self.didAppearAction = didAppearAction

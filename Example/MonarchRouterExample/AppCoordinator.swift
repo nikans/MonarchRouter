@@ -39,11 +39,11 @@ func createCoordinator(dispatcher: ProvidesRouteDispatch, setRootView: @escaping
         // Tabbar
         RoutingUnit(lazyTabBarRoutePresenter(
             optionsDescription: [
-                (title: "First", icon: nil, route: .first),
+                (title: "First",  icon: nil, route: .first),
                 (title: "Second", icon: nil, route: .second),
-                (title: "Third", icon: nil, route: .third(id: "-thirdInitial")),
+                (title: "Third",  icon: nil, route: .third(id: "-thirdInitial")),
                 (title: "Fourth", icon: nil, route: .fourth(id: "-fourthInitial")),
-                (title: "Fifth", icon: nil, route: .fifth)
+                (title: "Fifth",  icon: nil, route: .fifth)
             ],
             routeDispatcher: dispatcher)).fork([
             
