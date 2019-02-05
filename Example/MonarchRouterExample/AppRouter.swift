@@ -70,9 +70,8 @@ protocol ProvidesRouteDispatch
     
     /// Extension method to change the route.
     /// - parameter route: `AppRoute` to navigate to.
-    /// - parameter keepSubroutes: Defines should a more long Path should remain, if presented.
-    /// - warning: If you opt in using `keepSubroutes: false` i.e. for Fork Routers (TabBarController), you have to make sure, that your endpoint VCs call `dispatchRoute(:)` with their respective Path on `viewDidAppear(:)` for navigation controller consistency. See Example implementation for details.
-    func dispatchRoute(_ route: AppRoute, keepSubroutes: Bool)
+    /// - parameter options: Special options for navigation (see `DispatchRouteOption` enum).
+    func dispatchRoute(_ route: AppRoute, options: [DispatchRouteOption])
 }
 
 // Extending `RouterStore` to accept `AppRoute` instead of string Path.
@@ -82,7 +81,7 @@ extension RouterStore: ProvidesRouteDispatch
         dispatchRoute(route.path)
     }
     
-    func dispatchRoute(_ route: AppRoute, keepSubroutes: Bool) {
-        dispatchRoute(route.path, keepSubroutes: keepSubroutes)
+    func dispatchRoute(_ route: AppRoute, options: [DispatchRouteOption]) {
+        dispatchRoute(route.path, options: options)
     }
 }

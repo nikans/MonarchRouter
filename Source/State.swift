@@ -9,6 +9,12 @@
 import Foundation
 
 
+public enum DispatchRouteOption
+{
+    case junctionsOnly
+}
+
+
 /// State Store for the Router.
 /// Initialize one to change routes via `dispatchRoute(_ path: String)`.
 public final class RouterStore
@@ -16,10 +22,9 @@ public final class RouterStore
     /// Primary method to change the path.
     /// You can extend `RouterStore` with a method to accept your routes enum and delegate paths switching to this method.
     /// - parameter path: String Path to navigate to.
-    /// - parameter keepSubroutes: Defines should a more long Path should remain, if presented.
-    /// - warning: If you opt in using `keepSubroutes: false` i.e. for Fork Routers (TabBarController), you have to make sure, that your endpoint VCs call `dispatchRoute(:)` with their respective Path on `viewDidAppear(:)` for navigation controller consistency. See Example implementation for details.
-    public func dispatchRoute(_ path: String, keepSubroutes: Bool = false) {
-        self.state = routerReducer(path: path, router: router(), state: self.state, keepSubroutes: keepSubroutes)
+    /// - parameter options: Special options for navigation (see `DispatchRouteOption` enum).
+    public func dispatchRoute(_ path: String, options: [DispatchRouteOption] = []) {
+        self.state = routerReducer(path: path, router: router(), state: self.state, options: options)
     }
     
     
@@ -28,7 +33,7 @@ public final class RouterStore
     public init(router: @autoclosure @escaping () -> RoutingUnitType) {
         self.router = router
         self.state = RouterState()
-        self.reducer = routerReducer(path:router:state:keepSubroutes:)
+        self.reducer = routerReducer(path:router:state:options:)
     }
 
     
@@ -39,7 +44,7 @@ public final class RouterStore
     public init(
         router: @autoclosure @escaping () -> RoutingUnitType,
         state: RouterStateType,
-        reducer: @escaping (_ path: String, _ router: RoutingUnitType, _ state: RouterStateType, _ keepSubroutes: Bool) -> RouterStateType)
+        reducer: @escaping (_ path: String, _ router: RoutingUnitType, _ state: RouterStateType, _ options: [DispatchRouteOption]) -> RouterStateType)
     {
         self.router = router
         self.state = state
@@ -56,7 +61,7 @@ public final class RouterStore
     /// Function to calculate a new State.
     /// Implements navigation via `RoutingUnitType`'s `setPath` callback.
     /// Unwinds unused `RoutingUnits` (see `RoutingUnitType`'s `unwind()` function).
-    let reducer: (_ path: String, _ router: RoutingUnitType, _ state: RouterStateType, _ keepSubroutes: Bool) -> RouterStateType
+    let reducer: (_ path: String, _ router: RoutingUnitType, _ state: RouterStateType, _ options: [DispatchRouteOption]) -> RouterStateType
 }
 
 
@@ -83,11 +88,11 @@ struct RouterState: RouterStateType
 /// - parameter path: String Path to navigate to.
 /// - parameter router: Describes the Coordinator hierarchy for the current application.
 /// - parameter state: State holds the current `RoutingUnits` stack.
-func routerReducer(path: String, router: RoutingUnitType, state: RouterStateType, keepSubroutes: Bool) -> RouterStateType
+func routerReducer(path: String, router: RoutingUnitType, state: RouterStateType, options: [DispatchRouteOption]) -> RouterStateType
 {
     // Changes the Path and returns a new Routers stack
     let newRoutersStack = router.testPath(path, [])
-    router.setPath(path, [], keepSubroutes)
+    router.setPath(path, [], options)
     
     // Finding the first RoutingUnit in the stack that is not the same as in the previous Routers stack
     if let firstDifferenceIndex = state.routersStack.enumerated().first(where: { (i, element) -> Bool in

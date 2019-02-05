@@ -55,7 +55,7 @@ class ExampleTabBarDelegate: NSObject, UITabBarControllerDelegate
     {
         let index = tabBarController.selectedIndex
         guard optionsDescriptions.count > index else { return }
-        routeDispatcher.dispatchRoute(optionsDescriptions[index].route, keepSubroutes: true)
+        routeDispatcher.dispatchRoute(optionsDescriptions[index].route, options: [.junctionsOnly])
     }
 }
 

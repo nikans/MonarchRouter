@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'MonarchRouter'
-  s.version          = '0.9.4'
+  s.version          = '0.9.5'
   s.summary          = 'A lightweight yet powerful state-based router written in Swift.'
 
   s.description      = <<-DESC
