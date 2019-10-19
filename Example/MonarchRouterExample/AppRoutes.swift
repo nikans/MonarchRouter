@@ -1,9 +1,9 @@
 //
-//  RoutingUnit.swift
+//  AppRoutes.swift
 //  MonarchRouterExample
 //
-//  Created by Eliah Snakin on 16/11/2018.
-//  nikans.com
+//  Created by Eliah Snakin on 19.10.2019.
+//  Copyright © 2019 nikans.com. All rights reserved.
 //
 
 import Foundation
@@ -30,10 +30,11 @@ enum AppRoute
     var path: String {
         switch self {
         case .login:                            return "login"
-        case .onboarding(let name):             return "onboarding/" + name
+        case .onboarding(let name):
+            return "onboarding?name=" + (name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")
         case .first:                            return "first"
         case .firstDetail:                      return "firstDetail"
-        case .firstDetailParametrized(let id):  return "firstDetailParametrized/" + id
+        case .firstDetailParametrized(let id):  return "firstDetailParametrized?id=" + (id.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")
         case .second:                           return "second"
         case .secondDetail:                     return "secondDetail"
         case .third(let id):                    return "third/" + id
@@ -45,21 +46,6 @@ enum AppRoute
     }
 }
 
-
-/// Sets up the Router and root view controller.
-func appRouter(setRootView: @escaping (UIViewController)->())
-{
-    var router: RoutingUnitType!
-    
-    // creating a Store for the Router and passing a callback to get a Coordinator (RoutingUnits hierarchy) to it
-    let store = RouterStore(router: router)
-    
-    // creating a Coordinator hierarchy for the Router
-    router = createCoordinator(dispatcher: store, setRootView: setRootView)
-    
-    // presenting the default Route
-    store.dispatchRoute(.login)
-}
 
 
 /// Describes the object capable of Routes switching.

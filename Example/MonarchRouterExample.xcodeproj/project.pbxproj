@@ -10,7 +10,9 @@
 		17958E51AD3E4032D5A6C478 /* Pods_MonarchRouter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF23C904D963434DC0360A9D /* Pods_MonarchRouter.framework */; };
 		9187C6D64BB2763E78C00E8D /* Pods_MonarchRouterExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1907EB298DF999B25DA1BB67 /* Pods_MonarchRouterExample.framework */; };
 		D07E7B0C21A5606F00B415D6 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07E7B0B21A5606F00B415D6 /* State.swift */; };
-		D09228CA235B45120066E33B /* ParametersStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09228C9235B45120066E33B /* ParametersStructs.swift */; };
+		D09228CC235B4AB30066E33B /* AppRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09228CB235B4AB30066E33B /* AppRoutes.swift */; };
+		D09228D0235B5CE50066E33B /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09228CF235B5CE50066E33B /* Route.swift */; };
+		D09228D2235B5CFC0066E33B /* Parameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09228D1235B5CFC0066E33B /* Parameters.swift */; };
 		D09D0DEF21A46FE300601258 /* PresenterStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D0DEE21A46FE300601258 /* PresenterStack.swift */; };
 		D09D0DF121A4703100601258 /* PresenterFork.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D0DF021A4703100601258 /* PresenterFork.swift */; };
 		D09D0DF321A470C300601258 /* PresenterSwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D0DF221A470C300601258 /* PresenterSwitcher.swift */; };
@@ -22,7 +24,6 @@
 		D0A7B9EE219F324200B44C3D /* MonarchRouter.h in Headers */ = {isa = PBXBuildFile; fileRef = D0A7B9EC219F324200B44C3D /* MonarchRouter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0A7B9F1219F324200B44C3D /* MonarchRouter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0A7B9EA219F324200B44C3D /* MonarchRouter.framework */; };
 		D0A7B9F2219F324200B44C3D /* MonarchRouter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D0A7B9EA219F324200B44C3D /* MonarchRouter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D0A7BA04219F332900B44C3D /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7BA03219F332900B44C3D /* AppRouter.swift */; };
 		D0A7BA0E219F363900B44C3D /* Collection+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7BA0B219F363900B44C3D /* Collection+extension.swift */; };
 		D0A7BA0F219F363900B44C3D /* Presenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7BA0C219F363900B44C3D /* Presenter.swift */; };
 		D0A7BA10219F363900B44C3D /* RoutingUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7BA0D219F363900B44C3D /* RoutingUnit.swift */; };
@@ -64,7 +65,9 @@
 		9E40EA1D4799DD2D0F3A8810 /* Pods-MonarchRouterExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MonarchRouterExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MonarchRouterExample/Pods-MonarchRouterExample.debug.xcconfig"; sourceTree = "<group>"; };
 		CF23C904D963434DC0360A9D /* Pods_MonarchRouter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MonarchRouter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D07E7B0B21A5606F00B415D6 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = State.swift; path = ../../Source/State.swift; sourceTree = "<group>"; };
-		D09228C9235B45120066E33B /* ParametersStructs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParametersStructs.swift; sourceTree = "<group>"; };
+		D09228CB235B4AB30066E33B /* AppRoutes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRoutes.swift; sourceTree = "<group>"; };
+		D09228CF235B5CE50066E33B /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Route.swift; path = ../../Source/Route.swift; sourceTree = "<group>"; };
+		D09228D1235B5CFC0066E33B /* Parameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Parameters.swift; path = ../../Source/Parameters.swift; sourceTree = "<group>"; };
 		D09D0DEE21A46FE300601258 /* PresenterStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PresenterStack.swift; path = ../../Source/PresenterStack.swift; sourceTree = "<group>"; };
 		D09D0DF021A4703100601258 /* PresenterFork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PresenterFork.swift; path = ../../Source/PresenterFork.swift; sourceTree = "<group>"; };
 		D09D0DF221A470C300601258 /* PresenterSwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PresenterSwitcher.swift; path = ../../Source/PresenterSwitcher.swift; sourceTree = "<group>"; };
@@ -78,7 +81,6 @@
 		D0A7B9EA219F324200B44C3D /* MonarchRouter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MonarchRouter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0A7B9EC219F324200B44C3D /* MonarchRouter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MonarchRouter.h; sourceTree = "<group>"; };
 		D0A7B9ED219F324200B44C3D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D0A7BA03219F332900B44C3D /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
 		D0A7BA0B219F363900B44C3D /* Collection+extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Collection+extension.swift"; path = "../../Source/Collection+extension.swift"; sourceTree = "<group>"; };
 		D0A7BA0C219F363900B44C3D /* Presenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Presenter.swift; path = ../../Source/Presenter.swift; sourceTree = "<group>"; };
 		D0A7BA0D219F363900B44C3D /* RoutingUnit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RoutingUnit.swift; path = ../../Source/RoutingUnit.swift; sourceTree = "<group>"; };
@@ -155,7 +157,7 @@
 				D0A7B9D3219F322C00B44C3D /* AppDelegate.swift */,
 				D0A7B9D5219F322C00B44C3D /* MockViewController.swift */,
 				D0A7B9D7219F322C00B44C3D /* Main.storyboard */,
-				D0A7BA03219F332900B44C3D /* AppRouter.swift */,
+				D09228CB235B4AB30066E33B /* AppRoutes.swift */,
 				D0A7BA15219F3EC500B44C3D /* AppCoordinator.swift */,
 				D0A7BA11219F378B00B44C3D /* Presenters.swift */,
 				D0A7BA13219F3C5800B44C3D /* EndpointBuilder.swift */,
@@ -171,12 +173,13 @@
 			isa = PBXGroup;
 			children = (
 				D07E7B0B21A5606F00B415D6 /* State.swift */,
+				D09228CF235B5CE50066E33B /* Route.swift */,
 				D0A7BA0D219F363900B44C3D /* RoutingUnit.swift */,
 				D0A7BA0C219F363900B44C3D /* Presenter.swift */,
 				D09D0DEE21A46FE300601258 /* PresenterStack.swift */,
 				D09D0DF021A4703100601258 /* PresenterFork.swift */,
 				D09D0DF221A470C300601258 /* PresenterSwitcher.swift */,
-				D09228C9235B45120066E33B /* ParametersStructs.swift */,
+				D09228D1235B5CFC0066E33B /* Parameters.swift */,
 				D0A7BA0B219F363900B44C3D /* Collection+extension.swift */,
 				D0A7B9EC219F324200B44C3D /* MonarchRouter.h */,
 				D0A7B9ED219F324200B44C3D /* Info.plist */,
@@ -359,9 +362,9 @@
 			files = (
 				D0A7BA16219F3EC500B44C3D /* AppCoordinator.swift in Sources */,
 				D0A7B9D6219F322C00B44C3D /* MockViewController.swift in Sources */,
-				D0A7BA04219F332900B44C3D /* AppRouter.swift in Sources */,
 				D0A7BA12219F378B00B44C3D /* Presenters.swift in Sources */,
 				D0A7B9D4219F322C00B44C3D /* AppDelegate.swift in Sources */,
+				D09228CC235B4AB30066E33B /* AppRoutes.swift in Sources */,
 				D0A7BA1821A0336200B44C3D /* String+extension.swift in Sources */,
 				D0A7BA14219F3C5900B44C3D /* EndpointBuilder.swift in Sources */,
 			);
@@ -371,13 +374,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D09228CA235B45120066E33B /* ParametersStructs.swift in Sources */,
+				D09228D0235B5CE50066E33B /* Route.swift in Sources */,
 				D07E7B0C21A5606F00B415D6 /* State.swift in Sources */,
 				D0A7BA0F219F363900B44C3D /* Presenter.swift in Sources */,
 				D09D0DF321A470C300601258 /* PresenterSwitcher.swift in Sources */,
 				D09D0DEF21A46FE300601258 /* PresenterStack.swift in Sources */,
 				D09D0DF121A4703100601258 /* PresenterFork.swift in Sources */,
 				D0A7BA10219F363900B44C3D /* RoutingUnit.swift in Sources */,
+				D09228D2235B5CFC0066E33B /* Parameters.swift in Sources */,
 				D0A7BA0E219F363900B44C3D /* Collection+extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

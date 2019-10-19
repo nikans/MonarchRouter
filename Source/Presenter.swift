@@ -105,4 +105,34 @@ public struct RoutePresenter: RoutePresenterType
         }
         return presenter
     }
+    
+    /// A lazy wrapper around a Presenter creation function that wraps presenter scope, but the Presentable does not get created until invoked. Presentable must conform to `URIParametrizedPresentable`.
+    /// - parameter createPresentable: Callback returning a Presentable object.
+    /// - parameter setParameters: Optional callback to configure a Presentable with given `RouteParameters`.
+    /// - parameter presentModal: Optional callback to handle modals presentation.
+    /// - parameter unwind: Optional callback executed when the Presentable is no longer presented. You can use it to dissmiss modals, etc.
+    /// - returns: RoutePresenter
+    public static func lazyPresenter(
+        _ createPresentable: @escaping () -> (UIViewController & URIParametrizedPresentable),
+        presentModal: ((_ modal: UIViewController?, _ over: UIViewController) -> ())? = nil,
+        unwind: ((_ presentable: UIViewController) -> ())? = nil
+    ) -> RoutePresenter
+    {
+        weak var presentable: UIViewController? = nil
+        
+        let maybeCachedPresentable: () -> (UIViewController) = {
+            if let cachedPresentable = presentable {
+                return cachedPresentable
+            }
+            
+            let newPresentable = createPresentable()
+            presentable = newPresentable
+            return newPresentable
+        }
+        var presenter = RoutePresenter(getPresentable: maybeCachedPresentable, unwind: unwind)
+        if let presentModal = presentModal {
+            presenter.presentModal = presentModal
+        }
+        return presenter
+    }
 }
