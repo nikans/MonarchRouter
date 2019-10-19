@@ -8,7 +8,8 @@
 
 import UIKit
 import MonarchRouter
-import Dwifft
+import Differ
+
 
 
 // MARK: - App sections' switcher
@@ -115,38 +116,39 @@ func lazyNavigationRoutePresenter() -> RoutePresenterStack
     return RoutePresenterStack.lazyPresenter({
         UINavigationController()
     },
-    setStack: { (stack, container) in
+    setStack: { (newStack, container) in
         let navigationController = container as! UINavigationController
         let currentStack = navigationController.viewControllers
         
         // same, do nothing
-        if currentStack.count == stack.count, currentStack.last == stack.last {
+        if currentStack.count == newStack.count, currentStack.last == newStack.last {
             return
         }
         
         // only one, pop to root
-        if stack.count == 1 && currentStack.count > 1 {
+        if newStack.count == 1 && currentStack.count > 1 {
             navigationController.popToRootViewController(animated: true)
         }
         
         // pop
-        if currentStack.count > stack.count {
-            navigationController.setViewControllers(stack, animated: true)
+        if currentStack.count > newStack.count {
+            navigationController.setViewControllers(newStack, animated: true)
         }
         
         // push
         else {
-            let diff = Dwifft.diff(currentStack, stack)
-            diff.forEach({ (step) in
-                switch step {
-                case .delete(let idx, _):
-                    navigationController.viewControllers.remove(at: idx)
-                case .insert(let idx, let vc):
-                    if idx == stack.count-1 {
+            let diff = patch(from: currentStack, to: newStack)
+            diff.forEach({ change in
+                switch change {
+                    
+                case .insertion(let idx, let vc):
+                    if idx == newStack.count - 1 {
                         navigationController.pushViewController(vc, animated: true)
                     } else {
                         navigationController.viewControllers.insert(vc, at: idx)
                     }
+                case .deletion(let idx):
+                    navigationController.viewControllers.remove(at: idx)
                 }
             })
         }

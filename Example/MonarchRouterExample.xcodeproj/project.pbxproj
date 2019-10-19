@@ -335,17 +335,16 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-MonarchRouterExample/Pods-MonarchRouterExample-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Dwifft/Dwifft.framework",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MonarchRouterExample/Pods-MonarchRouterExample-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Dwifft.framework",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MonarchRouterExample/Pods-MonarchRouterExample-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MonarchRouterExample/Pods-MonarchRouterExample-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MonarchRouterExample/Pods-MonarchRouterExample-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

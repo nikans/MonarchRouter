@@ -8,6 +8,8 @@
 
 import Foundation
 
+
+
 extension Array
 {
     /// Returns the first non-nil result passed through the predicate.
