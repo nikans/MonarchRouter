@@ -1,16 +1,16 @@
 PODS:
-  - Dwifft (0.9)
+  - Differ (1.4.3)
 
 DEPENDENCIES:
-  - Dwifft (~> 0.9)
+  - Differ (~> 1.4)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
-    - Dwifft
+  trunk:
+    - Differ
 
 SPEC CHECKSUMS:
-  Dwifft: 42912068ed2a8146077d1a1404df18625bd086e1
+  Differ: 6c7477d6187e8c36d02ec342a3c321061b85a0ea
 
-PODFILE CHECKSUM: af333e2959ad3bcad7e240d7973e477b983a7d80
+PODFILE CHECKSUM: 1cbc80b781746b6267ec3a28b70a376a6d569faa
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.8.4

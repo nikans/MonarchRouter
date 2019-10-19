@@ -4,17 +4,12 @@ target 'MonarchRouterExample' do
   use_frameworks!
 
   # Diffs for collections
-  # https://github.com/jflinter/Dwifft
-  pod 'Dwifft', '~> 0.9'
+  # https://github.com/tonyarnold/Differ
+  pod 'Differ', '~> 1.4'
 
 end
 
 
 target 'MonarchRouter' do
     use_frameworks!
-    
-    # Diffs for collections
-    # https://github.com/jflinter/Dwifft
-    pod 'Dwifft', '~> 0.9'
-    
 end
