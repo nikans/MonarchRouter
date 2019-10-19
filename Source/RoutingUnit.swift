@@ -74,35 +74,48 @@ public struct RoutingUnit<Presenter: RoutePresenterType>: RoutingUnitType
 
 extension RoutingUnit where Presenter == RoutePresenter
 {
-    /// Endpoint `RoutingUnit` representing an actual target to navigate to.
-    /// - parameter predicate: A closure to determine whether this `RoutingUnit` should handle the Path.
-    /// - parameter parameters: An optional closure to parse the Path into `RouteParameters` to configure a Presentable with.
+    /// Endpoint `RoutingUnit` representing an actual target to navigate to, configured with optional custom path parametes and URL query parameters.
+    /// - parameter predicate: A closure to determine whether this `RoutingUnit` should handle the Path. If the Path is a proper URI, only the path component is provided here.
+    /// - parameter parameters: An optional closure to parse the Path into `RouteParameters` to configure a Presentable with. If the Path is a proper URI, only the path component is provided here.
     /// - parameter children: `RoutingUnit`s you can navigate to from this unit, i.e. in navigation stack.
     /// - parameter modals: `RoutingUnit`s you can present as modals from this one.
     /// - returns: Modified `RoutingUnit`
     public func endpoint(
-        predicate isMatching: @escaping ((_ path: String) -> Bool),
-        parameters: ((_ path: String) -> RouteParameters)? = nil,
+        pathPredicate isMatching: @escaping ((_ path: String) -> Bool),
+        pathParameters: ((_ path: String) -> PathParameters)? = nil,
         children: [RoutingUnitType] = [],
         modals: [RoutingUnitType] = []
     ) -> RoutingUnit
     {
         var router = self
         
+        /// Get `path` component from Path URI
+        func pathComponent(from routePath: String) -> String {
+            let path: String
+            
+            if let uri = URL(string: routePath) {
+                path = uri.path
+            } else {
+                path = routePath
+            }
+            
+            return path
+        }
+        
         router.shouldHandleRoute = { path in
             // checking if this RoutingUnit or any of the children or modals can handle the Path
-            return isMatching(path)
+            return isMatching(pathComponent(from: path))
                 || children.contains { $0.shouldHandleRoute(path) }
                 || modals.contains { $0.shouldHandleRoute(path) }
         }
         
         router.shouldHandleRouteExclusively = { path in
-            return isMatching(path)
+            return isMatching(pathComponent(from: path))
         }
         
         router.testPath = { path, routers in
             // this RoutingUnit handles the Path
-            if isMatching(path) {
+            if isMatching(pathComponent(from: path)) {
                 return routers + [router]
             }
             
@@ -122,13 +135,19 @@ extension RoutingUnit where Presenter == RoutePresenter
         }
         
         router.setPath = { path, routers, dispatchOptions in
-            let params = parameters?(path)
             
             // this RoutingUnit handles the Path
-            if isMatching(path) {
-                // setting parameters
+            if isMatching(pathComponent(from: path)) {
+                
                 let presentable = router.getPresentable()
-                router.presenter.setParameters(params ?? [:], presentable)
+                
+                //
+                // setting parameters
+
+                let customPathParameters = pathParameters?(pathComponent(from: path))
+                let routeParameters = RouteURIParameters(uriString: path, pathParameters: customPathParameters)
+                
+                router.presenter.setParameters(routeParameters, presentable)
             }
                 
             // should present a modal to handle the Path
@@ -152,6 +171,7 @@ extension RoutingUnit where Presenter == RoutePresenter
         return router
     }
 }
+
 
 
 extension RoutingUnit where Presenter == RoutePresenterStack
@@ -220,6 +240,7 @@ extension RoutingUnit where Presenter == RoutePresenterStack
 }
 
 
+
 extension RoutingUnit where Presenter == RoutePresenterFork
 {
     /// Fork `RoutingUnit` can be used for tabbar-like navigation.
@@ -278,6 +299,7 @@ extension RoutingUnit where Presenter == RoutePresenterFork
         return router
     }
 }
+
 
 
 extension RoutingUnit where Presenter == RoutePresenterSwitcher
