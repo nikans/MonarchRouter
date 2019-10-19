@@ -26,37 +26,37 @@ func buildEndpoint(for route: AppRoute, routeDispatcher: ProvidesRouteDispatch) 
     
     switch route {
     case .login:
-        vc.configure(title: "Login screen", didAppearAction: { routeDispatcher.dispatchRoute(route) }, buttonTitle: "Login", buttonAction: {
-            routeDispatcher.dispatchRoute(AppRoute.onboarding(name: "USERNAME"))
+        vc.configure(title: "Login screen",buttonTitle: "Login", buttonAction: {
+            routeDispatcher.dispatchRoute(AppRoute.onboarding(name: "USER NAME"))
         }, backgroundColor: .purple)
         
     case .first:
-        vc.configure(title: "Main screen", didAppearAction: { routeDispatcher.dispatchRoute(route) }, buttonTitle: "Detail", buttonAction: {
+        vc.configure(title: "Main screen", buttonTitle: "Detail", buttonAction: {
             routeDispatcher.dispatchRoute(AppRoute.firstDetail)
         }, backgroundColor: .magenta)
         
     case .firstDetail:
-        vc.configure(title: "First detail", didAppearAction: { routeDispatcher.dispatchRoute(route) }, buttonTitle: "Parametrized Detail", buttonAction: {
+        vc.configure(title: "First detail", buttonTitle: "Parametrized Detail", buttonAction: {
             routeDispatcher.dispatchRoute(AppRoute.firstDetailParametrized(id: "-firstDetail"))
         }, backgroundColor: .magenta)
         
     case .second:
-        vc.configure(title: "Second screen", didAppearAction: { routeDispatcher.dispatchRoute(route) }, buttonTitle: "Second detail", buttonAction: {
+        vc.configure(title: "Second screen", buttonTitle: "Second detail", buttonAction: {
             routeDispatcher.dispatchRoute(AppRoute.secondDetail)
         }, backgroundColor: .orange)
         
     case .secondDetail:
-        vc.configure(title: "Second detail", didAppearAction: { routeDispatcher.dispatchRoute(route) }, buttonTitle: "First detail", buttonAction: {
+        vc.configure(title: "Second detail", buttonTitle: "First detail", buttonAction: {
             routeDispatcher.dispatchRoute(AppRoute.firstDetail)
         }, backgroundColor: .orange)
         
     case .fifth:
-        vc.configure(title: "Fifth screen", didAppearAction: { routeDispatcher.dispatchRoute(route) }, buttonTitle: "Modal", buttonAction: {
+        vc.configure(title: "Fifth screen", buttonTitle: "Modal", buttonAction: {
             routeDispatcher.dispatchRoute(AppRoute.modalParametrized(id: "-someModal"))
         }, backgroundColor: .darkGray)
       
     case .modal:
-        vc.configure(title: "Modal screen", didAppearAction: { routeDispatcher.dispatchRoute(route) }, buttonTitle: "Fifth", buttonAction: {
+        vc.configure(title: "Modal screen", buttonTitle: "Fifth", buttonAction: {
             routeDispatcher.dispatchRoute(AppRoute.fifth)
         }, backgroundColor: .blue)
         

@@ -29,19 +29,41 @@ enum AppRoute
     
     var path: String {
         switch self {
-        case .login:                            return "login"
+        case .login:
+            return "login"
+            
         case .onboarding(let name):
-            return "onboarding?name=" + (name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")
-        case .first:                            return "first"
-        case .firstDetail:                      return "firstDetail"
-        case .firstDetailParametrized(let id):  return "firstDetailParametrized?id=" + (id.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")
-        case .second:                           return "second"
-        case .secondDetail:                     return "secondDetail"
-        case .third(let id):                    return "third/" + id
-        case .fourth(let id):                   return "fourth/" + id
-        case .fifth:                            return "fifth"
-        case .modal:                            return "modal"
-        case .modalParametrized(let id):        return "modalParametrized/" + id
+            return "onboarding?name=" + name
+            
+        case .first:
+            return "first"
+            
+        case .firstDetail:
+            return "firstDetail"
+            
+        case .firstDetailParametrized(let id):
+            return "firstDetailParametrized?id=" + id
+            
+        case .second:
+            return "second"
+            
+        case .secondDetail:
+            return "secondDetail"
+            
+        case .third(let id):
+            return "third/" + id
+            
+        case .fourth(let id):
+            return "fourth/" + id
+            
+        case .fifth:
+            return "fifth"
+            
+        case .modal:
+            return "modal"
+            
+        case .modalParametrized(let id):
+            return "modalParametrized/" + id
         }
     }
 }

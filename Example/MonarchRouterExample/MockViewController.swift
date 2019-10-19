@@ -19,9 +19,8 @@ class MockViewController: UIViewController
     
     /// Call this method to configure VC right after the initialization or getting the `RouteParameters`.
     /// You can dispatch the route for this VC in `viewDidAppear(:)` for navigation consistency.
-    func configure(title: String, didAppearAction: (()->())?, buttonTitle: String?, buttonAction: (()->())?, backgroundColor: UIColor)
+    func configure(title: String, buttonTitle: String?, buttonAction: (()->())?, backgroundColor: UIColor)
     {
-        self.didAppearAction = didAppearAction
         self.titleString = title
         self.buttonTitleString = buttonTitle
         self.buttonAction = buttonAction
@@ -30,7 +29,6 @@ class MockViewController: UIViewController
         applyConfig()
     }
     
-    private var didAppearAction: (()->())?
     private var titleString: String!
     private var buttonTitleString: String?
     private var buttonAction: (()->())?
@@ -57,13 +55,6 @@ class MockViewController: UIViewController
         button.isHidden = buttonTitleString == nil
         
         self.view.backgroundColor = backgroundColor
-    }
-    
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        didAppearAction?()
     }
     
 
