@@ -171,12 +171,21 @@ func lazyParametrizedPresenter(routeDispatcher: ProvidesRouteDispatch) -> RouteP
         return mockVC()
     },
     setParameters: { parameters, presentable in
-        if  let presentable = presentable as? MockViewController,
-            let id: String = parameters.pathParameter("id"),
+        guard let presentable = presentable as? MockViewController else { return }
+        
+        if  let id: String = parameters.pathParameter("id"),
             let route: AppRoute = parameters.pathParameter("route")
         {
             presentable.configure(title: "ID: \(id)", didAppearAction: {
-                routeDispatcher.dispatchRoute(route)
+                //routeDispatcher.dispatchRoute(route)
+            }, buttonTitle: "Second", buttonAction: {
+                routeDispatcher.dispatchRoute(AppRoute.second)
+            }, backgroundColor: .red)
+        }
+        
+        else if let id: String = parameters.queryParameter("id") {
+            presentable.configure(title: "ID: \(id)", didAppearAction: {
+                //routeDispatcher.dispatchRoute(route)
             }, buttonTitle: "Second", buttonAction: {
                 routeDispatcher.dispatchRoute(AppRoute.second)
             }, backgroundColor: .red)
@@ -193,10 +202,11 @@ func lazyOnboardingPresenter(routeDispatcher: ProvidesRouteDispatch) -> RoutePre
         mockVC()
     },
     setParameters: { parameters, presentable in
-        if let presentable = presentable as? MockViewController, let name: String = parameters.pathParameter("name")
+        if  let presentable = presentable as? MockViewController,
+            let name: String = parameters.queryParameter("name")
         {
             presentable.configure(title: "Welcome, \(name)", didAppearAction: {
-                routeDispatcher.dispatchRoute(AppRoute.onboarding(name: name))
+                //routeDispatcher.dispatchRoute(AppRoute.onboarding(name: name))
             }, buttonTitle: "Okay", buttonAction: {
                 routeDispatcher.dispatchRoute(AppRoute.first)
             }, backgroundColor: .red)

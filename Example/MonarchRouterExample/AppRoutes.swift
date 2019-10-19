@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import MonarchRouter
 
 
 
@@ -29,10 +30,11 @@ enum AppRoute
     var path: String {
         switch self {
         case .login:                            return "login"
-        case .onboarding(let name):             return "onboarding/" + name
+        case .onboarding(let name):
+            return "onboarding?name=" + (name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")
         case .first:                            return "first"
         case .firstDetail:                      return "firstDetail"
-        case .firstDetailParametrized(let id):  return "firstDetailParametrized/" + id
+        case .firstDetailParametrized(let id):  return "firstDetailParametrized?id=" + (id.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")
         case .second:                           return "second"
         case .secondDetail:                     return "secondDetail"
         case .third(let id):                    return "third/" + id
@@ -41,5 +43,32 @@ enum AppRoute
         case .modal:                            return "modal"
         case .modalParametrized(let id):        return "modalParametrized/" + id
         }
+    }
+}
+
+
+
+/// Describes the object capable of Routes switching.
+protocol ProvidesRouteDispatch
+{
+    /// Extension method to change the route.
+    /// - parameter route: `AppRoute` to navigate to.
+    func dispatchRoute(_ route: AppRoute)
+    
+    /// Extension method to change the route.
+    /// - parameter route: `AppRoute` to navigate to.
+    /// - parameter options: Special options for navigation (see `DispatchRouteOption` enum).
+    func dispatchRoute(_ route: AppRoute, options: [DispatchRouteOption])
+}
+
+// Extending `RouterStore` to accept `AppRoute` instead of string Path.
+extension RouterStore: ProvidesRouteDispatch
+{
+    func dispatchRoute(_ route: AppRoute) {
+        dispatchRoute(route.path)
+    }
+    
+    func dispatchRoute(_ route: AppRoute, options: [DispatchRouteOption]) {
+        dispatchRoute(route.path, options: options)
     }
 }

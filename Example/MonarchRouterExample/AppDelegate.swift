@@ -15,7 +15,7 @@ import MonarchRouter
 class AppDelegate: UIResponder, UIApplicationDelegate
 {
     var window: UIWindow?
-    var appRouter: ProvidesRouteDispatch?
+    var appRouter: ProvidesRouteDispatch!
     
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool
@@ -33,7 +33,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         }
         
         // Initializing Router and setting root VC
-        appRouter = createAppRouter(setRootView: setRootViewController)
+        var coordinator: RoutingUnitType!
+        appRouter = RouterStore(router: coordinator)
+        coordinator = appCoordinator(dispatcher: appRouter, setRootView: setRootViewController)
         
         window?.makeKeyAndVisible()
         

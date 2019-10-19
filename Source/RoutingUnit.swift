@@ -11,6 +11,7 @@ import UIKit
 
 
 /// Any `RoutingUnit` object.
+/// Hierarchy of `RoutingUnitType` objects forms an app coordinator.
 public protocol RoutingUnitType
 {
     /// Returns Routers stack for provided Path.
@@ -74,7 +75,7 @@ public struct RoutingUnit<Presenter: RoutePresenterType>: RoutingUnitType
 
 extension RoutingUnit where Presenter == RoutePresenter
 {
-    /// Endpoint `RoutingUnit` representing an actual target to navigate to, configured with optional custom path parametes and URL query parameters.
+    /// Endpoint `RoutingUnit` represents an actual target to navigate to, configured with optional custom path parametes and URL query parameters.
     /// - parameter predicate: A closure to determine whether this `RoutingUnit` should handle the Path. If the Path is a proper URI, only the path component is provided here.
     /// - parameter parameters: An optional closure to parse the Path into `RouteParameters` to configure a Presentable with. If the Path is a proper URI, only the path component is provided here.
     /// - parameter children: `RoutingUnit`s you can navigate to from this unit, i.e. in navigation stack.
@@ -169,6 +170,24 @@ extension RoutingUnit where Presenter == RoutePresenter
         }
         
         return router
+    }
+    
+    
+    /// Convenience method for Endpoint `RoutingUnit` creation, `path` is simply checked for equality.
+    /// Endpoint `RoutingUnit` represents an actual target to navigate to, configured with optional custom path parametes and URL query parameters.
+    /// - parameter path: A string to determine whether this `RoutingUnit` should handle the Path. If the Path is a proper URI, only the path component is provided here.
+    /// - parameter parameters: An optional closure to parse the Path into `RouteParameters` to configure a Presentable with. If the Path is a proper URI, only the path component is provided here.
+    /// - parameter children: `RoutingUnit`s you can navigate to from this unit, i.e. in navigation stack.
+    /// - parameter modals: `RoutingUnit`s you can present as modals from this one.
+    /// - returns: Modified `RoutingUnit`
+    public func endpoint(
+        path: String,
+        pathParameters: ((_ path: String) -> PathParameters)? = nil,
+        children: [RoutingUnitType] = [],
+        modals: [RoutingUnitType] = []
+    ) -> RoutingUnit
+    {
+        endpoint(pathPredicate: { $0 == path }, pathParameters: pathParameters, children: children, modals: modals)
     }
 }
 

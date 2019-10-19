@@ -81,6 +81,9 @@ public struct RouteURIParameters
     
     public let query: String?
     public let queryParameters: [String: String?]?
+    public func queryParameter(_ key: String) -> String? {
+        return queryParameters?[key] ?? nil
+    }
     
     public let fragment: String?
 }
