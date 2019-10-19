@@ -238,7 +238,7 @@ func lazyMockPresenter(for route: AppRoute, routeDispatcher: ProvidesRouteDispat
     return presenter
 }
 
-/// Not lazy Presenter for a mock VC, just to notice the difference. Implements modals presentation.
+/// NOT lazy Presenter for a mock VC, just to notice the difference. Implements modals presentation.
 func mockPresenter(for route: AppRoute, routeDispatcher: ProvidesRouteDispatch) -> RoutePresenter
 {
     let vc = buildEndpoint(for: route, routeDispatcher: routeDispatcher)

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MonarchRouter
 
 
 
@@ -71,3 +72,10 @@ class MockViewController: UIViewController
     }
 }
 
+
+extension MockViewController: URIParametrizedPresentable
+{
+    func configure(with uriParameters: RouteURIParameters) {
+        
+    }
+}

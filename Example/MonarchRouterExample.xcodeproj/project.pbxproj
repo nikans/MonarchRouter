@@ -11,6 +11,7 @@
 		9187C6D64BB2763E78C00E8D /* Pods_MonarchRouterExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1907EB298DF999B25DA1BB67 /* Pods_MonarchRouterExample.framework */; };
 		D07E7B0C21A5606F00B415D6 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07E7B0B21A5606F00B415D6 /* State.swift */; };
 		D09228CA235B45120066E33B /* ParametersStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09228C9235B45120066E33B /* ParametersStructs.swift */; };
+		D09228CC235B4AB30066E33B /* AppRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09228CB235B4AB30066E33B /* AppRoutes.swift */; };
 		D09D0DEF21A46FE300601258 /* PresenterStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D0DEE21A46FE300601258 /* PresenterStack.swift */; };
 		D09D0DF121A4703100601258 /* PresenterFork.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D0DF021A4703100601258 /* PresenterFork.swift */; };
 		D09D0DF321A470C300601258 /* PresenterSwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D0DF221A470C300601258 /* PresenterSwitcher.swift */; };
@@ -65,6 +66,7 @@
 		CF23C904D963434DC0360A9D /* Pods_MonarchRouter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MonarchRouter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D07E7B0B21A5606F00B415D6 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = State.swift; path = ../../Source/State.swift; sourceTree = "<group>"; };
 		D09228C9235B45120066E33B /* ParametersStructs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParametersStructs.swift; sourceTree = "<group>"; };
+		D09228CB235B4AB30066E33B /* AppRoutes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRoutes.swift; sourceTree = "<group>"; };
 		D09D0DEE21A46FE300601258 /* PresenterStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PresenterStack.swift; path = ../../Source/PresenterStack.swift; sourceTree = "<group>"; };
 		D09D0DF021A4703100601258 /* PresenterFork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PresenterFork.swift; path = ../../Source/PresenterFork.swift; sourceTree = "<group>"; };
 		D09D0DF221A470C300601258 /* PresenterSwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PresenterSwitcher.swift; path = ../../Source/PresenterSwitcher.swift; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 				D0A7B9D3219F322C00B44C3D /* AppDelegate.swift */,
 				D0A7B9D5219F322C00B44C3D /* MockViewController.swift */,
 				D0A7B9D7219F322C00B44C3D /* Main.storyboard */,
+				D09228CB235B4AB30066E33B /* AppRoutes.swift */,
 				D0A7BA03219F332900B44C3D /* AppRouter.swift */,
 				D0A7BA15219F3EC500B44C3D /* AppCoordinator.swift */,
 				D0A7BA11219F378B00B44C3D /* Presenters.swift */,
@@ -362,6 +365,7 @@
 				D0A7BA04219F332900B44C3D /* AppRouter.swift in Sources */,
 				D0A7BA12219F378B00B44C3D /* Presenters.swift in Sources */,
 				D0A7B9D4219F322C00B44C3D /* AppDelegate.swift in Sources */,
+				D09228CC235B4AB30066E33B /* AppRoutes.swift in Sources */,
 				D0A7BA1821A0336200B44C3D /* String+extension.swift in Sources */,
 				D0A7BA14219F3C5900B44C3D /* EndpointBuilder.swift in Sources */,
 			);
