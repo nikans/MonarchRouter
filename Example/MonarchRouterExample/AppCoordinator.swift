@@ -20,7 +20,7 @@ func createCoordinator(dispatcher: ProvidesRouteDispatch, setRootView: @escaping
         
         // Login
         RoutingUnit(lazyMockPresenter(for: .login, routeDispatcher: dispatcher)).endpoint(
-            predicate: { $0 == AppRoute.login.path }
+            pathPredicate: { $0 == AppRoute.login.path }
         ),
         
         // Onboarding
@@ -28,10 +28,10 @@ func createCoordinator(dispatcher: ProvidesRouteDispatch, setRootView: @escaping
             
             // Parametrized welcome page (just for test)
             RoutingUnit(lazyOnboardingPresenter(routeDispatcher: dispatcher)).endpoint(
-                predicate: { path in
+                pathPredicate: { path in
                     path.matches("onboarding/(?<name>[\\w\\-\\.]+)") },
-                parameters: { (path) -> RouteParameters in
-                    var arguments = RouteParameters()
+                pathParameters: { (path) -> PathParameters in
+                    var arguments = PathParameters()
                     if let name = path.capturedGroups(withRegex: "onboarding/(?<name>[\\w\\-\\.]+)").first { arguments["name"] = name }
                     return arguments
                 }
@@ -54,21 +54,21 @@ func createCoordinator(dispatcher: ProvidesRouteDispatch, setRootView: @escaping
                 
                 // First
                 RoutingUnit(lazyMockPresenter(for: .first, routeDispatcher: dispatcher)).endpoint(
-                    predicate: { $0 == AppRoute.first.path },
+                    pathPredicate: { $0 == AppRoute.first.path },
                     children: [
                     
                     // Detail
                     RoutingUnit(lazyMockPresenter(for: .firstDetail, routeDispatcher: dispatcher)).endpoint(
-                        predicate: { $0 == AppRoute.firstDetail.path },
+                        pathPredicate: { $0 == AppRoute.firstDetail.path },
                         children: [
                         
                         // Parametrized Detail
                         RoutingUnit(lazyParametrizedPresenter(routeDispatcher: dispatcher)).endpoint(
-                            predicate: { path in
+                            pathPredicate: { path in
                                 path.matches("firstDetailParametrized/(?<id>[\\w\\-\\.]+)")
                             },
-                            parameters: { (path) -> RouteParameters in
-                                var arguments = RouteParameters()
+                            pathParameters: { (path) -> PathParameters in
+                                var arguments = PathParameters()
                                 if let id = path.capturedGroups(withRegex: "firstDetailParametrized/(?<id>[\\w\\-\\.]+)").first {
                                     arguments["id"] = id
                                     arguments["route"] = AppRoute.firstDetailParametrized(id: id)
@@ -85,12 +85,12 @@ func createCoordinator(dispatcher: ProvidesRouteDispatch, setRootView: @escaping
             
                 // Second
                 RoutingUnit(lazyMockPresenter(for: .second, routeDispatcher: dispatcher)).endpoint(
-                    predicate: { $0 == AppRoute.second.path },
+                    pathPredicate: { $0 == AppRoute.second.path },
                     children: [
                     
                     // Detail
                     RoutingUnit(lazyMockPresenter(for: .secondDetail, routeDispatcher: dispatcher)).endpoint(
-                        predicate: { $0 == AppRoute.secondDetail.path }
+                        pathPredicate: { $0 == AppRoute.secondDetail.path }
                     )
                 ])
             ]),
@@ -100,11 +100,11 @@ func createCoordinator(dispatcher: ProvidesRouteDispatch, setRootView: @escaping
             
                 // Third (parametrized)
                 RoutingUnit(lazyParametrizedPresenter(routeDispatcher: dispatcher)).endpoint(
-                    predicate: { path in
+                    pathPredicate: { path in
                         path.matches("third/(?<id>[\\w\\-\\.]+)")
                     },
-                    parameters: { (path) -> RouteParameters in
-                        var arguments = RouteParameters()
+                    pathParameters: { (path) -> PathParameters in
+                        var arguments = PathParameters()
                         if let id = path.capturedGroups(withRegex: "third/(?<id>[\\w\\-\\.]+)").first {
                             arguments["id"] = id
                             arguments["route"] = AppRoute.third(id: id)
@@ -116,10 +116,11 @@ func createCoordinator(dispatcher: ProvidesRouteDispatch, setRootView: @escaping
             
             // Fourth (parametrized)
             RoutingUnit(lazyParametrizedPresenter(routeDispatcher: dispatcher)).endpoint(
-                predicate: { path in
+                pathPredicate: { path in
                     path.matches("fourth/(?<id>[\\w\\-\\.]+)")
-                }, parameters: { (path) -> RouteParameters in
-                    var arguments = RouteParameters()
+                },
+                pathParameters: { (path) -> PathParameters in
+                    var arguments = PathParameters()
                     if let id = path.capturedGroups(withRegex: "fourth/(?<id>[\\w\\-\\.]+)").first {
                         arguments["id"] = id
                         arguments["route"] = AppRoute.fourth(id: id)
@@ -130,17 +131,18 @@ func createCoordinator(dispatcher: ProvidesRouteDispatch, setRootView: @escaping
             
             // Fifth
             RoutingUnit(lazyMockPresenter(for: .fifth, routeDispatcher: dispatcher)).endpoint(
-                predicate: { $0 == AppRoute.fifth.path },
+                pathPredicate: { $0 == AppRoute.fifth.path },
                 modals: [
                 
                 // Modal
                 RoutingUnit(unenchancedLazyTabBarRoutePresenter()).fork([
                     RoutingUnit(lazyNavigationRoutePresenter()).stack([
                         RoutingUnit(lazyParametrizedPresenter(routeDispatcher: dispatcher)).endpoint(
-                            predicate: { path in
+                            pathPredicate: { path in
                                 path.matches("modalParametrized/(?<id>[\\w\\-\\.]+)")
-                            }, parameters: { (path) -> RouteParameters in
-                                var arguments = RouteParameters()
+                            },
+                            pathParameters: { (path) -> PathParameters in
+                                var arguments = PathParameters()
                                 if let id = path.capturedGroups(withRegex: "modalParametrized/(?<id>[\\w\\-\\.]+)").first {
                                     arguments["id"] = id
                                     arguments["route"] = AppRoute.modalParametrized(id: id)
@@ -150,7 +152,7 @@ func createCoordinator(dispatcher: ProvidesRouteDispatch, setRootView: @escaping
                         ),
                         
                         RoutingUnit(lazyMockPresenter(for: .modal, routeDispatcher: dispatcher)).endpoint(
-                            predicate: { $0 == AppRoute.modal.path }
+                            pathPredicate: { $0 == AppRoute.modal.path }
                         )
                     ])
                 ])
