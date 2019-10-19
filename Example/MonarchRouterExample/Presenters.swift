@@ -173,20 +173,15 @@ func lazyParametrizedPresenter(routeDispatcher: ProvidesRouteDispatch) -> RouteP
     setParameters: { parameters, presentable in
         guard let presentable = presentable as? MockViewController else { return }
         
-        if  let id: String = parameters.pathParameter("id"),
-            let route: AppRoute = parameters.pathParameter("route")
+        if  let id: String = parameters.pathParameter("id")
         {
-            presentable.configure(title: "ID: \(id)", didAppearAction: {
-                //routeDispatcher.dispatchRoute(route)
-            }, buttonTitle: "Second", buttonAction: {
+            presentable.configure(title: "ID: \(id)", buttonTitle: "Second", buttonAction: {
                 routeDispatcher.dispatchRoute(AppRoute.second)
             }, backgroundColor: .red)
         }
         
         else if let id: String = parameters.queryParameter("id") {
-            presentable.configure(title: "ID: \(id)", didAppearAction: {
-                //routeDispatcher.dispatchRoute(route)
-            }, buttonTitle: "Second", buttonAction: {
+            presentable.configure(title: "ID: \(id)", buttonTitle: "Second", buttonAction: {
                 routeDispatcher.dispatchRoute(AppRoute.second)
             }, backgroundColor: .red)
         }
@@ -205,9 +200,7 @@ func lazyOnboardingPresenter(routeDispatcher: ProvidesRouteDispatch) -> RoutePre
         if  let presentable = presentable as? MockViewController,
             let name: String = parameters.queryParameter("name")
         {
-            presentable.configure(title: "Welcome, \(name)", didAppearAction: {
-                //routeDispatcher.dispatchRoute(AppRoute.onboarding(name: name))
-            }, buttonTitle: "Okay", buttonAction: {
+            presentable.configure(title: "Welcome, \(name)", buttonTitle: "Okay", buttonAction: {
                 routeDispatcher.dispatchRoute(AppRoute.first)
             }, backgroundColor: .red)
         }

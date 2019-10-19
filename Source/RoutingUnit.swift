@@ -94,10 +94,10 @@ extension RoutingUnit where Presenter == RoutePresenter
         func pathComponent(from routePath: String) -> String {
             let path: String
             
-            if let uri = URL(string: routePath) {
+            if let uriString = routePath.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed), let uri = URL(string: uriString) {
                 path = uri.path
             } else {
-                path = routePath
+                path = routePath.trimmingCharacters(in: .whitespaces)
             }
             
             return path

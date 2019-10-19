@@ -42,6 +42,7 @@ public struct RouteURIParameters
     }
     
     public init(uriString: String, pathParameters: PathParameters?) {
+        let uriString = uriString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? uriString.trimmingCharacters(in: .whitespaces)
         guard let uri = URL(string: uriString) else {
             self = RouteURIParameters(string: uriString, path: uriString, pathParameters: pathParameters, query: nil, queryParameters: nil, fragment: nil)
             return
