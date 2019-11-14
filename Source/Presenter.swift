@@ -17,7 +17,7 @@ public protocol RoutePresenterType
     var getPresentable: () -> (UIViewController) { get }
     
     /// Allows to configure the presentable with parameters.
-    var setParameters: (_ parameters: RouteURIParameters, _ presentable: UIViewController) -> () { get }
+    var setParameters: (_ parameters: RouteParameters, _ presentable: UIViewController) -> () { get }
     
     /// Clears up when the router is no longer selected.
     /// For example used to dismiss presented modals.
@@ -35,7 +35,7 @@ public struct RoutePresenter: RoutePresenterType
     /// - parameter unwind: Optional callback executed when the Presentable is no longer presented. You can use it to dissmiss modals, etc.
     public init(
         getPresentable: @escaping () -> (UIViewController),
-        setParameters: ((_ parameters: RouteURIParameters, _ presentable: UIViewController) -> ())? = nil,
+        setParameters: ((_ parameters: RouteParameters, _ presentable: UIViewController) -> ())? = nil,
         unwind: ((_ presentable: UIViewController) -> ())? = nil
     ) {
         self.getPresentable = getPresentable
@@ -52,12 +52,12 @@ public struct RoutePresenter: RoutePresenterType
     /// - parameter getPresentable: Callback returning a Presentable object.
     /// - parameter unwind: Optional callback executed when the Presentable is no longer presented. You can use it to dissmiss modals, etc.
     public init(
-        getPresentable: @escaping () -> (UIViewController & URIParametrizedPresentable),
+        getPresentable: @escaping () -> (UIViewController & RouteParametrizedPresentable),
         unwind: ((_ presentable: UIViewController) -> ())? = nil
     ) {
         self.getPresentable = getPresentable
         self.setParameters = { parameters, presentable in
-            guard let presentable = presentable as? URIParametrizedPresentable else { return }
+            guard let presentable = presentable as? RouteParametrizedPresentable else { return }
             presentable.configure(with: parameters)
         }
         if let unwind = unwind {
@@ -71,7 +71,7 @@ public struct RoutePresenter: RoutePresenterType
     public var presentModal: (_ modal: UIViewController, _ over: UIViewController) -> () = { _,_ in }
     
     public let getPresentable: () -> (UIViewController)
-    public var setParameters: (_ parameters: RouteURIParameters, _ presentable: UIViewController) -> () = { _,_ in }
+    public var setParameters: (_ parameters: RouteParameters, _ presentable: UIViewController) -> () = { _,_ in }
     public var unwind: (_ presentable: UIViewController) -> () = { _ in }
     
     
@@ -83,7 +83,7 @@ public struct RoutePresenter: RoutePresenterType
     /// - returns: RoutePresenter
     public static func lazyPresenter(
         _ createPresentable: @escaping () -> (UIViewController),
-        setParameters: ((_ parameters: RouteURIParameters, _ presentable: UIViewController) -> ())? = nil,
+        setParameters: ((_ parameters: RouteParameters, _ presentable: UIViewController) -> ())? = nil,
         presentModal: ((_ modal: UIViewController?, _ over: UIViewController) -> ())? = nil,
         unwind: ((_ presentable: UIViewController) -> ())? = nil
     ) -> RoutePresenter
@@ -113,7 +113,7 @@ public struct RoutePresenter: RoutePresenterType
     /// - parameter unwind: Optional callback executed when the Presentable is no longer presented. You can use it to dissmiss modals, etc.
     /// - returns: RoutePresenter
     public static func lazyPresenter(
-        _ createPresentable: @escaping () -> (UIViewController & URIParametrizedPresentable),
+        _ createPresentable: @escaping () -> (UIViewController & RouteParametrizedPresentable),
         presentModal: ((_ modal: UIViewController?, _ over: UIViewController) -> ())? = nil,
         unwind: ((_ presentable: UIViewController) -> ())? = nil
     ) -> RoutePresenter

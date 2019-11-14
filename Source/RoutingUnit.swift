@@ -16,11 +16,11 @@ public protocol RoutingUnitType
 {
     /// Returns Routers stack for provided Path.
     /// Configured for each respective `RoutingUnit` type.
-    var testPath: (_ path: String, _ routers: [RoutingUnitType]) -> [RoutingUnitType] { get }
+    var testPath: (_ path: RoutingRequestType, _ routers: [RoutingUnitType]) -> [RoutingUnitType] { get }
     
     /// Passes actions to the Presenter to update the view for provided Path.
     /// Configured for each respective `RoutingUnit` type.
-    var setPath: (_ path: String, _ routers: [RoutingUnitType], _ options: [DispatchRouteOption]) -> () { get }
+    var setPath: (_ path: RoutingRequestType, _ routers: [RoutingUnitType], _ options: [DispatchRouteOption]) -> () { get }
     
     /// Called when the `RoutingUnit` no handles a new Path.
     func unwind()
@@ -31,11 +31,11 @@ public protocol RoutingUnitType
     
     /// Determines should this `RoutingUnit` or it's child handle the given Path.
     /// Configured for each respective `RoutingUnit` type.
-    var shouldHandleRoute: (_ path: String) -> Bool { get }
+    var shouldHandleRoute: (_ path: RoutingRequestType) -> Bool { get }
     
     /// Determines should this `RoutingUnit` handle the given Path by itself.
     /// Configured for each respective `RoutingUnit` type.
-    var shouldHandleRouteExclusively: (_ path: String) -> Bool { get }
+    var shouldHandleRouteExclusively: (_ path: RoutingRequestType) -> Bool { get }
 }
 
 
@@ -57,14 +57,14 @@ public struct RoutingUnit<Presenter: RoutePresenterType>: RoutingUnitType
         return presenter.getPresentable()
     }
     
-    public fileprivate(set) var shouldHandleRoute: (_ path: String) -> Bool
+    public fileprivate(set) var shouldHandleRoute: (_ path: RoutingRequestType) -> Bool
         = { _ in false }
     
-    public fileprivate(set) var shouldHandleRouteExclusively: (_ path: String) -> Bool = { _ in false }
+    public fileprivate(set) var shouldHandleRouteExclusively: (_ path: RoutingRequestType) -> Bool = { _ in false }
     
-    public fileprivate(set) var testPath: (String, [RoutingUnitType]) -> [RoutingUnitType] = { _,_ in [] }
+    public fileprivate(set) var testPath: (RoutingRequestType, [RoutingUnitType]) -> [RoutingUnitType] = { _,_ in [] }
     
-    public fileprivate(set) var setPath: (_ path: String, _ routers: [RoutingUnitType], _ dispatchOptions: [DispatchRouteOption]) -> ()
+    public fileprivate(set) var setPath: (_ path: RoutingRequestType, _ routers: [RoutingUnitType], _ dispatchOptions: [DispatchRouteOption]) -> ()
         = { _,_,_ in }
     
     public func unwind() -> () {
@@ -82,41 +82,41 @@ extension RoutingUnit where Presenter == RoutePresenter
     /// - parameter modals: `RoutingUnit`s you can present as modals from this one.
     /// - returns: Modified `RoutingUnit`
     public func endpoint(
-        pathPredicate isMatching: @escaping ((_ path: String) -> Bool),
-        pathParameters: ((_ path: String) -> PathParameters)? = nil,
+        isMatching: @escaping ((_ request: RoutingRequestType) -> Bool),
+        resolve: @escaping ((_ request: RoutingRequestType) -> RoutingResolvedRequestType),
         children: [RoutingUnitType] = [],
         modals: [RoutingUnitType] = []
     ) -> RoutingUnit
     {
         var router = self
         
-        /// Get `path` component from Path URI
-        func pathComponent(from routePath: String) -> String {
-            let path: String
-            
-            if let uriString = routePath.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed), let uri = URL(string: uriString) {
-                path = uri.path
-            } else {
-                path = routePath.trimmingCharacters(in: .whitespaces)
-            }
-            
-            return path
-        }
+//        /// Get `path` component from Path URI
+//        func pathComponent(from routePath: RoutingRequestType) -> RoutingRequestType {
+//            let path: RoutingRequestType
+//
+//            if let uriString = routePath.routingRequest.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed), let uri = URL(string: uriString) {
+//                path = uri.path
+//            } else {
+//                path = routePath.routingRequest.trimmingCharacters(in: .whitespaces)
+//            }
+//
+//            return path
+//        }
         
         router.shouldHandleRoute = { path in
             // checking if this RoutingUnit or any of the children or modals can handle the Path
-            return isMatching(pathComponent(from: path))
+            return isMatching(path)
                 || children.contains { $0.shouldHandleRoute(path) }
                 || modals.contains { $0.shouldHandleRoute(path) }
         }
         
         router.shouldHandleRouteExclusively = { path in
-            return isMatching(pathComponent(from: path))
+            return isMatching(path)
         }
         
         router.testPath = { path, routers in
             // this RoutingUnit handles the Path
-            if isMatching(pathComponent(from: path)) {
+            if isMatching(path) {
                 return routers + [router]
             }
             
@@ -138,16 +138,14 @@ extension RoutingUnit where Presenter == RoutePresenter
         router.setPath = { path, routers, dispatchOptions in
             
             // this RoutingUnit handles the Path
-            if isMatching(pathComponent(from: path)) {
-                
+            if isMatching(path) {
                 let presentable = router.getPresentable()
-                
+
                 //
                 // setting parameters
-
-                let customPathParameters = pathParameters?(pathComponent(from: path))
-                let routeParameters = RouteURIParameters(uriString: path, pathParameters: customPathParameters)
                 
+                let resolvedRequest = resolve(path)
+                let routeParameters = RouteParameters(request: resolvedRequest)
                 router.presenter.setParameters(routeParameters, presentable)
             }
                 
@@ -181,13 +179,12 @@ extension RoutingUnit where Presenter == RoutePresenter
     /// - parameter modals: `RoutingUnit`s you can present as modals from this one.
     /// - returns: Modified `RoutingUnit`
     public func endpoint(
-        path: String,
-        pathParameters: ((_ path: String) -> PathParameters)? = nil,
+        _ route: RouteType,
         children: [RoutingUnitType] = [],
         modals: [RoutingUnitType] = []
     ) -> RoutingUnit
     {
-        endpoint(pathPredicate: { $0 == path }, pathParameters: pathParameters, children: children, modals: modals)
+        endpoint(isMatching: { route.isMatching(request: $0) }, resolve: { $0.resolve(for: route) }, children: children, modals: modals)
     }
 }
 
@@ -227,7 +224,7 @@ extension RoutingUnit where Presenter == RoutePresenterStack
             
             // `junctionsOnly` dispatch option
             if dispatchOptions.contains(.junctionsOnly) {
-                // some item in stack handles the Path
+                // some item in the stack handles the Path
                 if let stackItem = stack.firstResult({ stackItem in stackItem.shouldHandleRoute(path) ? stackItem : nil })
                 {
                     let presentable = router.presenter.getPresentable()
@@ -239,7 +236,7 @@ extension RoutingUnit where Presenter == RoutePresenterStack
             
             // default dispatch options
             
-            // some item in stack handles the Path
+            // some item in the stack handles the Path
             if let stackItem = stack.firstResult({ stackItem in stackItem.shouldHandleRoute(path) ? stackItem : nil })
             {
                 let presentable = router.presenter.getPresentable()

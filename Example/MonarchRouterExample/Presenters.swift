@@ -190,7 +190,7 @@ func lazyParametrizedPresenter(routeDispatcher: ProvidesRouteDispatch) -> RouteP
     return presenter
 }
 
-/// Lazy Presenter for a VC that is configured based on a Route.
+/// Lazy Presenter for a VC that is configured based on a query parameter.
 func lazyOnboardingPresenter(routeDispatcher: ProvidesRouteDispatch) -> RoutePresenter
 {
     var presenter = RoutePresenter.lazyPresenter({
@@ -198,7 +198,7 @@ func lazyOnboardingPresenter(routeDispatcher: ProvidesRouteDispatch) -> RoutePre
     },
     setParameters: { parameters, presentable in
         if  let presentable = presentable as? MockViewController,
-            let name: String = parameters.queryParameter("name")
+            let name = parameters.queryParameter("name")
         {
             presentable.configure(title: "Welcome, \(name)", buttonTitle: "Okay", buttonAction: {
                 routeDispatcher.dispatchRoute(AppRoute.first)

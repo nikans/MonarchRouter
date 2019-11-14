@@ -36,3 +36,19 @@ extension Set
         self = set
     }
 }
+
+
+extension Collection
+{
+    func mapToDictionary<K, V>(_ map: ((Self.Iterator.Element) -> (K, V)?))  -> [K: V]
+    {
+        var d = [K: V]()
+        for e in self {
+            if let kV = map(e) {
+                d[kV.0] = kV.1
+            }
+        }
+        
+        return d
+    }
+}

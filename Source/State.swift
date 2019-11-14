@@ -12,20 +12,24 @@ import Foundation
 
 public enum DispatchRouteOption
 {
+    /// Keeps presented VCs if only need to switch the junction option
     case junctionsOnly
 }
 
 
 /// State Store for the Router.
-/// Initialize one to change routes via `dispatchRoute(_ path: String)`.
+/// Initialize one to change routes via `dispatchRoute(_ path:)`.
 public final class RouterStore
 {
     /// Primary method to change the path.
     /// You can extend `RouterStore` with a method to accept your routes enum and delegate paths switching to this method.
-    /// - parameter path: String Path to navigate to.
+    /// - parameter path: Path to navigate to.
     /// - parameter options: Special options for navigation (see `DispatchRouteOption` enum).
-    public func dispatchRoute(_ path: String, options: [DispatchRouteOption] = []) {
+    public func dispatchRoute(_ path: RoutingRequestType, options: [DispatchRouteOption] = []) {
         self.state = routerReducer(path: path, router: router(), state: self.state, options: options)
+        
+        // TODO: REMOVE
+//        Test()
     }
     
     
@@ -45,7 +49,7 @@ public final class RouterStore
     public init(
         router: @autoclosure @escaping () -> RoutingUnitType,
         state: RouterStateType,
-        reducer: @escaping (_ path: String, _ router: RoutingUnitType, _ state: RouterStateType, _ options: [DispatchRouteOption]) -> RouterStateType)
+        reducer: @escaping (_ path: RoutingRequestType, _ router: RoutingUnitType, _ state: RouterStateType, _ options: [DispatchRouteOption]) -> RouterStateType)
     {
         self.router = router
         self.state = state
@@ -62,7 +66,7 @@ public final class RouterStore
     /// Function to calculate a new State.
     /// Implements navigation via `RoutingUnitType`'s `setPath` callback.
     /// Unwinds unused `RoutingUnits` (see `RoutingUnitType`'s `unwind()` function).
-    let reducer: (_ path: String, _ router: RoutingUnitType, _ state: RouterStateType, _ options: [DispatchRouteOption]) -> RouterStateType
+    let reducer: (_ path: RoutingRequestType, _ router: RoutingUnitType, _ state: RouterStateType, _ options: [DispatchRouteOption]) -> RouterStateType
 }
 
 
@@ -86,10 +90,10 @@ struct RouterState: RouterStateType
 /// Function to calculate a new State.
 /// Implements navigation via `RoutingUnitType`'s `setPath` callback.
 /// Unwinds unused `RoutingUnit`s (see `RoutingUnitType`'s `unwind()` function).
-/// - parameter path: String Path to navigate to.
+/// - parameter path: Path to navigate to.
 /// - parameter router: Describes the Coordinator hierarchy for the current application.
 /// - parameter state: State holds the current `RoutingUnits` stack.
-func routerReducer(path: String, router: RoutingUnitType, state: RouterStateType, options: [DispatchRouteOption]) -> RouterStateType
+func routerReducer(path: RoutingRequestType, router: RoutingUnitType, state: RouterStateType, options: [DispatchRouteOption]) -> RouterStateType
 {
     // Changes the Path and returns a new Routers stack
     let newRoutersStack = router.testPath(path, [])

@@ -64,9 +64,9 @@ class MockViewController: UIViewController
 }
 
 
-extension MockViewController: URIParametrizedPresentable
+extension MockViewController: RouteParametrizedPresentable
 {
-    func configure(with uriParameters: RouteURIParameters) {
+    func configure(with uriParameters: RouteParameters) {
         
     }
 }
