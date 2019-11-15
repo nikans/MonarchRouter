@@ -11,24 +11,44 @@ import MonarchRouter
 
 
 
+
+
+//struct Test {
+//    init() {
+////        let route: Route = [.constant("test"), .parameter(name: "id", type: Int.self)]
+//        let route = "user/:id/..."
+////        let route = RouteString("user/:id/...", parametersValidation: [(name: "id", pattern: "[\\w\\-\\.]+")])
+//
+////        let path = Path([PathConstant("user"), PathParameter("id", "shit"), PathParameter("name", "loh")])
+//        let request = "user/shit"
+//
+//        print(route.isMatching(request: request))
+//        print(request.resolve(for: route))
+//    }
+//}
+
+
+
+
+
 /// Creating the app's Coordinator hierarchy.
-func appCoordinator(dispatcher: ProvidesRouteDispatch, setRootView: @escaping (UIViewController)->()) -> RoutingUnitType
+func appCoordinator(dispatcher: ProvidesRouteDispatch, setRootView: @escaping (UIViewController)->()) -> RoutingNodeType
 {
-//    return RoutingUnit(sectionsSwitcherRoutePresenter(setRootView)).switcher([])
+//    return RoutingNode(sectionsSwitcherRoutePresenter(setRootView)).switcher([])
     
     return
         // Top level app sections' switcher
-        RoutingUnit(sectionsSwitcherRoutePresenter(setRootView)).switcher([
+        RoutingNode(sectionsSwitcherRoutePresenter(setRootView)).switcher([
         
         // Login
-        RoutingUnit(lazyMockPresenter(for: .login, routeDispatcher: dispatcher))
+        RoutingNode(lazyMockPresenter(for: .login, routeDispatcher: dispatcher))
             .endpoint(AppRoute.login.path),
         
         // Onboarding
-        RoutingUnit(lazyNavigationRoutePresenter()).stack([
+        RoutingNode(lazyNavigationRoutePresenter()).stack([
             
             // Parametrized welcome page
-            RoutingUnit(lazyOnboardingPresenter(routeDispatcher: dispatcher))
+            RoutingNode(lazyOnboardingPresenter(routeDispatcher: dispatcher))
                 .endpoint(
                     // note that only path component of the uri is matched here
                     "onboarding"
@@ -36,7 +56,7 @@ func appCoordinator(dispatcher: ProvidesRouteDispatch, setRootView: @escaping (U
         ]),
         
         // Tabbar
-        RoutingUnit(lazyTabBarRoutePresenter(
+        RoutingNode(lazyTabBarRoutePresenter(
             optionsDescription: [
                 (title: "First",  icon: nil, route: .first),
                 (title: "Second", icon: nil, route: .second),
@@ -47,43 +67,43 @@ func appCoordinator(dispatcher: ProvidesRouteDispatch, setRootView: @escaping (U
             routeDispatcher: dispatcher)).fork([
             
             // First nav stack
-            RoutingUnit(lazyNavigationRoutePresenter()).stack([
+            RoutingNode(lazyNavigationRoutePresenter()).stack([
                 
                 // First
-                RoutingUnit(lazyMockPresenter(for: .first, routeDispatcher: dispatcher)).endpoint(
+                RoutingNode(lazyMockPresenter(for: .first, routeDispatcher: dispatcher)).endpoint(
                     AppRoute.first.path,
                     children: [
                     
                     // Detail
-                    RoutingUnit(lazyMockPresenter(for: .firstDetail, routeDispatcher: dispatcher)).endpoint(
+                    RoutingNode(lazyMockPresenter(for: .firstDetail, routeDispatcher: dispatcher)).endpoint(
                         AppRoute.firstDetail.path,
                         children: [
                         
                         // Parametrized Detail
-                        RoutingUnit(lazyParametrizedPresenter(routeDispatcher: dispatcher))
+                        RoutingNode(lazyParametrizedPresenter(routeDispatcher: dispatcher))
                             .endpoint("firstDetailParametrized")
                     ])
                 ])
             ]),
             
             // Second nav stack
-            RoutingUnit(lazyNavigationRoutePresenter()).stack([
+            RoutingNode(lazyNavigationRoutePresenter()).stack([
             
                 // Second
-                RoutingUnit(lazyMockPresenter(for: .second, routeDispatcher: dispatcher)).endpoint(AppRoute.second.path,
+                RoutingNode(lazyMockPresenter(for: .second, routeDispatcher: dispatcher)).endpoint(AppRoute.second.path,
                     children: [
                     
                     // Detail
-                    RoutingUnit(lazyMockPresenter(for: .secondDetail, routeDispatcher: dispatcher))
+                    RoutingNode(lazyMockPresenter(for: .secondDetail, routeDispatcher: dispatcher))
                         .endpoint(AppRoute.secondDetail.path)
                 ])
             ]),
             
             // Third nav stack
-            RoutingUnit(lazyNavigationRoutePresenter()).stack([
+            RoutingNode(lazyNavigationRoutePresenter()).stack([
             
                 // Third (parametrized)
-                RoutingUnit(lazyParametrizedPresenter(routeDispatcher: dispatcher)).endpoint(
+                RoutingNode(lazyParametrizedPresenter(routeDispatcher: dispatcher)).endpoint(
                     isMatching: { path in
                         "third/:id".isMatching(request: path)
 //                        path.matches(predicate: "third/(?<id>[\\w\\-\\.]+)")
@@ -103,7 +123,7 @@ func appCoordinator(dispatcher: ProvidesRouteDispatch, setRootView: @escaping (U
             ]),
             
             // Fourth (parametrized)
-            RoutingUnit(lazyParametrizedPresenter(routeDispatcher: dispatcher)).endpoint(
+            RoutingNode(lazyParametrizedPresenter(routeDispatcher: dispatcher)).endpoint(
                 isMatching: { path in
                     "fourth/:id".isMatching(request: path)
 //                    path.matches(predicate: "fourth/(?<id>[\\w\\-\\.]+)")
@@ -121,14 +141,14 @@ func appCoordinator(dispatcher: ProvidesRouteDispatch, setRootView: @escaping (U
             ),
             
             // Fifth
-            RoutingUnit(lazyMockPresenter(for: .fifth, routeDispatcher: dispatcher)).endpoint(
+            RoutingNode(lazyMockPresenter(for: .fifth, routeDispatcher: dispatcher)).endpoint(
                 AppRoute.fifth.path,
                 modals: [
                 
                 // Modal
-                RoutingUnit(unenchancedLazyTabBarRoutePresenter()).fork([
-                    RoutingUnit(lazyNavigationRoutePresenter()).stack([
-                        RoutingUnit(lazyParametrizedPresenter(routeDispatcher: dispatcher)).endpoint(
+                RoutingNode(unenchancedLazyTabBarRoutePresenter()).fork([
+                    RoutingNode(lazyNavigationRoutePresenter()).stack([
+                        RoutingNode(lazyParametrizedPresenter(routeDispatcher: dispatcher)).endpoint(
                             isMatching: { path in
                                 "modalParametrized/:id".isMatching(request: path)
 //                                path.matches(predicate: "modalParametrized/(?<id>[\\w\\-\\.]+)")
@@ -145,7 +165,7 @@ func appCoordinator(dispatcher: ProvidesRouteDispatch, setRootView: @escaping (U
                             }
                         ),
                         
-                        RoutingUnit(lazyMockPresenter(for: .modal, routeDispatcher: dispatcher))
+                        RoutingNode(lazyMockPresenter(for: .modal, routeDispatcher: dispatcher))
                             .endpoint(AppRoute.modal.path)
                     ])
                 ])

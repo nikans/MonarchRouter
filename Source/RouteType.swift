@@ -10,7 +10,8 @@ import Foundation
 
 
 
-public enum RouteComponent {
+public enum RouteComponent
+{
     case constant(String)
     case parameter(name: String, type: Any.Type?, isMatching: ((_ value: Any) -> Bool)? )
     case anything
@@ -51,25 +52,36 @@ public enum RouteComponent {
 }
 
 
+
 public protocol RouteType
 {
     var components: [RouteComponent] { get }
-    func isMatching(path: Path) -> Bool
+    func isMatching(path: [PathComponentType]) -> Bool
     func isMatching(request: RoutingRequestType) -> Bool
 }
 
+
+
 extension RouteType
 {
-    public func isMatching(path: Path) -> Bool {
+    public func isMatching(path pathComponents: [PathComponentType]) -> Bool
+    {
         guard components.count > 0 else { return false }
         
         for (i, routeComponent) in components.enumerated() {
-            if path.count <= i || !routeComponent.isMatching(pathComponent: path[i]) {
+            if pathComponents.count <= i {
+                switch routeComponent {
+                case .anything, .everything:
+                    break
+                default:
+                    return false
+                }
+            } else if !routeComponent.isMatching(pathComponent: pathComponents[i]) {
                 return false
             }
         }
         
-        if path.count > components.count, let lastComponent = components.last {
+        if pathComponents.count > components.count, let lastComponent = components.last {
             switch lastComponent {
             case .anything, .everything:
                 return true
@@ -85,32 +97,11 @@ extension RouteType
         guard components.count > 0 else { return false }
         
         let request = request.resolve(for: self)
-//        print(components)
-        for (i, routeComponent) in components.enumerated() {
-            if request.pathComponents.count <= i {
-                switch routeComponent {
-                case .anything, .everything:
-                    break
-                default:
-                    return false
-                }
-            } else if !routeComponent.isMatching(pathComponent: request.pathComponents[i]) {
-                return false
-            }
-        }
-        
-        if request.pathComponents.count > components.count, let lastComponent = components.last {
-            switch lastComponent {
-            case .anything, .everything:
-                return true
-            default:
-                return false
-            }
-        }
-        
-        return true
+        let pathComponents = request.pathComponents
+        return isMatching(path: pathComponents)
     }
 }
+
 
 
 extension String: RouteType
@@ -138,11 +129,13 @@ extension String: RouteType
 }
 
 
+
 struct RouteString: RouteType
 {
     typealias ParameterValidation = (name: String, pattern: String)
     
-    init(_ predicate: String, parametersValidation: [ParameterValidation]? = nil) {
+    init(_ predicate: String, parametersValidation: [ParameterValidation]? = nil)
+    {
         let parametersValidation: Dictionary<String, String> = parametersValidation?.mapToDictionary { parameter in
             return (parameter.name, parameter.pattern)
         } ?? [:]
@@ -182,6 +175,7 @@ struct RouteString: RouteType
 }
 
 
+
 extension Array: RouteType where Element == RouteComponent
 {
     public var components: [RouteComponent] {
@@ -191,162 +185,4 @@ extension Array: RouteType where Element == RouteComponent
     init(_ components: [RouteComponent]) {
         self = components
     }
-}
-
-
-
-
-
-
-
-public protocol PathComponentType {
-    var name: String { get }
-}
-
-public protocol PathParameterType: PathComponentType {
-    var anyValue: Any { get }
-}
-
-public struct PathConstant: PathComponentType
-{
-    public var name: String
-    
-    public init(_ name: String) {
-        self.name = name
-    }
-}
-
-public struct PathParameter<T>: PathParameterType
-{
-    public var name: String
-    var value: T
-    
-    public init(_ name: String, _ value: T) {
-        self.name = name
-        self.value = value
-    }
-    
-    public var anyValue: Any {
-        return value
-    }
-}
-
-
-
-public typealias Path = [PathComponentType]
-
-extension Path {
-    public init(_ components: [PathComponentType]) {
-        self = components
-    }
-}
-
-
-
-struct Test {
-    init() {
-//        let route: Route = [.constant("test"), .parameter(name: "id", type: Int.self)]
-        let route = "user/:id/..."
-//        let route = RouteString("user/:id/...", parametersValidation: [(name: "id", pattern: "[\\w\\-\\.]+")])
-        
-//        let path = Path([PathConstant("user"), PathParameter("id", "shit"), PathParameter("name", "loh")])
-        let request = "user/shit"
-
-        print(route.isMatching(request: request))
-        print(request.resolve(for: route))
-    }
-}
-
-
-
-public protocol QueryParameterType {
-    var name: String { get }
-    var anyValue: Any? { get }
-}
-
-public struct QueryParameter<T>: QueryParameterType
-{
-    public var name: String
-    var value: T?
-    
-    public init(_ name: String, _ value: T?) {
-        self.name = name
-        self.value = value
-    }
-    
-    public var anyValue: Any? {
-        return value
-    }
-}
-
-
-
-
-public protocol RoutingRequestType
-{
-    func resolve(for route: RouteType) -> RoutingResolvedRequestType
-}
-
-extension URL: RoutingRequestType
-{
-    public func resolve(for route: RouteType) -> RoutingResolvedRequestType
-    {
-        let pathComponents: [PathComponentType] = self.pathComponents.enumerated().map { (i, pathComponent) in
-            if route.components.count > i, case .parameter(let name, let parameterType, _) = route.components[i] {
-                    return PathParameter(name, pathComponent)
-            }
-            
-            return PathConstant(pathComponent)
-        }
-        
-        
-        var queryParameters: [QueryParameterType] = []
-        
-        if  let components = URLComponents(url: self, resolvingAgainstBaseURL: false),
-            let queryItems = components.queryItems
-        {
-            for item in queryItems {
-                queryParameters.append(QueryParameter(item.name, item.value))
-            }
-        }
-        
-        return RoutingRequest(pathComponents: pathComponents, queryParameters: queryParameters, fragment: self.fragment)
-    }
-}
-
-
-extension String: RoutingRequestType
-{
-    public func resolve(for route: RouteType) -> RoutingResolvedRequestType
-    {
-        guard let string = self.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed), let url = URL(string: string) else {
-            fatalError()
-            // TODO:
-        }
-        
-        return url.resolve(for: route)
-    }
-}
-
-
-public protocol RoutingResolvedRequestType
-{
-    var pathComponents: [PathComponentType] { get }
-    var pathParameters: [PathParameterType] { get }
-    var queryParameters: [QueryParameterType] { get }
-    var fragment: String? { get }
-}
-
-public struct RoutingRequest: RoutingResolvedRequestType
-{
-    public var pathComponents: [PathComponentType]
-    public var pathParameters: [PathParameterType] {
-        return pathComponents.compactMap { element in
-            guard let element = element as? PathParameterType else { return nil }
-            return element
-        }
-    }
-    
-    public var queryParameters: [QueryParameterType]
-    public var fragment: String?
 }

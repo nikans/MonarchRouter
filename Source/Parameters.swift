@@ -61,6 +61,70 @@ public struct RouteParameters
 
 
 
+public protocol PathComponentType {
+    var name: String { get }
+}
+
+
+
+public protocol PathParameterType: PathComponentType {
+    var anyValue: Any { get }
+}
+
+
+
+public struct PathConstant: PathComponentType
+{
+    public var name: String
+    
+    public init(_ name: String) {
+        self.name = name
+    }
+}
+
+
+
+public struct PathParameter<T>: PathParameterType
+{
+    public var name: String
+    var value: T
+    
+    public init(_ name: String, _ value: T) {
+        self.name = name
+        self.value = value
+    }
+    
+    public var anyValue: Any {
+        return value
+    }
+}
+
+
+
+public protocol QueryParameterType {
+    var name: String { get }
+    var anyValue: Any? { get }
+}
+
+
+
+public struct QueryParameter<T>: QueryParameterType
+{
+    public var name: String
+    var value: T?
+    
+    public init(_ name: String, _ value: T?) {
+        self.name = name
+        self.value = value
+    }
+    
+    public var anyValue: Any? {
+        return value
+    }
+}
+
+
+
 /// Indicates a presentable can be automatically parametrized.
 public protocol RouteParametrizedPresentable
 {

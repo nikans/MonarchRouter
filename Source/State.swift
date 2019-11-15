@@ -17,39 +17,36 @@ public enum DispatchRouteOption
 }
 
 
+
 /// State Store for the Router.
-/// Initialize one to change routes via `dispatchRoute(_ path:)`.
+/// Initialize one to change routes via `dispatchRoute(_ request:)`.
 public final class RouterStore
 {
-    /// Primary method to change the path.
-    /// You can extend `RouterStore` with a method to accept your routes enum and delegate paths switching to this method.
-    /// - parameter path: Path to navigate to.
+    /// Primary method to make a Routing Request.
+    /// - parameter request: Routing Request.
     /// - parameter options: Special options for navigation (see `DispatchRouteOption` enum).
-    public func dispatchRoute(_ path: RoutingRequestType, options: [DispatchRouteOption] = []) {
-        self.state = routerReducer(path: path, router: router(), state: self.state, options: options)
-        
-        // TODO: REMOVE
-//        Test()
+    public func dispatchRoute(_ request: RoutingRequestType, options: [DispatchRouteOption] = []) {
+        self.state = routerReducer(request: request, router: router(), state: self.state, options: options)
     }
     
     
     /// Primary initializer for a new `RouterStore`.
     /// - parameter router: Describes the Coordinator hierarchy for the current application. Autoclosure.
-    public init(router: @autoclosure @escaping () -> RoutingUnitType) {
+    public init(router: @autoclosure @escaping () -> RoutingNodeType) {
         self.router = router
         self.state = RouterState()
-        self.reducer = routerReducer(path:router:state:options:)
+        self.reducer = routerReducer(request:router:state:options:)
     }
 
     
     /// Initializer allowing for overriding the State and Reducer.
     /// - parameter router: Describes the Coordinator hierarchy for the current application. Autoclosure.
-    /// - parameter state: State holds the current `RoutingUnits` stack.
+    /// - parameter state: State holds the current `RoutingNodes` stack.
     /// - parameter reducer: Function to calculate a new State.
     public init(
-        router: @autoclosure @escaping () -> RoutingUnitType,
+        router: @autoclosure @escaping () -> RoutingNodeType,
         state: RouterStateType,
-        reducer: @escaping (_ path: RoutingRequestType, _ router: RoutingUnitType, _ state: RouterStateType, _ options: [DispatchRouteOption]) -> RouterStateType)
+        reducer: @escaping (_ request: RoutingRequestType, _ router: RoutingNodeType, _ state: RouterStateType, _ options: [DispatchRouteOption]) -> RouterStateType)
     {
         self.router = router
         self.state = state
@@ -58,15 +55,15 @@ public final class RouterStore
     
     
     /// Describes the Coordinator hierarchy for the current application.
-    let router: () -> RoutingUnitType
+    let router: () -> RoutingNodeType
     
-    /// State holds the current `RoutingUnits` stack.
+    /// State holds the current `RoutingNodes` stack.
     var state: RouterStateType
     
     /// Function to calculate a new State.
-    /// Implements navigation via `RoutingUnitType`'s `setPath` callback.
-    /// Unwinds unused `RoutingUnits` (see `RoutingUnitType`'s `unwind()` function).
-    let reducer: (_ path: RoutingRequestType, _ router: RoutingUnitType, _ state: RouterStateType, _ options: [DispatchRouteOption]) -> RouterStateType
+    /// Implements navigation via `RoutingNodeType`'s `setRequest` callback.
+    /// Unwinds unused `RoutingNodes` (see `RoutingNodeType`'s `unwind()` function).
+    let reducer: (_ request: RoutingRequestType, _ router: RoutingNodeType, _ state: RouterStateType, _ options: [DispatchRouteOption]) -> RouterStateType
 }
 
 
@@ -75,31 +72,31 @@ public final class RouterStore
 public protocol RouterStateType
 {
     /// The stack of Routers.
-    var routersStack: [RoutingUnitType] { get set }
+    var routersStack: [RoutingNodeType] { get set }
 }
 
 /// State holds the current Routers stack.
 struct RouterState: RouterStateType
 {
-    /// The resulting Routers after applying the path.
-    var routersStack = [RoutingUnitType]()
+    /// The resulting Routers after performing the Request.
+    var routersStack = [RoutingNodeType]()
 }
 
 
 
 /// Function to calculate a new State.
-/// Implements navigation via `RoutingUnitType`'s `setPath` callback.
-/// Unwinds unused `RoutingUnit`s (see `RoutingUnitType`'s `unwind()` function).
-/// - parameter path: Path to navigate to.
+/// Implements navigation via `RoutingNodeType`'s `performRequest` callback.
+/// Unwinds unused `RoutingNode`s (see `RoutingNodeType`'s `unwind()` function).
+/// - parameter request: Request to perform.
 /// - parameter router: Describes the Coordinator hierarchy for the current application.
-/// - parameter state: State holds the current `RoutingUnits` stack.
-func routerReducer(path: RoutingRequestType, router: RoutingUnitType, state: RouterStateType, options: [DispatchRouteOption]) -> RouterStateType
+/// - parameter state: State holds the current `RoutingNodes` stack.
+func routerReducer(request: RoutingRequestType, router: RoutingNodeType, state: RouterStateType, options: [DispatchRouteOption]) -> RouterStateType
 {
-    // Changes the Path and returns a new Routers stack
-    let newRoutersStack = router.testPath(path, [])
-    router.setPath(path, [], options)
+    // Performs the Request and returns a new Routers stack
+    let newRoutersStack = router.testRequest(request, [])
+    router.performRequest(request, [], options)
     
-    // Finding the first RoutingUnit in the stack that is not the same as in the previous Routers stack
+    // Finding the first RoutingNode in the stack that is not the same as in the previous Routers stack
     if let firstDifferenceIndex = state.routersStack.enumerated().first(where: { (i, element) -> Bool in
         guard newRoutersStack.count > i else { return true }
         return element.getPresentable() != newRoutersStack[i].getPresentable()
