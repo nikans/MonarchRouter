@@ -19,7 +19,7 @@
 		D09D0DF121A4703100601258 /* PresenterFork.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D0DF021A4703100601258 /* PresenterFork.swift */; };
 		D09D0DF321A470C300601258 /* PresenterSwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D0DF221A470C300601258 /* PresenterSwitcher.swift */; };
 		D0A7B9D4219F322C00B44C3D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7B9D3219F322C00B44C3D /* AppDelegate.swift */; };
-		D0A7B9D6219F322C00B44C3D /* MockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7B9D5219F322C00B44C3D /* MockViewController.swift */; };
+		D0A7B9D6219F322C00B44C3D /* ViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7B9D5219F322C00B44C3D /* ViewControllers.swift */; };
 		D0A7B9D9219F322C00B44C3D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D0A7B9D7219F322C00B44C3D /* Main.storyboard */; };
 		D0A7B9DB219F322D00B44C3D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0A7B9DA219F322D00B44C3D /* Assets.xcassets */; };
 		D0A7B9DE219F322D00B44C3D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D0A7B9DC219F322D00B44C3D /* LaunchScreen.storyboard */; };
@@ -32,7 +32,6 @@
 		D0A7BA12219F378B00B44C3D /* Presenters.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7BA11219F378B00B44C3D /* Presenters.swift */; };
 		D0A7BA14219F3C5900B44C3D /* EndpointBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7BA13219F3C5800B44C3D /* EndpointBuilder.swift */; };
 		D0A7BA16219F3EC500B44C3D /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7BA15219F3EC500B44C3D /* AppCoordinator.swift */; };
-		D0A7BA1821A0336200B44C3D /* String+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7BA1721A0336200B44C3D /* String+extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,7 +76,7 @@
 		D09D0DF221A470C300601258 /* PresenterSwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PresenterSwitcher.swift; path = ../../Source/PresenterSwitcher.swift; sourceTree = "<group>"; };
 		D0A7B9D0219F322C00B44C3D /* MonarchRouterExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MonarchRouterExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0A7B9D3219F322C00B44C3D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		D0A7B9D5219F322C00B44C3D /* MockViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockViewController.swift; sourceTree = "<group>"; };
+		D0A7B9D5219F322C00B44C3D /* ViewControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllers.swift; sourceTree = "<group>"; };
 		D0A7B9D8219F322C00B44C3D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D0A7B9DA219F322D00B44C3D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D0A7B9DD219F322D00B44C3D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -91,7 +90,6 @@
 		D0A7BA11219F378B00B44C3D /* Presenters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presenters.swift; sourceTree = "<group>"; };
 		D0A7BA13219F3C5800B44C3D /* EndpointBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndpointBuilder.swift; sourceTree = "<group>"; };
 		D0A7BA15219F3EC500B44C3D /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
-		D0A7BA1721A0336200B44C3D /* String+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,13 +157,12 @@
 			isa = PBXGroup;
 			children = (
 				D0A7B9D3219F322C00B44C3D /* AppDelegate.swift */,
-				D0A7B9D5219F322C00B44C3D /* MockViewController.swift */,
+				D0A7B9D5219F322C00B44C3D /* ViewControllers.swift */,
 				D0A7B9D7219F322C00B44C3D /* Main.storyboard */,
 				D09228CB235B4AB30066E33B /* AppRoutes.swift */,
 				D0A7BA15219F3EC500B44C3D /* AppCoordinator.swift */,
 				D0A7BA11219F378B00B44C3D /* Presenters.swift */,
 				D0A7BA13219F3C5800B44C3D /* EndpointBuilder.swift */,
-				D0A7BA1721A0336200B44C3D /* String+extension.swift */,
 				D0A7B9DA219F322D00B44C3D /* Assets.xcassets */,
 				D0A7B9DC219F322D00B44C3D /* LaunchScreen.storyboard */,
 				D0A7B9DF219F322D00B44C3D /* Info.plist */,
@@ -179,12 +176,12 @@
 				D07E7B0B21A5606F00B415D6 /* State.swift */,
 				D03164BA237E1C3A00F9B1EC /* RoutingRequest.swift */,
 				D03164B6237B8C9300F9B1EC /* RouteType.swift */,
+				D09228D1235B5CFC0066E33B /* Parameters.swift */,
 				D0A7BA0D219F363900B44C3D /* RoutingNode.swift */,
 				D0A7BA0C219F363900B44C3D /* Presenter.swift */,
 				D09D0DEE21A46FE300601258 /* PresenterStack.swift */,
 				D09D0DF021A4703100601258 /* PresenterFork.swift */,
 				D09D0DF221A470C300601258 /* PresenterSwitcher.swift */,
-				D09228D1235B5CFC0066E33B /* Parameters.swift */,
 				D0A7BA0B219F363900B44C3D /* Collection+extension.swift */,
 				D03164B8237BA5D300F9B1EC /* String+extension.swift */,
 				D0A7B9EC219F324200B44C3D /* MonarchRouter.h */,
@@ -368,11 +365,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0A7BA16219F3EC500B44C3D /* AppCoordinator.swift in Sources */,
-				D0A7B9D6219F322C00B44C3D /* MockViewController.swift in Sources */,
+				D0A7B9D6219F322C00B44C3D /* ViewControllers.swift in Sources */,
 				D0A7BA12219F378B00B44C3D /* Presenters.swift in Sources */,
 				D0A7B9D4219F322C00B44C3D /* AppDelegate.swift in Sources */,
 				D09228CC235B4AB30066E33B /* AppRoutes.swift in Sources */,
-				D0A7BA1821A0336200B44C3D /* String+extension.swift in Sources */,
 				D0A7BA14219F3C5900B44C3D /* EndpointBuilder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

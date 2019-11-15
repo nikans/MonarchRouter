@@ -11,57 +11,33 @@ import MonarchRouter
 
 
 
-/// Creates a mock VC.
-func mockVC() -> MockViewController
+enum EndpointViewControllerId: String
 {
-    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-    return storyboard.instantiateInitialViewController() as! MockViewController
+    case login = "LoginViewController"
+    case onboarding = "OnboardingViewController"
+    case today = "TodayViewController"
+    case story = "StoryViewController"
+    case allNews = "AllNewsViewController"
+    case books = "BooksViewController"
+    case book = "BookViewController"
+//    case booksCategory = ""
+    case profile = "ProfileViewController"
+    case orders = "OrdersViewController"
+    case deliveryInfo = "DeliveryViewController"
+    
+    var identifier: String {
+        return rawValue
+    }
 }
 
 
-/// Creates VCs for non-parametrized Routes.
-func buildEndpoint(for route: AppRoute, routeDispatcher: ProvidesRouteDispatch) -> UIViewController
+/// Creates VCs for Routes.
+func buildEndpoint(_ endpoint: EndpointViewControllerId, router: ProvidesRouteDispatch) -> UIViewController
 {
-    let vc = mockVC()
-    
-    switch route {
-    case .login:
-        vc.configure(title: "Login screen",buttonTitle: "Login", buttonAction: {
-            routeDispatcher.dispatchRoute(AppRoute.onboarding(name: "USER NAME"))
-        }, backgroundColor: .purple)
-        
-    case .first:
-        vc.configure(title: "Main screen", buttonTitle: "Detail", buttonAction: {
-            routeDispatcher.dispatchRoute(AppRoute.firstDetail)
-        }, backgroundColor: .magenta)
-        
-    case .firstDetail:
-        vc.configure(title: "First detail", buttonTitle: "Parametrized Detail", buttonAction: {
-            routeDispatcher.dispatchRoute(AppRoute.firstDetailParametrized(id: "-firstDetail"))
-        }, backgroundColor: .magenta)
-        
-    case .second:
-        vc.configure(title: "Second screen", buttonTitle: "Second detail", buttonAction: {
-            routeDispatcher.dispatchRoute(AppRoute.secondDetail)
-        }, backgroundColor: .orange)
-        
-    case .secondDetail:
-        vc.configure(title: "Second detail", buttonTitle: "First detail", buttonAction: {
-            routeDispatcher.dispatchRoute(AppRoute.firstDetail)
-        }, backgroundColor: .orange)
-        
-    case .fifth:
-        vc.configure(title: "Fifth screen", buttonTitle: "Modal", buttonAction: {
-            routeDispatcher.dispatchRoute(AppRoute.modalParametrized(id: "-someModal"))
-        }, backgroundColor: .darkGray)
-      
-    case .modal:
-        vc.configure(title: "Modal screen", buttonTitle: "Fifth", buttonAction: {
-            routeDispatcher.dispatchRoute(AppRoute.fifth)
-        }, backgroundColor: .blue)
-        
-    case .onboarding(_), .firstDetailParametrized(_), .third(_), .fourth(_), .modalParametrized(_):
-        fatalError("This VC is built elsewhere")
+    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+    let vc = storyboard.instantiateViewController(withIdentifier: endpoint.identifier)
+    if let vc = vc as? MonarchViewController {
+        vc.configure(router: router)
     }
     
     return vc

@@ -128,5 +128,5 @@ public struct QueryParameter<T>: QueryParameterType
 /// Indicates a presentable can be automatically parametrized.
 public protocol RouteParametrizedPresentable
 {
-    func configure(with uriParameters: RouteParameters)
+    func configure(routeParameters: RouteParameters)
 }

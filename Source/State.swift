@@ -19,13 +19,13 @@ public enum DispatchRouteOption
 
 
 /// State Store for the Router.
-/// Initialize one to change routes via `dispatchRoute(_ request:)`.
+/// Initialize one to change routes via `dispatch(_ request:)`.
 public final class RouterStore
 {
     /// Primary method to make a Routing Request.
     /// - parameter request: Routing Request.
     /// - parameter options: Special options for navigation (see `DispatchRouteOption` enum).
-    public func dispatchRoute(_ request: RoutingRequestType, options: [DispatchRouteOption] = []) {
+    public func dispatch(_ request: RoutingRequestType, options: [DispatchRouteOption] = []) {
         self.state = routerReducer(request: request, router: router(), state: self.state, options: options)
     }
     

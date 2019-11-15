@@ -11,163 +11,97 @@ import MonarchRouter
 
 
 
-
-
-//struct Test {
-//    init() {
-////        let route: Route = [.constant("test"), .parameter(name: "id", type: Int.self)]
-//        let route = "user/:id/..."
-////        let route = RouteString("user/:id/...", parametersValidation: [(name: "id", pattern: "[\\w\\-\\.]+")])
-//
-////        let path = Path([PathConstant("user"), PathParameter("id", "shit"), PathParameter("name", "loh")])
-//        let request = "user/shit"
-//
-//        print(route.isMatching(request: request))
-//        print(request.resolve(for: route))
-//    }
-//}
-
-
-
-
-
 /// Creating the app's Coordinator hierarchy.
-func appCoordinator(dispatcher: ProvidesRouteDispatch, setRootView: @escaping (UIViewController)->()) -> RoutingNodeType
-{
-//    return RoutingNode(sectionsSwitcherRoutePresenter(setRootView)).switcher([])
-    
+func appCoordinator(router: ProvidesRouteDispatch, setRootView: @escaping (UIViewController)->()) -> RoutingNodeType
+{    
     return
         // Top level app sections' switcher
         RoutingNode(sectionsSwitcherRoutePresenter(setRootView)).switcher([
         
         // Login
-        RoutingNode(lazyMockPresenter(for: .login, routeDispatcher: dispatcher))
-            .endpoint(AppRoute.login.path),
+        RoutingNode(lazyPresenter(for: .login, router: router))
+            .endpoint(AppRoute.login),
         
-        // Onboarding
+        // Onboarding nav stack
         RoutingNode(lazyNavigationRoutePresenter()).stack([
             
             // Parametrized welcome page
-            RoutingNode(lazyOnboardingPresenter(routeDispatcher: dispatcher))
-                .endpoint(
-                    // note that only path component of the uri is matched here
-                    "onboarding"
-                )
+            RoutingNode(lazyPresenter(for: .onboarding, router: router))
+                .endpoint(AppRoute.onboarding)
         ]),
         
         // Tabbar
         RoutingNode(lazyTabBarRoutePresenter(
             optionsDescription: [
-                (title: "First",  icon: nil, route: .first),
-                (title: "Second", icon: nil, route: .second),
-                (title: "Third",  icon: nil, route: .third(id: "-thirdInitial")),
-                (title: "Fourth", icon: nil, route: .fourth(id: "-fourthInitial")),
-                (title: "Fifth",  icon: nil, route: .fifth)
+                (title: "Today",  icon: nil, request: .today),
+                (title: "Books", icon: nil, request: .books),
+                (title: "Profile",  icon: nil, request: .profile)
             ],
-            routeDispatcher: dispatcher)).fork([
+            router: router)).fork([
             
-            // First nav stack
+            // Today nav stack
             RoutingNode(lazyNavigationRoutePresenter()).stack([
                 
-                // First
-                RoutingNode(lazyMockPresenter(for: .first, routeDispatcher: dispatcher)).endpoint(
-                    AppRoute.first.path,
-                    children: [
+                // Today
+                RoutingNode(lazyPresenter(for: .today, router: router))
+                    .endpoint(AppRoute.today, children: [
                     
-                    // Detail
-                    RoutingNode(lazyMockPresenter(for: .firstDetail, routeDispatcher: dispatcher)).endpoint(
-                        AppRoute.firstDetail.path,
-                        children: [
-                        
-                        // Parametrized Detail
-                        RoutingNode(lazyParametrizedPresenter(routeDispatcher: dispatcher))
-                            .endpoint("firstDetailParametrized")
-                    ])
+                    // All news
+                    RoutingNode(lazyPresenter(for: .allNews, router: router))
+                        .endpoint(AppRoute.allNews)
+                    
+                    ], modals: [
+                    
+                    // Story
+                    RoutingNode(lazyPresenter(for: .story, router: router))
+                        .endpoint(AppRoute.story)
                 ])
             ]),
             
-            // Second nav stack
+            // Books nav stack
             RoutingNode(lazyNavigationRoutePresenter()).stack([
             
-                // Second
-                RoutingNode(lazyMockPresenter(for: .second, routeDispatcher: dispatcher)).endpoint(AppRoute.second.path,
-                    children: [
+                // Books
+                RoutingNode(lazyPresenter(for: .books, router: router))
+                    .endpoint(AppRoute.books, children: [
                     
-                    // Detail
-                    RoutingNode(lazyMockPresenter(for: .secondDetail, routeDispatcher: dispatcher))
-                        .endpoint(AppRoute.secondDetail.path)
+                    // Book
+                    RoutingNode(lazyPresenter(for: .book, router: router))
+                        .endpoint(AppRoute.book)
+                        
+                    // Book categories
+//                    RoutingNode(lazyMockPresenter(for: .booksCategory, routeDispatcher: dispatcher))
+//                        .endpoint(AppRoute.booksCategory)
                 ])
             ]),
             
-            // Third nav stack
+            // Profile nav stack
             RoutingNode(lazyNavigationRoutePresenter()).stack([
-            
-                // Third (parametrized)
-                RoutingNode(lazyParametrizedPresenter(routeDispatcher: dispatcher)).endpoint(
-                    isMatching: { path in
-                        "third/:id".isMatching(request: path)
-//                        path.matches(predicate: "third/(?<id>[\\w\\-\\.]+)")
-                    },
-                    resolve: { request in
-                        request.resolve(for: "third/:id")
-//                        var arguments = PathParameters()
-//                        print(path.routingRequest.capturedGroups(withRegex: "third/(?<id>[\\w\\-\\.]+)"))
-//                        if let id = path.routingRequest.capturedGroups(withRegex: "third/(?<id>[\\w\\-\\.]+)").first {
-//                            arguments["id"] = id
-//                            arguments["route"] = AppRoute.third(id: id)
-//                        }
-//                        return arguments
-//                        return [:]
-                    }
-                )
-            ]),
-            
-            // Fourth (parametrized)
-            RoutingNode(lazyParametrizedPresenter(routeDispatcher: dispatcher)).endpoint(
-                isMatching: { path in
-                    "fourth/:id".isMatching(request: path)
-//                    path.matches(predicate: "fourth/(?<id>[\\w\\-\\.]+)")
-                },
-                resolve: { request in
-                    request.resolve(for: "third/:id")
-//                    var arguments = PathParameters()
-//                    if let id = path.routingRequest.capturedGroups(withRegex: "fourth/(?<id>[\\w\\-\\.]+)").first {
-//                        arguments["id"] = id
-//                        arguments["route"] = AppRoute.fourth(id: id)
-//                    }
-//                    return arguments
-//                    return [:]
-                }
-            ),
-            
-            // Fifth
-            RoutingNode(lazyMockPresenter(for: .fifth, routeDispatcher: dispatcher)).endpoint(
-                AppRoute.fifth.path,
-                modals: [
                 
-                // Modal
-                RoutingNode(unenchancedLazyTabBarRoutePresenter()).fork([
-                    RoutingNode(lazyNavigationRoutePresenter()).stack([
-                        RoutingNode(lazyParametrizedPresenter(routeDispatcher: dispatcher)).endpoint(
-                            isMatching: { path in
-                                "modalParametrized/:id".isMatching(request: path)
-//                                path.matches(predicate: "modalParametrized/(?<id>[\\w\\-\\.]+)")
-                            },
-                            resolve: { request in
-                                request.resolve(for: "third/:id")
-//                                var arguments = PathParameters()
-//                                if let id = path.routingRequest.capturedGroups(withRegex: "modalParametrized/(?<id>[\\w\\-\\.]+)").first {
-//                                    arguments["id"] = id
-//                                    arguments["route"] = AppRoute.modalParametrized(id: id)
-//                                }
-//                                return arguments
-//                                return [:]
-                            }
-                        ),
+                // Profile
+                RoutingNode(lazyPresenter(for: .profile, router: router))
+                    .endpoint(AppRoute.profile, modals: [
                         
-                        RoutingNode(lazyMockPresenter(for: .modal, routeDispatcher: dispatcher))
-                            .endpoint(AppRoute.modal.path)
-                    ])
+                        // Tabbar
+                        RoutingNode(lazyTabBarRoutePresenter(
+                            optionsDescription: [
+                                (title: "Orders",  icon: nil, request: .orders),
+                                (title: "Delivery",  icon: nil, request: .deliveryInfo)
+                            ],
+                            router: router)).fork([
+                                
+                                // Orders nav stack
+                                RoutingNode(lazyNavigationRoutePresenter()).stack([
+                        
+                                    // Orders done
+                                    RoutingNode(lazyPresenter(for: .orders, router: router))
+                                        .endpoint(AppRoute.orders)
+                                ]),
+                                
+                                // Delivery info
+                                RoutingNode(lazyPresenter(for: .deliveryInfo, router: router))
+                                    .endpoint(AppRoute.deliveryInfo)
+                        ])
                 ])
             ])
         ])
