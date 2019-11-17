@@ -92,21 +92,50 @@ struct RouterState: RouterStateType
 /// - parameter state: State holds the current `RoutingNodes` stack.
 func routerReducer(request: RoutingRequestType, router: RoutingNodeType, state: RouterStateType, options: [DispatchRouteOption]) -> RouterStateType
 {
-    // Performs the Request and returns a new Routers stack
-    let newRoutersStack = router.testRequest(request, [])
-    router.performRequest(request, [], options)
-    
-    // Finding the first RoutingNode in the stack that is not the same as in the previous Routers stack
-    if let firstDifferenceIndex = state.routersStack.enumerated().first(where: { (i, element) -> Bool in
-        guard newRoutersStack.count > i else { return true }
-        return element.getPresentable() != newRoutersStack[i].getPresentable()
-    })?.offset
+    func unwind(stack: [RoutingNodeType], comparing newStack: [RoutingNodeType])
     {
-        // Unwinding unused Routers in reversed order
-        state.routersStack[firstDifferenceIndex ..< min(newRoutersStack.count, state.routersStack.count)]
+        // Recursively called for each substack
+        stack.enumerated().forEach { (i, element) in
+            if let substack = element.substack {
+                unwind(stack: substack, comparing: newStack[safe: i]?.substack ?? [])
+            }
+        }
+        
+        // Dismissing substacks that are not present anymore
+        stack.enumerated()
+            .filter({ (i, node) in
+                return node.substack != nil && newStack[safe: i]?.substack == nil
+            })
             .reversed()
-            .forEach { $0.unwind() }
+            .forEach { (_, node) in
+                node.dismissSubstack()
+            }
+        
+        // Finding the first RoutingNode in the stack that is not the same as in the previous Routers stack
+        if let firstDifferenceIndex = stack.enumerated().first(where: { (i, node) in
+            guard newStack.count > i else { return true }
+            return node.getPresentable() != newStack[i].getPresentable()
+        })?.offset
+        {
+            // Unwinding unused `RoutingNode`s in reversed order
+            stack[firstDifferenceIndex ..< stack.count]
+                .reversed()
+                .forEach { node in
+                    node.dismissSubstack()
+                    node.unwind()
+            }
+        }
     }
+    
+    
+    // Getting a new `RoutingNode`s stack for a given Request
+    let newRoutersStack = router.testRequest(request, [])
+    
+    // Unwinding unused Routers
+    unwind(stack: state.routersStack, comparing: newRoutersStack)
+    
+    // Changing state
+    router.performRequest(request, [], options)
     
     return RouterState(routersStack: newRoutersStack)
 }

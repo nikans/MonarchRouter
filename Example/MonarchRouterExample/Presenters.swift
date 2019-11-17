@@ -147,6 +147,7 @@ func lazyNavigationRoutePresenter() -> RoutePresenterStack
                     } else {
                         navigationController.viewControllers.insert(vc, at: idx)
                     }
+                    
                 case .deletion(let idx):
                     navigationController.viewControllers.remove(at: idx)
                 }

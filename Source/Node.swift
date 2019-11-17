@@ -14,13 +14,19 @@ import UIKit
 /// Hierarchy of `RoutingNodeType` objects forms an app coordinator.
 public protocol RoutingNodeType
 {
-    /// Returns Routers stack for provided Request.
+    /// Returns `RoutingNode`s stack for provided Request.
     /// Configured for each respective `RoutingNode` type.
     var testRequest: (_ request: RoutingRequestType, _ routers: [RoutingNodeType]) -> [RoutingNodeType] { get }
     
     /// Passes actions to the Presenter to update the view for provided Request.
     /// Configured for each respective `RoutingNode` type.
     var performRequest: (_ request: RoutingRequestType, _ routers: [RoutingNodeType], _ options: [DispatchRouteOption]) -> () { get }
+    
+    /// Array of nested `RoutingNode`s, i.e. modals.
+    var substack: [RoutingNodeType]? { get }
+    
+    /// Called when the `RoutingNode` is required to dismiss its substack.
+    func dismissSubstack()
     
     /// Called when the `RoutingNode` does not handle a Request anymore.
     func unwind()
@@ -57,6 +63,8 @@ public struct RoutingNode<Presenter: RoutePresenterType>: RoutingNodeType
         return presenter.getPresentable()
     }
     
+    public fileprivate(set) var substack: [RoutingNodeType]?
+    
     public fileprivate(set) var shouldHandleRoute: (_ request: RoutingRequestType) -> Bool
         = { _ in false }
     
@@ -67,7 +75,14 @@ public struct RoutingNode<Presenter: RoutePresenterType>: RoutingNodeType
     public fileprivate(set) var performRequest: (_ request: RoutingRequestType, _ routers: [RoutingNodeType], _ dispatchOptions: [DispatchRouteOption]) -> ()
         = { _,_,_ in }
     
-    public func unwind() -> () {
+    public func dismissSubstack() {
+        if let modal = substack?.first?.getPresentable(), let presenter = presenter as? RoutePresenterCapableOfModalsPresentationType {
+            presenter.dismissModal(modal)
+        }
+    }
+    
+    public func unwind() {
+        dismissSubstack()
         presenter.unwind(presenter.getPresentable())
     }
 }
@@ -100,8 +115,10 @@ extension RoutingNode where Presenter == RoutePresenter
         router.shouldHandleRouteExclusively = { request in
             return isMatching(request)
         }
-        
+                
         router.testRequest = { request, routers in
+            router.substack = nil
+            
             // this RoutingNode handles the Request
             if isMatching(request) {
                 return routers + [router]
@@ -110,7 +127,8 @@ extension RoutingNode where Presenter == RoutePresenter
             // should present a modal to handle the Request
             else if let modal = modals.firstResult({ modal in modal.shouldHandleRoute(request) ? modal : nil })
             {
-                return modal.testRequest(request, routers + [router])
+                router.substack = modal.testRequest(request, [])
+                return routers + [router]
             }
                 
             // this RoutingNode's child handles the Request
@@ -140,7 +158,9 @@ extension RoutingNode where Presenter == RoutePresenter
             {
                 let presentable = router.getPresentable()
                 router.presenter.presentModal(modal.getPresentable(), presentable)
-                modal.performRequest(request, routers + [router], dispatchOptions)
+                
+//                modal.performRequest(request, routers + [router], dispatchOptions)
+                modal.performRequest(request, [], dispatchOptions)
             }
                 
             // this RoutingNode's child handles the Request

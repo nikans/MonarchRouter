@@ -167,7 +167,7 @@ class BooksViewController: MonarchViewController
     }
     
     @IBAction func buttonAction(_ sender: Any) {
-        router?.dispatch(.orders)
+        router?.dispatch(.deliveryInfo)
     }
 }
 

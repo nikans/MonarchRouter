@@ -89,10 +89,10 @@ func appCoordinator(router: ProvidesRouteDispatch, setRootView: @escaping (UIVie
                                 (title: "Delivery",  icon: nil, request: .deliveryInfo)
                             ],
                             router: router)).fork([
-                                
+
                                 // Orders nav stack
                                 RoutingNode(lazyNavigationRoutePresenter()).stack([
-                        
+
                                     // Orders done
                                     RoutingNode(lazyPresenter(for: .orders, router: router))
                                         .endpoint(AppRoute.orders)

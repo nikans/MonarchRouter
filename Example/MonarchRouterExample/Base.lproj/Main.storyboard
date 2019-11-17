@@ -574,9 +574,9 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="98I-36-xvw">
-                                <rect key="frame" x="140.5" y="576" width="94" height="51"/>
+                                <rect key="frame" x="103" y="576" width="169" height="51"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="32"/>
-                                <state key="normal" title="Orders"/>
+                                <state key="normal" title="Delivery info"/>
                                 <connections>
                                     <action selector="buttonAction:" destination="uhY-pW-hOH" eventType="touchUpInside" id="Z1p-ar-ZBt"/>
                                 </connections>
