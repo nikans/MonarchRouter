@@ -82,22 +82,6 @@ public struct RoutePresenter: RoutePresenterType, RoutePresenterCapableOfModalsP
         if let unwind = unwind {
             self.unwind = unwind
         }
-//        else {
-//            self.unwind = { presentable in
-//                
-//                func isModal(_ presentable: UIViewController) -> Bool {
-//                    let presentingIsModal = presentable.presentingViewController != nil
-//                    let presentingIsNavigation = presentable.navigationController?.presentingViewController?.presentedViewController == presentable.navigationController
-//                    let presentingIsTabBar = presentable.tabBarController?.presentingViewController is UITabBarController
-//                    
-//                    return presentingIsModal || presentingIsNavigation || presentingIsTabBar
-//                }
-//                
-//                if isModal(presentable) {
-//                    presentable.dismiss(animated: true, completion: nil)
-//                }
-//            }
-//        }
     }
     
     

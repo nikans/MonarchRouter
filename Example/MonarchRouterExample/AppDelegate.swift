@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         coordinator = appCoordinator(router: appRouter, setRootView: setRootViewController)
         
         window?.makeKeyAndVisible()
-        
+                
         // presenting the default Route
         appRouter?.dispatch(.login)
         

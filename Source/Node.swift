@@ -10,6 +10,7 @@ import UIKit
 
 
 
+
 /// Any `RoutingNode` object.
 /// Hierarchy of `RoutingNodeType` objects forms an app coordinator.
 public protocol RoutingNodeType
@@ -76,14 +77,19 @@ public struct RoutingNode<Presenter: RoutePresenterType>: RoutingNodeType
         = { _,_,_ in }
     
     public func dismissSubstack() {
-        if let modal = substack?.first?.getPresentable(), let presenter = presenter as? RoutePresenterCapableOfModalsPresentationType {
-            presenter.dismissModal(modal)
+        dispatchOnMainThreadIfNeeded {
+            if let modal = self.substack?.first?.getPresentable(), let presenter = self.presenter as? RoutePresenterCapableOfModalsPresentationType {
+                presenter.dismissModal(modal)
+            }
         }
     }
     
     public func unwind() {
         dismissSubstack()
-        presenter.unwind(presenter.getPresentable())
+        
+        dispatchOnMainThreadIfNeeded {
+            self.presenter.unwind(self.presenter.getPresentable())
+        }
     }
 }
 
@@ -144,20 +150,24 @@ extension RoutingNode where Presenter == RoutePresenter
             
             // this RoutingNode handles the Request
             if isMatching(request) {
-                let presentable = router.getPresentable()
+                dispatchOnMainThreadIfNeeded {
+                    let presentable = router.getPresentable()
 
-                //
-                // setting parameters
-                let resolvedRequest = resolve(request)
-                let routeParameters = RouteParameters(request: resolvedRequest)
-                router.presenter.setParameters(routeParameters, presentable)
+                    //
+                    // setting parameters
+                    let resolvedRequest = resolve(request)
+                    let routeParameters = RouteParameters(request: resolvedRequest)
+                    router.presenter.setParameters(routeParameters, presentable)
+                }
             }
                 
             // should present a modal to handle the Request
             else if let modal = modals.firstResult({ modal in modal.shouldHandleRoute(request) ? modal : nil })
             {
-                let presentable = router.getPresentable()
-                router.presenter.presentModal(modal.getPresentable(), presentable)
+                dispatchOnMainThreadIfNeeded {
+                    let presentable = router.getPresentable()
+                    router.presenter.presentModal(modal.getPresentable(), presentable)
+                }
                 
 //                modal.performRequest(request, routers + [router], dispatchOptions)
                 modal.performRequest(request, [], dispatchOptions)
@@ -232,9 +242,11 @@ extension RoutingNode where Presenter == RoutePresenterStack
                 // some item in the stack handles the Request
                 if let stackItem = stack.firstResult({ stackItem in stackItem.shouldHandleRoute(request) ? stackItem : nil })
                 {
-                    let presentable = router.presenter.getPresentable()
+                    dispatchOnMainThreadIfNeeded {
+                        let presentable = router.presenter.getPresentable()
+                        router.presenter.prepareRootPresentable(stackItem.getPresentable(), presentable)
+                    }
                     stackItem.performRequest(request, [], dispatchOptions)
-                    router.presenter.prepareRootPresentable(stackItem.getPresentable(), presentable)
                 }
                 return
             }
@@ -244,12 +256,17 @@ extension RoutingNode where Presenter == RoutePresenterStack
             // some item in the stack handles the Request
             if let stackItem = stack.firstResult({ stackItem in stackItem.shouldHandleRoute(request) ? stackItem : nil })
             {
-                let presentable = router.presenter.getPresentable()
-                let stackRouters = stackItem.testRequest(request, [])
-                stackItem.performRequest(request, [], dispatchOptions)
+                dispatchOnMainThreadIfNeeded {
+                    let presentable = router.presenter.getPresentable()
+                    router.presenter.prepareRootPresentable(stackItem.getPresentable(), presentable)
+                    
+                    let stackRouters = stackItem.testRequest(request, [])
+                    
+                    // passing the navigation stack to the Presenter
+                    router.presenter.setStack(stackRouters.map({ subRouter in subRouter.getPresentable() }), presentable)
+                }
                 
-                // passing the navigation stack to the Presenter
-                router.presenter.setStack(stackRouters.map({ subRouter in subRouter.getPresentable() }), presentable)
+                stackItem.performRequest(request, [], dispatchOptions)
             }
             
             // no item found
@@ -291,13 +308,17 @@ extension RoutingNode where Presenter == RoutePresenterFork
             let presentable = router.presenter.getPresentable()
             
             // passing children as options for the Presenter
-            router.presenter.setOptions(options.map { option in option.getPresentable() }, presentable)
+            dispatchOnMainThreadIfNeeded {
+                router.presenter.setOptions(options.map { option in option.getPresentable() }, presentable)
+            }
             
             // this RoutingNode's option handles the Request
             if let option = options.firstResult({ option in option.shouldHandleRoute(request) ? option : nil })
             {
                 // setup the Presenter for matching RoutingNode and set it as an active option
-                router.presenter.setOptionSelected(option.getPresentable(), presentable)
+                dispatchOnMainThreadIfNeeded {
+                    router.presenter.setOptionSelected(option.getPresentable(), presentable)
+                }
                 
                 // `junctionsOnly` dispatch option
                 // keep presented VCs if we only need to switch option
@@ -354,7 +375,9 @@ extension RoutingNode where Presenter == RoutePresenterSwitcher
             if let option = options.firstResult({ option in option.shouldHandleRoute(request) ? option : nil })
             {
                 // setup the presenter for matching Router and set it as an active option
-                router.presenter.setOptionSelected(option.getPresentable())
+                dispatchOnMainThreadIfNeeded {
+                    router.presenter.setOptionSelected(option.getPresentable())
+                }
                 option.performRequest(request, routers + [router], dispatchOptions)
             }
             
@@ -363,5 +386,17 @@ extension RoutingNode where Presenter == RoutePresenterSwitcher
         }
         
         return router
+    }
+}
+
+
+
+func dispatchOnMainThreadIfNeeded(closure: @escaping ()->()) {
+    if Thread.isMainThread {
+        closure()
+    } else {
+        DispatchQueue.main.async {
+            closure()
+        }
     }
 }
