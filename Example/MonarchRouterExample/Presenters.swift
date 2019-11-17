@@ -60,12 +60,12 @@ class ExampleTabBarDelegate: NSObject, UITabBarControllerDelegate
     }
 }
 
-var tabBarDelegate: ExampleTabBarDelegate!
-
 
 /// Lazy Presenter for a Tab Bar Controller with a delegate.
 func lazyTabBarRoutePresenter(optionsDescription: [TabBarItemDescription], router: ProvidesRouteDispatch) -> RoutePresenterFork
 {
+    var tabBarDelegate: ExampleTabBarDelegate!
+    
     return RoutePresenterFork.lazyPresenter({
             let tabBarController = UITabBarController()
             tabBarDelegate = ExampleTabBarDelegate(optionsDescriptions: optionsDescription, router: router)
@@ -174,85 +174,3 @@ func lazyPresenter(for endpoint: EndpointViewControllerId, router: ProvidesRoute
     
     return RoutePresenter.lazyPresenter(vc)
 }
-
-///// Lazy Presenter for a VC that is configured based on a Route.
-//func lazyPresenter(_ vc: UIViewController & RouteParametrizedPresentable, routeDispatcher: ProvidesRouteDispatch) -> RoutePresenter
-//{
-//    return RoutePresenter.lazyPresenter({
-//        return vc
-//    })
-//}
-//
-///// Lazy Presenter for a VC that is configured based on a query parameter.
-//func lazyOnboardingPresenter(routeDispatcher: ProvidesRouteDispatch) -> RoutePresenter
-//{
-//    var presenter = RoutePresenter.lazyPresenter({
-//        mockVC()
-//    },
-//    setParameters: { parameters, presentable in
-//        if  let presentable = presentable as? MockViewController,
-//            let name = parameters.queryParameter("name")
-//        {
-//            presentable.configure(title: "Welcome, \(name)", buttonTitle: "Okay", buttonAction: {
-//                routeDispatcher.dispatchRoute(AppRoute.today)
-//            }, backgroundColor: .red)
-//        }
-//    })
-//
-//    weak var presentedModal: UIViewController? = nil
-//    presenter.presentModal = { modal, parent in
-//        guard modal != presentedModal else { return }
-//        parent.present(modal, animated: true)
-//        presentedModal = modal
-//    }
-//    presenter.unwind = { presentable in
-//        presentedModal?.dismiss(animated: true, completion: nil)
-//        presentedModal = nil
-//    }
-//
-//    return presenter
-//}
-//
-///// Lazy Presenter for a mock VC. Implements modals presentation.
-//func lazyMockPresenter(for route: AppRoute, routeDispatcher: ProvidesRouteDispatch) -> RoutePresenter
-//{
-//    var presenter = RoutePresenter.lazyPresenter({
-//        return buildEndpoint(for: route, routeDispatcher: routeDispatcher)
-//    })
-//
-//    weak var presentedModal: UIViewController? = nil
-//    presenter.presentModal = { modal, parent in
-//        guard modal != presentedModal else { return }
-//        parent.present(modal, animated: true)
-//        presentedModal = modal
-//    }
-//    presenter.unwind = { presentable in
-//        presentedModal?.dismiss(animated: true, completion: nil)
-//        presentedModal = nil
-//    }
-//
-//    return presenter
-//}
-//
-///// NOT lazy Presenter for a mock VC, just to notice the difference. Implements modals presentation.
-//func mockPresenter(for route: AppRoute, routeDispatcher: ProvidesRouteDispatch) -> RoutePresenter
-//{
-//    let vc = buildEndpoint(for: route, routeDispatcher: routeDispatcher)
-//
-//    var presenter = RoutePresenter.lazyPresenter({
-//        return vc
-//    })
-//
-//    weak var presentedModal: UIViewController? = nil
-//    presenter.presentModal = { modal, _ in
-//        guard modal != presentedModal else { return }
-//        vc.present(modal, animated: true)
-//        presentedModal = modal
-//    }
-//    presenter.unwind = { presentable in
-//        presentedModal?.dismiss(animated: true, completion: nil)
-//        presentedModal = nil
-//    }
-//
-//    return presenter
-//}
