@@ -24,7 +24,7 @@ public enum RouteComponent
             guard let pathComponent = pathComponent as? PathConstant else { return false }
             return pathComponent.name == name
             
-        case .parameter(let name, let parameterType, let isMatching):
+        case .parameter(let name, _ /*let parameterType*/, let isMatching):
             // path component is not a parameter
             guard let pathComponent = pathComponent as? PathParameterType
                 else { return false }

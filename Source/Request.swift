@@ -22,7 +22,7 @@ extension URL: RoutingRequestType
     public func resolve(for route: RouteType) -> RoutingResolvedRequestType
     {
         let pathComponents: [PathComponentType] = self.pathComponents.enumerated().map { (i, pathComponent) in
-            if route.components.count > i, case .parameter(let name, let parameterType, _) = route.components[i] {
+            if route.components.count > i, case .parameter(let name, _, _) = route.components[i] {
                 return PathParameter(name, pathComponent)
             }
             
