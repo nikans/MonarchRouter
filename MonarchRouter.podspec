@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'MonarchRouter'
-  s.version          = '0.9.5'
+  s.version          = '1.0'
   s.summary          = 'A lightweight yet powerful state-based router written in Swift.'
 
   s.description      = <<-DESC
@@ -34,6 +34,6 @@ Features:
   s.source_files = 'Source/**/*.swift'
   s.frameworks = 'UIKit'
   s.requires_arc  = true
-  s.swift_version = '4.2'
+  s.swift_version = '5.0'
   s.screenshots = [ 'https://raw.githubusercontent.com/nikans/MonarchRouter/master/Media/logo%402x.png' ]
 end
