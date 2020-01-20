@@ -12,133 +12,98 @@ import MonarchRouter
 
 
 /// Creating the app's Coordinator hierarchy.
-func appCoordinator(dispatcher: ProvidesRouteDispatch, setRootView: @escaping (UIViewController)->()) -> RoutingUnitType
-{
+func appCoordinator(router: ProvidesRouteDispatch, setRootView: @escaping (UIViewController)->()) -> RoutingNodeType
+{    
     return
         // Top level app sections' switcher
-        RoutingUnit(sectionsSwitcherRoutePresenter(setRootView)).switcher([
+        RoutingNode(sectionsSwitcherRoutePresenter(setRootView)).switcher([
         
-        // Login
-        RoutingUnit(lazyMockPresenter(for: .login, routeDispatcher: dispatcher))
-            .endpoint(path: AppRoute.login.path),
-        
-        // Onboarding
-        RoutingUnit(lazyNavigationRoutePresenter()).stack([
+            // Login
+            RoutingNode(lazyPresenter(for: .login, router: router))
+                .endpoint(AppRoute.login),
             
-            // Parametrized welcome page
-            RoutingUnit(lazyOnboardingPresenter(routeDispatcher: dispatcher))
-                .endpoint(
-                    // note that only path component of the uri is matched here
-                    path: "onboarding"
-                )
-        ]),
-        
-        // Tabbar
-        RoutingUnit(lazyTabBarRoutePresenter(
-            optionsDescription: [
-                (title: "First",  icon: nil, route: .first),
-                (title: "Second", icon: nil, route: .second),
-                (title: "Third",  icon: nil, route: .third(id: "-thirdInitial")),
-                (title: "Fourth", icon: nil, route: .fourth(id: "-fourthInitial")),
-                (title: "Fifth",  icon: nil, route: .fifth)
-            ],
-            routeDispatcher: dispatcher)).fork([
-            
-            // First nav stack
-            RoutingUnit(lazyNavigationRoutePresenter()).stack([
+            // Onboarding nav stack
+            RoutingNode(lazyNavigationRoutePresenter()).stack([
                 
-                // First
-                RoutingUnit(lazyMockPresenter(for: .first, routeDispatcher: dispatcher)).endpoint(
-                    path: AppRoute.first.path,
-                    children: [
+                // Parametrized welcome page
+                RoutingNode(lazyPresenter(for: .onboarding, router: router))
+                    .endpoint(AppRoute.onboarding)
+            ]),
+            
+            // Tabbar
+            RoutingNode(lazyTabBarRoutePresenter(
+                optionsDescription: [
+                    (title: "Today",  icon: nil, request: .today),
+                    (title: "Books", icon: nil, request: .books),
+                    (title: "Profile",  icon: nil, request: .profile)
+                ],
+                router: router)).fork([
+                
+                // Today nav stack
+                RoutingNode(lazyNavigationRoutePresenter()).stack([
                     
-                    // Detail
-                    RoutingUnit(lazyMockPresenter(for: .firstDetail, routeDispatcher: dispatcher)).endpoint(
-                        path: AppRoute.firstDetail.path,
-                        children: [
+                    // Today
+                    RoutingNode(lazyPresenter(for: .today, router: router))
+                        .endpoint(AppRoute.today, children: [
                         
-                        // Parametrized Detail
-                        RoutingUnit(lazyParametrizedPresenter(routeDispatcher: dispatcher))
-                            .endpoint(path: "firstDetailParametrized")
+                        // All news
+                        RoutingNode(lazyPresenter(for: .allNews, router: router))
+                            .endpoint(AppRoute.allNews)
+                        
+                        ], modals: [
+                        
+                        // Story
+                        RoutingNode(lazyPresenter(for: .story, router: router))
+                            .endpoint(AppRoute.story)
                     ])
-                ])
-            ]),
-            
-            // Second nav stack
-            RoutingUnit(lazyNavigationRoutePresenter()).stack([
-            
-                // Second
-                RoutingUnit(lazyMockPresenter(for: .second, routeDispatcher: dispatcher)).endpoint(
-                    path: AppRoute.second.path,
-                    children: [
-                    
-                    // Detail
-                    RoutingUnit(lazyMockPresenter(for: .secondDetail, routeDispatcher: dispatcher))
-                        .endpoint(path: AppRoute.secondDetail.path)
-                ])
-            ]),
-            
-            // Third nav stack
-            RoutingUnit(lazyNavigationRoutePresenter()).stack([
-            
-                // Third (parametrized)
-                RoutingUnit(lazyParametrizedPresenter(routeDispatcher: dispatcher)).endpoint(
-                    pathPredicate: { path in
-                        path.matches("third/(?<id>[\\w\\-\\.]+)")
-                    },
-                    pathParameters: { (path) -> PathParameters in
-                        var arguments = PathParameters()
-                        if let id = path.capturedGroups(withRegex: "third/(?<id>[\\w\\-\\.]+)").first {
-                            arguments["id"] = id
-                            arguments["route"] = AppRoute.third(id: id)
-                        }
-                        return arguments
-                    }
-                )
-            ]),
-            
-            // Fourth (parametrized)
-            RoutingUnit(lazyParametrizedPresenter(routeDispatcher: dispatcher)).endpoint(
-                pathPredicate: { path in
-                    path.matches("fourth/(?<id>[\\w\\-\\.]+)")
-                },
-                pathParameters: { (path) -> PathParameters in
-                    var arguments = PathParameters()
-                    if let id = path.capturedGroups(withRegex: "fourth/(?<id>[\\w\\-\\.]+)").first {
-                        arguments["id"] = id
-                        arguments["route"] = AppRoute.fourth(id: id)
-                    }
-                    return arguments
-                }
-            ),
-            
-            // Fifth
-            RoutingUnit(lazyMockPresenter(for: .fifth, routeDispatcher: dispatcher)).endpoint(
-                path: AppRoute.fifth.path,
-                modals: [
+                ]),
                 
-                // Modal
-                RoutingUnit(unenchancedLazyTabBarRoutePresenter()).fork([
-                    RoutingUnit(lazyNavigationRoutePresenter()).stack([
-                        RoutingUnit(lazyParametrizedPresenter(routeDispatcher: dispatcher)).endpoint(
-                            pathPredicate: { path in
-                                path.matches("modalParametrized/(?<id>[\\w\\-\\.]+)")
-                            },
-                            pathParameters: { (path) -> PathParameters in
-                                var arguments = PathParameters()
-                                if let id = path.capturedGroups(withRegex: "modalParametrized/(?<id>[\\w\\-\\.]+)").first {
-                                    arguments["id"] = id
-                                    arguments["route"] = AppRoute.modalParametrized(id: id)
-                                }
-                                return arguments
-                            }
-                        ),
+                // Books nav stack
+                RoutingNode(lazyNavigationRoutePresenter()).stack([
+                
+                    // Books
+                    RoutingNode(lazyPresenter(for: .books, router: router))
+                        .endpoint(AppRoute.books, children: [
                         
-                        RoutingUnit(lazyMockPresenter(for: .modal, routeDispatcher: dispatcher))
-                            .endpoint(path: AppRoute.modal.path)
+                        // Book
+                        RoutingNode(lazyPresenter(for: .book, router: router))
+                            .endpoint(AppRoute.book)
+                            
+                        // Book categories
+    //                    RoutingNode(lazyMockPresenter(for: .booksCategory, routeDispatcher: dispatcher))
+    //                        .endpoint(AppRoute.booksCategory)
+                    ])
+                ]),
+                
+                // Profile nav stack
+                RoutingNode(lazyNavigationRoutePresenter()).stack([
+                    
+                    // Profile
+                    RoutingNode(lazyPresenter(for: .profile, router: router))
+                        .endpoint(AppRoute.profile, modals: [
+                            
+                            // Tabbar
+                            RoutingNode(lazyTabBarRoutePresenter(
+                                optionsDescription: [
+                                    (title: "Orders",  icon: nil, request: .orders),
+                                    (title: "Delivery",  icon: nil, request: .deliveryInfo)
+                                ],
+                                router: router)).fork([
+
+                                    // Orders nav stack
+                                    RoutingNode(lazyNavigationRoutePresenter()).stack([
+
+                                        // Orders done
+                                        RoutingNode(lazyPresenter(for: .orders, router: router))
+                                            .endpoint(AppRoute.orders)
+                                    ]),
+                                    
+                                    // Delivery info
+                                    RoutingNode(lazyPresenter(for: .deliveryInfo, router: router))
+                                        .endpoint(AppRoute.deliveryInfo)
+                            ])
                     ])
                 ])
             ])
-        ])
     ])
 }

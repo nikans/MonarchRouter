@@ -33,14 +33,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         }
         
         // Initializing Router and setting root VC
-        var coordinator: RoutingUnitType!
+        var coordinator: RoutingNodeType!
         appRouter = RouterStore(router: coordinator)
-        coordinator = appCoordinator(dispatcher: appRouter, setRootView: setRootViewController)
+        coordinator = appCoordinator(router: appRouter, setRootView: setRootViewController)
         
         window?.makeKeyAndVisible()
-        
+                
         // presenting the default Route
-        appRouter?.dispatchRoute(.login)
+        appRouter?.dispatch(.login)
         
         return true
     }

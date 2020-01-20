@@ -11,86 +11,112 @@ import MonarchRouter
 
 
 
-/// Your app custom Routes enum and Paths for them.
-enum AppRoute
+/// Your app routing requests
+enum AppRoutingRequest: RoutingRequestType
 {
     case login
     case onboarding(name: String)
-    case first
-    case firstDetail
-    case firstDetailParametrized(id: String)
-    case second
-    case secondDetail
-    case third(id: String)
-    case fourth(id: String)
-    case fifth
-    case modal
-    case modalParametrized(id: String)
+    case today
+    case story(type: String, id: Int, title: String)
+    case allNews
+    case books
+    case book(id: Int, title: String?)
+    case booksCategory(id: Int)
+    case profile
+    case orders
+    case deliveryInfo
     
-    var path: String {
+    var request: String {
         switch self {
         case .login:
             return "login"
             
         case .onboarding(let name):
-            return "onboarding?name=" + name
+            return "onboarding?name=\(name)"
             
-        case .first:
-            return "first"
+        case .today:
+            return "today"
             
-        case .firstDetail:
-            return "firstDetail"
+        case .story(let type, let id, let title):
+            return "today/story/\(type)/\(id)?title=\(title)"
             
-        case .firstDetailParametrized(let id):
-            return "firstDetailParametrized?id=" + id
+        case .allNews:
+            return "all_news"
             
-        case .second:
-            return "second"
+        case .books:
+            return "books"
             
-        case .secondDetail:
-            return "secondDetail"
+        case .book(let id, let title):
+            return "books/\(id)?title=\(title ?? "")"
             
-        case .third(let id):
-            return "third/" + id
+        case .booksCategory(let id):
+            return "books/categories/\(id)"
             
-        case .fourth(let id):
-            return "fourth/" + id
+        case .profile:
+            return "profile"
             
-        case .fifth:
-            return "fifth"
+        case .orders:
+            return "orders"
             
-        case .modal:
-            return "modal"
-            
-        case .modalParametrized(let id):
-            return "modalParametrized/" + id
+        case .deliveryInfo:
+            return "delivery"
         }
+    }
+    
+    func resolve(for route: RouteType) -> RoutingResolvedRequestType {
+        return request.resolve(for: route)
+    }
+}
+
+
+
+/// Your app custom Routes
+enum AppRoute: String, RouteType
+{
+    case login = "login"
+    case onboarding = "onboarding"
+    case today = "today"
+    case story = "today/story/:type/:id"
+    case allNews = "all_news"
+    case books = "books"
+    case book = "books/:id"
+    case booksCategory = "books/categories/:id"
+    
+    // Notice, that if you want to open a book from a books category scene, you would need to create a separate route i.e. "books/categories/:category_id/book/:book_id". It may seem more appropriate to just push a book info scene into the navigation stack.
+    // Still, a separate route for a book info scene may be useful for deep-linking.
+    
+    case profile = "profile"
+    case orders = "orders"
+    case deliveryInfo = "delivery"
+    
+    var components: [RouteComponent] {
+        return rawValue.components
     }
 }
 
 
 
 /// Describes the object capable of Routes switching.
-protocol ProvidesRouteDispatch
+protocol ProvidesRouteDispatch: class
 {
-    /// Extension method to change the route.
-    /// - parameter route: `AppRoute` to navigate to.
-    func dispatchRoute(_ route: AppRoute)
+    /// Extension method to change the Route.
+    /// - parameter request: `AppRoutingRequest` to navigate to.
+    func dispatch(_ request: AppRoutingRequest)
     
-    /// Extension method to change the route.
-    /// - parameter route: `AppRoute` to navigate to.
+    /// Extension method to change the Route.
+    /// - parameter request: `AppRoutingRequest` to navigate to.
     /// - parameter options: Special options for navigation (see `DispatchRouteOption` enum).
-    func dispatchRoute(_ route: AppRoute, options: [DispatchRouteOption])
+    func dispatch(_ request: AppRoutingRequest, options: [DispatchRouteOption])
 }
 
-// Extending `RouterStore` to accept `AppRoute` instead of string Path.
+// Extending `RouterStore` to accept custom `AppRoutingRequest` in dispatch methods.
 extension RouterStore: ProvidesRouteDispatch
 {
-    func dispatchRoute(_ route: AppRoute) {
-        dispatchRoute(route.path)
+    func dispatch(_ request: AppRoutingRequest) {
+        dispatch(request.request)
     }
     
-    func dispatchRoute(_ route: AppRoute, options: [DispatchRouteOption]) {
-        dispatchRoute(route.path, options: options)
+    func dispatch(_ request: AppRoutingRequest, options: [DispatchRouteOption]) {
+        dispatch(request.request, options: options)
     }
 }

@@ -10,89 +10,123 @@ import Foundation
 
 
 
-/// Represents arguments parsed from path component of Path string
-public typealias PathParameters = [String: Any?]
-
-
-
 /// Parameters structure the presentable is parametrized with.
-public struct RouteURIParameters
+public struct RouteParameters
 {
-    public init(uri: URL, pathParameters: PathParameters?)
-    {
-        let string: String = uri.absoluteString
-        let path: String = uri.path
-        let query: String? = uri.query
-        let queryParameters: [String: String?]?
-        let fragment: String? = uri.fragment
+    init(request: RoutingResolvedRequestType) {
+        self.pathParameters = request.pathParameters.mapToDictionary({ parameter in (parameter.name, parameter)
+        })
         
-        if  let components = URLComponents(url: uri, resolvingAgainstBaseURL: false),
-            let queryItems = components.queryItems
-        {
-            var parameters = [String: String?]()
-            for item in queryItems {
-                parameters[item.name] = item.value
-            }
-            queryParameters = parameters
-        } else {
-            queryParameters = nil
-        }
+        self.queryParameters = request.queryParameters.mapToDictionary({ parameter in (parameter.name, parameter) })
         
-        self = RouteURIParameters(string: string, path: path, pathParameters: pathParameters, query: query, queryParameters: queryParameters, fragment: fragment)
+        self.fragment = request.fragment
     }
     
-    public init(uriString: String, pathParameters: PathParameters?) {
-        let uriString = uriString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? uriString.trimmingCharacters(in: .whitespaces)
-        guard let uri = URL(string: uriString) else {
-            self = RouteURIParameters(string: uriString, path: uriString, pathParameters: pathParameters, query: nil, queryParameters: nil, fragment: nil)
-            return
-        }
-        
-        self = RouteURIParameters(uri: uri, pathParameters: pathParameters)
-    }
+    var pathParameters: [String: PathParameterType]
     
-    init(string: String, path: String, pathParameters: PathParameters?, query: String?, queryParameters: [String: String?]?, fragment: String?)
-    {
-        self.string = string
-        self.path = path
-        self.pathParameters = pathParameters
-        self.query = query
-        self.queryParameters = queryParameters
-        self.fragment = fragment
-    }
-    
-    public let string: String
-    
-    public let path: String
-    
-    public let pathParameters: PathParameters?
-    public var stringPathParameters: [String: String?]? {
-        return pathParameters?.compactMapValues({
-            guard let stringValue = $0 as? String else { return nil }
+    public var stringPathParameters: [String: String] {
+        return pathParameters.compactMapValues({
+            guard let stringValue = $0.anyValue as? String else { return nil }
             return stringValue
         })
     }
     public func pathParameter(_ key: String) -> String? {
-        return stringPathParameters?[key] ?? nil
+        return stringPathParameters[key] ?? nil
     }
     public func pathParameter<T>(_ key: String) -> T? {
-        guard let parameter = pathParameters?[key] as? T else { return nil }
-        return parameter
+        guard let value = pathParameters[key]?.anyValue as? T else { return nil }
+        return value
     }
     
-    public let query: String?
-    public let queryParameters: [String: String?]?
+    var queryParameters: [String: QueryParameterType?]
+    
+    public var stringQueryParameters: [String: String] {
+        return queryParameters.compactMapValues({
+            guard let stringValue = $0?.anyValue as? String else { return nil }
+            return stringValue
+        })
+    }
+    
     public func queryParameter(_ key: String) -> String? {
-        return queryParameters?[key] ?? nil
+        return stringQueryParameters[key] ?? nil
     }
     
-    public let fragment: String?
+    public func queryParameter<T>(_ key: String) -> T? {
+        guard let value = queryParameters[key]??.anyValue as? T else { return nil }
+        return value
+    }
+    
+    public var fragment: String?
+}
+
+
+
+public protocol PathComponentType {
+    var name: String { get }
+}
+
+
+
+public protocol PathParameterType: PathComponentType {
+    var anyValue: Any { get }
+}
+
+
+
+public struct PathConstant: PathComponentType
+{
+    public var name: String
+    
+    public init(_ name: String) {
+        self.name = name
+    }
+}
+
+
+
+public struct PathParameter<T>: PathParameterType
+{
+    public var name: String
+    var value: T
+    
+    public init(_ name: String, _ value: T) {
+        self.name = name
+        self.value = value
+    }
+    
+    public var anyValue: Any {
+        return value
+    }
+}
+
+
+
+public protocol QueryParameterType {
+    var name: String { get }
+    var anyValue: Any? { get }
+}
+
+
+
+public struct QueryParameter<T>: QueryParameterType
+{
+    public var name: String
+    var value: T?
+    
+    public init(_ name: String, _ value: T?) {
+        self.name = name
+        self.value = value
+    }
+    
+    public var anyValue: Any? {
+        return value
+    }
 }
 
 
 
 /// Indicates a presentable can be automatically parametrized.
-public protocol URIParametrizedPresentable
+public protocol RouteParametrizedPresentable
 {
-    func configure(with uriParameters: RouteURIParameters)
+    func configure(routeParameters: RouteParameters)
 }

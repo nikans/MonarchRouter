@@ -1,9 +1,9 @@
 //
 //  String+extension.swift
-//  MonarchRouterExample
+//  MonarchRouter
 //
-//  Created by Eliah Snakin on 17/11/2018.
-//  nikans.com
+//  Created by Eliah Snakin on 13.11.2019.
+//  Copyright © 2019 nikans.com. All rights reserved.
 //
 
 import Foundation
