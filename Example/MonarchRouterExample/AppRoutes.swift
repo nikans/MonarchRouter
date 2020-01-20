@@ -11,8 +11,8 @@ import MonarchRouter
 
 
 
-/// Your app route requests
-enum AppRouteRequest: RoutingRequestType
+/// Your app routing requests
+enum AppRoutingRequest: RoutingRequestType
 {
     case login
     case onboarding(name: String)
@@ -99,24 +99,24 @@ enum AppRoute: String, RouteType
 /// Describes the object capable of Routes switching.
 protocol ProvidesRouteDispatch: class
 {
-    /// Extension method to change the route.
-    /// - parameter route: `AppRoute` to navigate to.
-    func dispatch(_ request: AppRouteRequest)
+    /// Extension method to change the Route.
+    /// - parameter request: `AppRoutingRequest` to navigate to.
+    func dispatch(_ request: AppRoutingRequest)
     
-    /// Extension method to change the route.
-    /// - parameter route: `AppRoute` to navigate to.
+    /// Extension method to change the Route.
+    /// - parameter request: `AppRoutingRequest` to navigate to.
     /// - parameter options: Special options for navigation (see `DispatchRouteOption` enum).
-    func dispatch(_ request: AppRouteRequest, options: [DispatchRouteOption])
+    func dispatch(_ request: AppRoutingRequest, options: [DispatchRouteOption])
 }
 
-// Extending `RouterStore` to accept `AppRoute` instead of string Path.
+// Extending `RouterStore` to accept custom `AppRoutingRequest` in dispatch methods.
 extension RouterStore: ProvidesRouteDispatch
 {
-    func dispatch(_ request: AppRouteRequest) {
+    func dispatch(_ request: AppRoutingRequest) {
         dispatch(request.request)
     }
     
-    func dispatch(_ request: AppRouteRequest, options: [DispatchRouteOption]) {
+    func dispatch(_ request: AppRoutingRequest, options: [DispatchRouteOption]) {
         dispatch(request.request, options: options)
     }
 }

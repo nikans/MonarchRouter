@@ -12,7 +12,7 @@ import UIKit
 
 
 /// Any `RoutingNode` object.
-/// Hierarchy of `RoutingNodeType` objects forms an app coordinator.
+/// Hierarchy of `RoutingNodeType` objects forms an app Coordinator.
 public protocol RoutingNodeType
 {
     /// Returns `RoutingNode`s stack for provided Request.

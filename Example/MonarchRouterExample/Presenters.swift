@@ -39,7 +39,7 @@ func sectionsSwitcherRoutePresenter(_ setRootView: @escaping (UIViewController)-
 // MARK: - Tab bar
 
 /// Describes the view and action for a tab bar item.
-typealias TabBarItemDescription = (title: String, icon: UIImage?, request: AppRouteRequest)
+typealias TabBarItemDescription = (title: String, icon: UIImage?, request: AppRoutingRequest)
 
 /// Mock Tab Bar Controller delegate that dispatch routes on tap.
 class ExampleTabBarDelegate: NSObject, UITabBarControllerDelegate

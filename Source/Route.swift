@@ -130,11 +130,11 @@ extension String: RouteType
 
 
 
-struct RouteString: RouteType
+public struct RouteString: RouteType
 {
-    typealias ParameterValidation = (name: String, pattern: String)
+    public typealias ParameterValidation = (name: String, pattern: String)
     
-    init(_ predicate: String, parametersValidation: [ParameterValidation]? = nil)
+    public init(_ predicate: String, parametersValidation: [ParameterValidation]? = nil)
     {
         let parametersValidation: Dictionary<String, String> = parametersValidation?.mapToDictionary { parameter in
             return (parameter.name, parameter.pattern)
@@ -171,7 +171,7 @@ struct RouteString: RouteType
         }
     }
     
-    let components: [RouteComponent]
+    public let components: [RouteComponent]
 }
 
 
@@ -182,7 +182,7 @@ extension Array: RouteType where Element == RouteComponent
         return self
     }
     
-    init(_ components: [RouteComponent]) {
+    public init(_ components: [RouteComponent]) {
         self = components
     }
 }
