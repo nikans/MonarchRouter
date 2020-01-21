@@ -167,10 +167,5 @@ func lazyNavigationRoutePresenter() -> RoutePresenterStack
 
 func lazyPresenter(for endpoint: EndpointViewControllerId, router: ProvidesRouteDispatch) -> RoutePresenter
 {
-    let vc = buildEndpoint(endpoint, router: router)
-    if let vc = vc as? UIViewController & RouteParametrizedPresentable {
-        return RoutePresenter.lazyParametrizedPresenter(vc)
-    }
-    
-    return RoutePresenter.lazyPresenter(vc)
+    return RoutePresenter.lazyPresenter(buildEndpoint(endpoint, router: router))
 }

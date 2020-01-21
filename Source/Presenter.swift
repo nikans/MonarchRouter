@@ -42,9 +42,9 @@ public struct RoutePresenter: RoutePresenterType, RoutePresenterCapableOfModalsP
 {
     /// Default initializer for RoutePresenter.
     /// - parameter getPresentable: Callback returning a Presentable object.
-    /// - parameter setParameters: Optional callback to configure a Presentable with given `RouteParameters`.
-    /// - parameter presentModal: Optional callback to define modals presentation. Default bahaviour if undefined.
-    /// - parameter dismissModal: Optional callback to define modals dismissal. Default bahaviour if undefined.
+    /// - parameter setParameters: Optional callback to configure a Presentable with given `RouteParameters`. Don't set if the Presentable conforms to `RouteParametrizedPresentable`.
+    /// - parameter presentModal: Optional callback to define modals presentation. Default behaviour if undefined.
+    /// - parameter dismissModal: Optional callback to define modals dismissal. Default behaviour if undefined.
     /// - parameter unwind: Optional callback executed when the Presentable is no longer presented.
     public init(
         getPresentable: @escaping () -> (UIViewController),
@@ -54,9 +54,16 @@ public struct RoutePresenter: RoutePresenterType, RoutePresenterCapableOfModalsP
         unwind: ((_ presentable: UIViewController) -> ())? = nil
     ) {
         self.getPresentable = getPresentable
+        
         if let setParameters = setParameters {
             self.setParameters = setParameters
+        } else {
+            self.setParameters = { parameters, presentable in
+                guard let presentable = presentable as? RouteParametrizedPresentable else { return }
+                presentable.configure(routeParameters: parameters)
+            }
         }
+        
         
         weak var presentedModal: UIViewController? = nil
         
@@ -85,30 +92,6 @@ public struct RoutePresenter: RoutePresenterType, RoutePresenterCapableOfModalsP
     }
     
     
-    /// Default initializer for RoutePresenter, when Presentable conforms to `RouteParametrizedPresentable`.
-    /// - parameter getParametrizedPresentable: Callback returning a Presentable object. Should conform to `RouteParametrizedPresentable`.
-    /// - parameter presentModal: Optional callback to define modals presentation. Default bahaviour if undefined.
-    /// - parameter dismissModal: Optional callback to define modals dismissal. Default bahaviour if undefined.
-    /// - parameter unwind: Optional callback executed when the Presentable is no longer presented.
-    public init(
-        getParametrizedPresentable: @escaping () -> (UIViewController & RouteParametrizedPresentable),
-        presentModal: ((_ modal: UIViewController, _ over: UIViewController) -> ())? = nil,
-        dismissModal: ((_ modal: UIViewController)->())? = nil,
-        unwind: ((_ presentable: UIViewController) -> ())? = nil
-    ) {
-        self.init(
-            getPresentable: getParametrizedPresentable,
-            setParameters: { parameters, presentable in
-                guard let presentable = presentable as? RouteParametrizedPresentable else { return }
-                presentable.configure(routeParameters: parameters)
-            },
-            presentModal: presentModal,
-            dismissModal: dismissModal,
-            unwind: unwind
-        )
-    }
-    
-    
     
     public var presentModal: (_ modal: UIViewController, _ over: UIViewController) -> () = { _,_ in }
     public var dismissModal: ((_ modal: UIViewController)->()) = { _ in }
@@ -118,11 +101,12 @@ public struct RoutePresenter: RoutePresenterType, RoutePresenterCapableOfModalsP
     public var unwind: (_ presentable: UIViewController) -> () = { _ in }
     
     
+    
     /// A lazy wrapper around a Presenter creation function that wraps presenter scope, but the Presentable does not get created until invoked.
-    /// - parameter getPresentable: Callback returning a Presentable object.
-    /// - parameter setParameters: Optional callback to configure a Presentable with given `RouteParameters`.
-    /// - parameter presentModal: Optional callback to define modals presentation. Default bahaviour if undefined.
-    /// - parameter dismissModal: Optional callback to define modals dismissal. Default bahaviour if undefined.
+    /// - parameter getPresentable: Autoclosure returning a Presentable object.
+    /// - parameter setParameters: Optional callback to configure a Presentable with given `RouteParameters`. Don't set if the Presentable conforms to `RouteParametrizedPresentable`.
+    /// - parameter presentModal: Optional callback to define modals presentation. Default behaviour if undefined.
+    /// - parameter dismissModal: Optional callback to define modals dismissal. Default behaviour if undefined.
     /// - parameter unwind: Optional callback executed when the Presentable is no longer presented.
     /// - returns: RoutePresenter
     public static func lazyPresenter(
@@ -145,36 +129,6 @@ public struct RoutePresenter: RoutePresenterType, RoutePresenterCapableOfModalsP
             return newPresentable
         }
         let presenter = RoutePresenter(getPresentable: maybeCachedPresentable, setParameters: setParameters, presentModal: presentModal, dismissModal: dismissModal, unwind: unwind)
-        
-        return presenter
-    }
-    
-    /// A lazy wrapper around a Presenter creation function that wraps presenter scope, but the Presentable does not get created until invoked. Presentable must conform to `RouteParametrizedPresentable`.
-    /// - parameter getPresentable: Callback returning a Presentable object. Should conform to `RouteParametrizedPresentable`.
-    /// - parameter setParameters: Optional callback to configure a Presentable with given `RouteParameters`.
-    /// - parameter presentModal: Optional callback to define modals presentation. Default bahaviour if undefined.
-    /// - parameter dismissModal: Optional callback to define modals dismissal. Default bahaviour if undefined.
-    /// - parameter unwind: Optional callback executed when the Presentable is no longer presented. You can use it to dissmiss modals, etc.
-    /// - returns: RoutePresenter
-    public static func lazyParametrizedPresenter(
-        _ getPresentable: @escaping @autoclosure () -> (UIViewController & RouteParametrizedPresentable),
-        presentModal: ((_ modal: UIViewController, _ over: UIViewController) -> ())? = nil,
-        dismissModal: ((_ modal: UIViewController)->())? = nil,
-        unwind: ((_ presentable: UIViewController) -> ())? = nil
-    ) -> RoutePresenter
-    {
-        weak var presentable: (UIViewController & RouteParametrizedPresentable)? = nil
-        
-        let maybeCachedPresentable: () -> (UIViewController & RouteParametrizedPresentable) = {
-            if let cachedPresentable = presentable {
-                return cachedPresentable
-            }
-            
-            let newPresentable = getPresentable()
-            presentable = newPresentable
-            return newPresentable
-        }
-        let presenter = RoutePresenter(getParametrizedPresentable: maybeCachedPresentable, presentModal: presentModal, dismissModal: dismissModal, unwind: unwind)
         
         return presenter
     }
