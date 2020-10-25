@@ -1,6 +1,5 @@
 # MonarchRouter
 
-[![CI Status](https://img.shields.io/travis/nikans/MonarchRouter.svg?style=flat)](https://travis-ci.org/nikans/MonarchRouter)
 [![Version](https://img.shields.io/cocoapods/v/MonarchRouter.svg?style=flat)](https://cocoapods.org/pods/MonarchRouter)
 [![License](https://img.shields.io/cocoapods/l/MonarchRouter.svg?style=flat)](https://cocoapods.org/pods/MonarchRouter)
 [![Platform](https://img.shields.io/cocoapods/p/MonarchRouter.svg?style=flat)](https://cocoapods.org/pods/MonarchRouter)
@@ -31,11 +30,20 @@ The Coordinator is constructed by declaring a route hierarchy mapped with a URL 
 
 ## Installation
 
-MonarchRouter is available through [CocoaPods](https://cocoapods.org). To install
-it, simply add the following line to your Podfile:
+### Swift Package Manager
+
+Using Xcode UI: go to your Project Settings -> Swift Packages and add `git@github.com:nikans/MonarchRouter.git` there.
+
+To integrate using Apple's Swift package manager, without Xcode integration, add the following as a dependency to your Package.swift:
+
+.package(url: "git@github.com:nikans/MonarchRouter.git", .upToNextMajor(from: "1.1.0"))
+
+### CocoaPods
+
+To install it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'MonarchRouter'
+pod 'MonarchRouter', '~> 1.1'
 ```
 
 You may find the last release version [here](https://github.com/nikans/MonarchRouter/releases).
