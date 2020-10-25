@@ -1,11 +1,11 @@
-platform :ios, '8.0'
+platform :ios, '9.0'
 
 target 'MonarchRouterExample' do
   use_frameworks!
 
   # Diffs for collections
   # https://github.com/tonyarnold/Differ
-  pod 'Differ', '~> 1.4'
+  pod 'Differ', '~> 1.4.5'
 
 end
 

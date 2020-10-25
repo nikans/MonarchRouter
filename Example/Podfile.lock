@@ -1,16 +1,16 @@
 PODS:
-  - Differ (1.4.3)
+  - Differ (1.4.5)
 
 DEPENDENCIES:
-  - Differ (~> 1.4)
+  - Differ (~> 1.4.5)
 
 SPEC REPOS:
   trunk:
     - Differ
 
 SPEC CHECKSUMS:
-  Differ: 6c7477d6187e8c36d02ec342a3c321061b85a0ea
+  Differ: 3b6bd78e2b20cc795d9a86f7641d087524e4273e
 
-PODFILE CHECKSUM: 1cbc80b781746b6267ec3a28b70a376a6d569faa
+PODFILE CHECKSUM: c18c7f47a7813752655a469df22e45e0030c037f
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.3
