@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'MonarchRouter'
-  s.version          = '1.0.2'
+  s.version          = '1.1.0'
   s.summary          = 'A lightweight yet powerful state-based router written in Swift.'
 
   s.description      = <<-DESC
@@ -20,6 +20,7 @@ Features:
 - [+] Navigating stacks (i.e. navigation controller).
 - [+] Opening and dismissing modals.
 - [+] Passing and parsing route parameters to endpoints.
+- [+] Scenes support
 - [ ] Handling navigation in universal apps. (PRs welcome!)
 - [ ] Properly abstracting Router layer to handle navigation in macOS apps.
                        DESC
@@ -31,7 +32,7 @@ Features:
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'Source/**/*.swift'
+  s.source_files = 'Sources/MonarchRouter/**/*.swift'
   s.frameworks = 'UIKit'
   s.requires_arc  = true
   s.swift_version = '5.0'
