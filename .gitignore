@@ -1,6 +1,11 @@
 Example/MonarchRouterExample.xcodeproj/xcuserdata/*
-Example/MonarchRouterExample.xcworkspace/xcuserdata/*
-Example/.build/*
 Example/MonarchRouterExample.xcodeproj/project.xcworkspace/xcuserdata/*
-Example/Pods/*
-Example/MonarchRouterExample.xcworkspace/xcshareddata/*
+Example/.build/*
+
+Example/Pods/
+*.xcworkspace
+
+Example/Packages/
+Example/Package.pins
+Example/Package.resolved
+.swiftpm
