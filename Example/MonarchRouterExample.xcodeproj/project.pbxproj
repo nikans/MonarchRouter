@@ -20,6 +20,8 @@
 		1242C575254572FE00378E4C /* PresenterStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1242C56A254572FE00378E4C /* PresenterStack.swift */; };
 		1242C576254572FE00378E4C /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1242C56B254572FE00378E4C /* Request.swift */; };
 		1242C57A2545756A00378E4C /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 1242C5792545756A00378E4C /* SwiftPackageProductDependency */; };
+		4B965216B430F91E5AB6365D /* Pods_MonarchRouterExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98D8505DFD65E996522513FA /* Pods_MonarchRouterExample.framework */; };
+		B0FD36574F66D9A0780DCF7E /* Pods_MonarchRouter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD4CD823224F7F85A27F8F38 /* Pods_MonarchRouter.framework */; };
 		D09228CC235B4AB30066E33B /* AppRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09228CB235B4AB30066E33B /* AppRoutes.swift */; };
 		D0A7B9D4219F322C00B44C3D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7B9D3219F322C00B44C3D /* AppDelegate.swift */; };
 		D0A7B9D6219F322C00B44C3D /* ViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7B9D5219F322C00B44C3D /* ViewControllers.swift */; };
@@ -71,6 +73,12 @@
 		1242C569254572FE00378E4C /* Collection+extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Collection+extension.swift"; path = "../../Sources/MonarchRouter/Collection+extension.swift"; sourceTree = "<group>"; };
 		1242C56A254572FE00378E4C /* PresenterStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PresenterStack.swift; path = ../../Sources/MonarchRouter/PresenterStack.swift; sourceTree = "<group>"; };
 		1242C56B254572FE00378E4C /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Request.swift; path = ../../Sources/MonarchRouter/Request.swift; sourceTree = "<group>"; };
+		1940549F2EE651C0D8E5C61F /* Pods-MonarchRouterExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MonarchRouterExample.debug.xcconfig"; path = "Target Support Files/Pods-MonarchRouterExample/Pods-MonarchRouterExample.debug.xcconfig"; sourceTree = "<group>"; };
+		2C21A4EB8ED94EB4748B4D24 /* Pods-MonarchRouter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MonarchRouter.release.xcconfig"; path = "Target Support Files/Pods-MonarchRouter/Pods-MonarchRouter.release.xcconfig"; sourceTree = "<group>"; };
+		4E75082574C1533A5E789561 /* Pods-MonarchRouter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MonarchRouter.debug.xcconfig"; path = "Target Support Files/Pods-MonarchRouter/Pods-MonarchRouter.debug.xcconfig"; sourceTree = "<group>"; };
+		50E4450FF479B4E9C9C00A70 /* Pods-MonarchRouterExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MonarchRouterExample.release.xcconfig"; path = "Target Support Files/Pods-MonarchRouterExample/Pods-MonarchRouterExample.release.xcconfig"; sourceTree = "<group>"; };
+		98D8505DFD65E996522513FA /* Pods_MonarchRouterExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MonarchRouterExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD4CD823224F7F85A27F8F38 /* Pods_MonarchRouter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MonarchRouter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D09228CB235B4AB30066E33B /* AppRoutes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRoutes.swift; sourceTree = "<group>"; };
 		D0A7B9D0219F322C00B44C3D /* MonarchRouterExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MonarchRouterExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0A7B9D3219F322C00B44C3D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -94,6 +102,7 @@
 			files = (
 				1242C57A2545756A00378E4C /* BuildFile in Frameworks */,
 				D0A7B9F1219F324200B44C3D /* MonarchRouter.framework in Frameworks */,
+				4B965216B430F91E5AB6365D /* Pods_MonarchRouterExample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -101,18 +110,42 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0FD36574F66D9A0780DCF7E /* Pods_MonarchRouter.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		682FB01FB389A3CDF66B349E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				4E75082574C1533A5E789561 /* Pods-MonarchRouter.debug.xcconfig */,
+				2C21A4EB8ED94EB4748B4D24 /* Pods-MonarchRouter.release.xcconfig */,
+				1940549F2EE651C0D8E5C61F /* Pods-MonarchRouterExample.debug.xcconfig */,
+				50E4450FF479B4E9C9C00A70 /* Pods-MonarchRouterExample.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		B1E05A5B41D6B8BCA3828A9C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CD4CD823224F7F85A27F8F38 /* Pods_MonarchRouter.framework */,
+				98D8505DFD65E996522513FA /* Pods_MonarchRouterExample.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		D0A7B9C7219F322C00B44C3D = {
 			isa = PBXGroup;
 			children = (
 				D0A7B9D2219F322C00B44C3D /* MonarchRouterExample */,
 				D0A7B9EB219F324200B44C3D /* MonarchRouter */,
 				D0A7B9D1219F322C00B44C3D /* Products */,
+				682FB01FB389A3CDF66B349E /* Pods */,
+				B1E05A5B41D6B8BCA3828A9C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -181,10 +214,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D0A7B9E2219F322D00B44C3D /* Build configuration list for PBXNativeTarget "MonarchRouterExample" */;
 			buildPhases = (
+				EA7778F87977D962409D4725 /* [CP] Check Pods Manifest.lock */,
 				D0A7B9CC219F322C00B44C3D /* Sources */,
 				D0A7B9CD219F322C00B44C3D /* Frameworks */,
 				D0A7B9CE219F322C00B44C3D /* Resources */,
 				D0A7B9F6219F324200B44C3D /* Embed Frameworks */,
+				CBADB48EEEC214FA73B0A5EF /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -203,6 +238,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D0A7B9F3219F324200B44C3D /* Build configuration list for PBXNativeTarget "MonarchRouter" */;
 			buildPhases = (
+				9F9F95A01B92C49B103B5E8F /* [CP] Check Pods Manifest.lock */,
 				D0A7B9E5219F324200B44C3D /* Headers */,
 				D0A7B9E6219F324200B44C3D /* Sources */,
 				D0A7B9E7219F324200B44C3D /* Frameworks */,
@@ -278,6 +314,70 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		9F9F95A01B92C49B103B5E8F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MonarchRouter-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CBADB48EEEC214FA73B0A5EF /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MonarchRouterExample/Pods-MonarchRouterExample-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MonarchRouterExample/Pods-MonarchRouterExample-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MonarchRouterExample/Pods-MonarchRouterExample-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EA7778F87977D962409D4725 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MonarchRouterExample-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D0A7B9CC219F322C00B44C3D /* Sources */ = {
@@ -462,6 +562,7 @@
 		};
 		D0A7B9E3219F322D00B44C3D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1940549F2EE651C0D8E5C61F /* Pods-MonarchRouterExample.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -483,6 +584,7 @@
 		};
 		D0A7B9E4219F322D00B44C3D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 50E4450FF479B4E9C9C00A70 /* Pods-MonarchRouterExample.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -504,6 +606,7 @@
 		};
 		D0A7B9F4219F324200B44C3D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4E75082574C1533A5E789561 /* Pods-MonarchRouter.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -537,6 +640,7 @@
 		};
 		D0A7B9F5219F324200B44C3D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2C21A4EB8ED94EB4748B4D24 /* Pods-MonarchRouter.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";

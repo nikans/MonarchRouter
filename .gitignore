@@ -5,6 +5,8 @@ Example/.build/*
 Example/Pods/
 *.xcworkspace
 
+Example/Carthage/Build/
+
 Example/Packages/
 Example/Package.pins
 Example/Package.resolved
