@@ -9,7 +9,7 @@
 
 *Powerful functional state-based router written in Swift.* 
 
-Monarch Router is a declarative routing handler that is capable of handling complex hierarchy transitions automatically, decoupling ViewControllers from each other via Coordinator and Presenters. It fits right in with Redux style state flow and reactive frameworks.
+Monarch Router is a declarative routing handler that is capable of managing complex View Controllers hierarchy transitions *automatically*, decoupling View Controllers from each other via Coordinator and Presenters. It fits right in with Redux style state flow and reactive frameworks.
 
 The Coordinator is constructed by declaring a route hierarchy mapped with a URL structure. Presenters abstract UI creation and modification. Common URL-handling conventions are used for routing. It's designed for you to feel at home if you ever developed a server-side app routing.
 
@@ -20,8 +20,8 @@ Monarch Router is distributed via SPM and Cocoapods.
 
 ## Features
 
-- [x] Navigating complex ViewControlles hierarchy and unwinding on path change.
-- [x] Parsing and passing route parameters to endpoints, following URL conventions.
+- [x] Navigating complex View Controllers hierarchy automatically — frome anywhere to anywhere in your app.
+- [x] Parsing and passing route parameters to endpoint View Controllers, following URL conventions.
 - [x] Deeplinking to handle Push Notifications, Shortcuts and Universal Links.
 - [x] Navigating forks (tabbar-like presenters).
 - [x] Navigating stacks (i.e. navigation controller).
@@ -57,7 +57,7 @@ Monarch Router is distributed via SPM and Cocoapods.
 
 ## Example
 
-The example project illustrates the basic usage of the router, as well as some not-trivial use cases, such as modals handling and deeplinking.
+The example project illustrates the basic usage of the router, as well as some not-trivial use cases, such as modals handling.
 
 If you prefer using Cocoapods, rather than SPM, clone the repo, and run `pod install` from the Example directory first.
 
