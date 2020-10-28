@@ -22,12 +22,12 @@ extension URL: RoutingRequestType
     public func resolve(for route: RouteType) -> RoutingResolvedRequestType
     {
         let pathComponents: [PathComponentType] = self.pathComponents.enumerated().map { (i, pathComponent) in
-            if route.components.count > i, case .parameter(let name, _, _) = route.components[i] {
-                return PathParameter(name, pathComponent)
+                if route.components.count > i, case .parameter(let name, /*_,*/ _) = route.components[i] {
+                    return PathParameter(name, pathComponent)
+                }
+                
+                return PathConstant(pathComponent)
             }
-            
-            return PathConstant(pathComponent)
-        }
         
         
         var queryParameters: [QueryParameterType] = []
@@ -73,6 +73,13 @@ public protocol RoutingResolvedRequestType
 
 public struct RoutingRequest: RoutingResolvedRequestType
 {
+    public init(pathComponents: [PathComponentType], queryParameters: [QueryParameterType] = [], fragment: String? = nil)
+    {
+        self.pathComponents = pathComponents
+        self.queryParameters = queryParameters
+        self.fragment = fragment
+    }
+    
     public var pathComponents: [PathComponentType]
     public var pathParameters: [PathParameterType] {
         return pathComponents.compactMap { element in

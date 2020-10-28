@@ -8,9 +8,13 @@
 
 A lightweight yet powerful state-based router written in Swift. 
 
-Monarch Router is a declarative routing handler that decouples ViewControllers from each other via Coordinator and Presenters. Monarch Router fits right in with Redux style State Flow and Reactive frameworks.
+Common URL conventions are used for routing. It's designed for you feel at home if you ever developed a server-side app routing. 
+
+Monarch Router is a declarative routing handler that decouples ViewControllers from each other via Coordinator and Presenters. It fits right in with Redux style State Flow and Reactive frameworks.
 
 The Coordinator is constructed by declaring a route hierarchy mapped with a URL structure. Presenters abstract UI creation and modification.
+
+Monarch Router is distributed via SPM and Cocoapods.
 
 *Monarch butterflies weight less than 1 gram but cover thousands of miles during their migration. It's considered an iconic pollinator and one of the most beautiful butterfly species.*
 
@@ -23,49 +27,11 @@ The Coordinator is constructed by declaring a route hierarchy mapped with a URL 
 - [x] Navigating forks (tab bar like presenters).
 - [x] Navigating stacks (i.e. navigation controller).
 - [x] Opening and dismissing modals, with their own hierarchy.
-- [x] Parsing and passing route parameters to endpoints.
+- [x] Parsing and passing route parameters to endpoints, following URL conventions.
 - [x] Scenes handling.
 - [ ] Handling navigation in universal apps. *(PRs welcome!)*
 - [ ] Properly abstracting Router layer to handle navigation in macOS apps.
 
-
-## Installation
-
-### Swift Package Manager
-
-Using Xcode UI: go to your Project Settings -> Swift Packages and add `git@github.com:nikans/MonarchRouter.git` there.
-
-To integrate using Apple's Swift package manager, without Xcode integration, add the following as a dependency to your Package.swift:
-
-```swift
-.package(url: "git@github.com:nikans/MonarchRouter.git", .upToNextMajor(from: "1.1.0"))
-```
-
-### CocoaPods
-
-To install it, simply add the following line to your Podfile:
-
-```ruby
-pod 'MonarchRouter', '~> 1.1'
-```
-
-You may find the last release version [here](https://github.com/nikans/MonarchRouter/releases).
-
-
-## Requirements
-
-Currently only iOS/iPhone 8.0+ is properly supported, but theoretically it's easyly extended to support Universal apps. MacOS support requires a new layer of abstraction with generics and stuff, and I think that it's clearer to use as it is for now. *But you are very welcome to contribute!*
-
-- [x] iOS/iPhone
-- [ ] iOS/Universal
-- [ ] macOS
-
-
-## Example
-
-The example project illustrates the basic usage of the router, as well as some not-trivial use cases, such as modals handling and deeplinking.
-
-If you prefer using Cocoapods, rather than SPM, clone the repo, and run `pod install` from the Example directory first.
 
 
 ## Glossary
@@ -84,24 +50,31 @@ If you prefer using Cocoapods, rather than SPM, clone the repo, and run `pod ins
 - `RouterReducer`: a function to calculate a new State. Implements navigation via `RoutingNode`'s callback. Unwinds unused `RoutingNode`s.
 
 
-## How to use
+## Example
+
+The example project illustrates the basic usage of the router, as well as some not-trivial use cases, such as modals handling and deeplinking.
+
+If you prefer using Cocoapods, rather than SPM, clone the repo, and run `pod install` from the Example directory first.
 
 **See [Example App](https://github.com/nikans/MonarchRouter/tree/master/Example).**
+
+
+## How to use
 
 ### 0. You may start with creating a `RouterStore`. 
 Persist it in your App- or SceneDelegate.
 
 ```swift
 // Initializing Router and setting root VC
-var coordinator: RoutingNodeType!
+let coordinator = appCoordinator()
 let router = RouterStore(router: coordinator)
-coordinator = appCoordinator(router: router, setRootView: setRootViewControllerCallback)
 
 self.appRouter = router
 ```
 
+
 ### 1. Define your App's `Routes`. 
-They are used to match against `RoutingRequest`s.
+Routes are used to match against `RoutingRequest`s.
 
 ```swift
 /// Your app custom Routes
@@ -115,11 +88,67 @@ enum AppRoute: String, RouteType
 }
 ```
 
-#### 1.1. Optionally define a set of `RoutingRequest`s. 
+A route is consisted of `RouteComponent`s. These components are matched to the `RouteRequest`'s `PathComponent`s (see below).
 
-You may prefer to simply use URLs or valid URL-like strings to trigger routing. 
+There are several ways to define a `Route`:
 
-Alternatively you can create a custom enum:
+
+#### `String` conforms to `RouteType`.
+
+- Components are separated with `/`
+- Constant components are just strings (i.e. `login`)
+- Parameter components are prefixed with `:`
+- To match anything for a component use `:_`
+- To match everything to the end of the string use `...`
+
+
+#### Use built-in `RouteString` structure to create parametrized routes.
+
+```swift
+typealias ParameterValidation = (name: String, pattern: String)
+init(_ predicate: String, parametersValidation: [ParameterValidation]? = nil)
+```
+
+- Use the stated above rules to set a predicate string.
+- Optionally add a `ParameterValidation` array, where `name` is a parameter name (without `:`) and `pattern` is a RegExp.
+
+
+#### Array of `RouteComponent`s conforms to `RouteType`.
+
+Build your `Route` with `RouteComponent` enum:
+
+```swift
+enum RouteComponent 
+{
+    /// Matches a constant component
+    case constant(String)
+    
+    /// Matches a parameter component
+    /// - parameter name: parameter name to match
+    /// - parameter isMatching: optional closure to match parameter value
+    case parameter(name: String, isMatching: ((_ value: Any) -> Bool)? )
+    
+    /// Matches any path component for a route component
+    case anything
+    
+    /// Matches any path to the end
+    case everything
+```
+
+
+### 1.1. Optionally define a set of `RoutingRequest`s. 
+
+`RoutingRequest` is matched against `Route`s, associated with some `RoutingNode`. 
+
+To make things easy, Monarch Router uses  `URL`s or valid URL-like `String`s to trigger routing. 
+
+URL parts available:
+- path components (`books/:id`)
+- query items (`?name=eliah`)
+- fragment (`#documentation`)
+
+
+You can dispatch `URL` or `String` directly. Alternatively you can create a custom enum:
 
 ```swift
 enum AppRoutingRequest: RoutingRequestType
@@ -129,7 +158,6 @@ enum AppRoutingRequest: RoutingRequestType
     case story(type: String, id: Int, title: String)
     case books
     case book(id: Int, title: String?)
-    case booksCategory(id: Int)
 
     var request: String {
         switch self {
@@ -151,7 +179,7 @@ enum AppRoutingRequest: RoutingRequestType
 }
 ```
 
-If for your convenience you've decided to define a custom `RoutingRequestType` enum, you'll need a resolver function. Since here we're mapping our requests to a String, we'll use it's built-in resolver.
+If for your convenience you've decided to define a custom `RoutingRequestType` enum, you'll need a resolver function. Since here we're mapping our requests to a `String`, we'll use it's built-in resolver.
 
 ```swift
 func resolve(for route: RouteType) -> RoutingResolvedRequestType {
@@ -159,8 +187,10 @@ func resolve(for route: RouteType) -> RoutingResolvedRequestType {
 }
 ```
 
+Matched Presenters can be parametrized with resolved `RouteParameters` object (see below).
 
-#### 1.2. You may dispatch routing requests on the `RouterStore` object 
+
+### 1.2. Dispatch routing requests on the `RouterStore` object 
 
 ```swift
 router.dispatch(.login)
@@ -245,7 +275,7 @@ func appCoordinator(...) -> RoutingNodeType
 
 Each `RoutingNode` either matches a `RoutingRequest` against it's `Route` (i.e. `.endpoint(AppRoute.today)`) or against it's childrens' (not-endpoint type nodes). The suitable sub-hierarchy is then selected, the `RouterState` is reduced to a new one. 
 
-The new nodes stack's `Presenter`s are then instantiating their `Presentable`s (i.e. `UIViewController`s) if necessary, and the App's navigation hierarchy is rebuilt automatically. 
+The new nodes stack's `Presenter`s are then instantiating their `Presentable`s (i.e. `UIViewController`s) if necessary, and the app's navigation hierarchy is rebuilt automatically. 
 
 For the magic to happen, you'll need to use or create some presenters first.
 
@@ -272,6 +302,38 @@ Displaying the same State on a phone and tablet for example, can result in diffe
 ### UI can generate actions to update the nodes stack in the State
 
 The user tapping a back button is easy to capture and generate an action that updates the State, which causes the UI change. But a user 'swiping' back a view is harder to capture. It should instead generate an action on completion to update the State. Then, if the current UI already matches the new State no UI changes are necessary.
+
+
+## Installation
+
+### Swift Package Manager
+
+Using Xcode UI: go to your Project Settings -> Swift Packages and add `git@github.com:nikans/MonarchRouter.git` there.
+
+To integrate using Apple's Swift package manager, without Xcode integration, add the following as a dependency to your Package.swift:
+
+```swift
+.package(url: "git@github.com:nikans/MonarchRouter.git", .upToNextMajor(from: "1.1.0"))
+```
+
+### CocoaPods
+
+To install it, simply add the following line to your Podfile:
+
+```ruby
+pod 'MonarchRouter', '~> 1.1'
+```
+
+You may find the last release version [here](https://github.com/nikans/MonarchRouter/releases).
+
+
+## Requirements
+
+Currently only iOS/iPhone 8.0+ is properly supported, but theoretically it's easyly extended to support Universal apps. MacOS support requires a new layer of abstraction with generics and stuff, and I think that it's clearer to use as it is for now. *But you are very welcome to contribute!*
+
+- [x] iOS/iPhone
+- [ ] iOS/Universal
+- [ ] macOS
 
 
 ## Author
