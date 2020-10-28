@@ -12,9 +12,18 @@ import Foundation
 
 public enum RouteComponent
 {
+    /// Matches a constant component
     case constant(String)
-    case parameter(name: String, type: Any.Type?, isMatching: ((_ value: Any) -> Bool)? )
+    
+    /// Matches a parameter component
+    /// - parameter name: parameter name to match
+    /// - parameter isMatching: optional closure to match parameter value
+    case parameter(name: String, /*type: Any.Type?,*/ isMatching: ((_ value: Any) -> Bool)? )
+    
+    /// Matches any path component for a route component
     case anything
+    
+    /// Matches any path to the end
     case everything
     
     func isMatching(pathComponent: PathComponentType) -> Bool {
@@ -24,7 +33,7 @@ public enum RouteComponent
             guard let pathComponent = pathComponent as? PathConstant else { return false }
             return pathComponent.name == name
             
-        case .parameter(let name, _ /*let parameterType*/, let isMatching):
+        case .parameter(let name, /*let parameterType,*/ let isMatching):
             // path component is not a parameter
             guard let pathComponent = pathComponent as? PathParameterType
                 else { return false }
@@ -120,7 +129,7 @@ extension String: RouteType
                 
                 if component.hasPrefix(":") {
                     let name = String(component.dropFirst())
-                    return .parameter(name: name, type: nil, isMatching: nil)
+                    return .parameter(name: name, /*type: nil,*/ isMatching: nil)
                 }
                 
                 return .constant(component)
@@ -164,7 +173,7 @@ public struct RouteString: RouteType
                         isMatching = nil
                     }
                     
-                    return .parameter(name: name, type: nil, isMatching: isMatching)
+                    return .parameter(name: name, /*type: nil,*/ isMatching: isMatching)
                 }
                 
                 return .constant(component)

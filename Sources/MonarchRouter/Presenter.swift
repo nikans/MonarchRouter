@@ -19,14 +19,14 @@ public protocol RoutePresenterType
     /// Allows to configure the presentable with parameters.
     var setParameters: (_ parameters: RouteParameters, _ presentable: UIViewController) -> () { get }
     
-    /// Clears up when the router is no longer selected.
+    /// Clears up when the node is no longer selected.
     var unwind: (_ presentable: UIViewController) -> () { get }
 }
 
 
 
 /// A presenter with enabled modals presentation functionality.
-public protocol RoutePresenterCapableOfModalsPresentationType
+public protocol RoutePresenterCapableOfModalPresentationType
 {
     /// Callback executed when a modal view is requested to be presented.
     var presentModal: (_ modal: UIViewController, _ over: UIViewController) -> () { get }
@@ -38,7 +38,7 @@ public protocol RoutePresenterCapableOfModalsPresentationType
 
 
 /// Used to present the endpoint.
-public struct RoutePresenter: RoutePresenterType, RoutePresenterCapableOfModalsPresentationType
+public struct RoutePresenter: RoutePresenterType, RoutePresenterCapableOfModalPresentationType
 {
     /// Default initializer for RoutePresenter.
     /// - parameter getPresentable: Callback returning a Presentable object.
