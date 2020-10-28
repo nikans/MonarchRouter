@@ -7,32 +7,31 @@
 ![Monarch Router](https://github.com/nikans/MonarchRouter/blob/master/Media/logo@2x.png)
 
 
-A lightweight yet powerful functional state-based router written in Swift. 
+*A lightweight yet powerful functional state-based router written in Swift.* 
 
-Common URL conventions are used for routing. It's designed for you feel at home if you ever developed a server-side app routing. 
+Common URL conventions are used for routing. It's designed for you to feel at home if you ever developed a server-side app routing. 
 
-Monarch Router is a declarative routing handler that decouples ViewControllers from each other via Coordinator and Presenters. It fits right in with Redux style State Flow and Reactive frameworks.
+Monarch Router is a declarative routing handler that decouples ViewControllers from each other via Coordinator and Presenters. It fits right in with Redux style state flow and reactive frameworks.
 
 The Coordinator is constructed by declaring a route hierarchy mapped with a URL structure. Presenters abstract UI creation and modification.
 
 Monarch Router is distributed via SPM and Cocoapods.
 
-*Monarch butterflies weight less than 1 gram but cover thousands of miles during their migration. It's considered an iconic pollinator and one of the most beautiful butterfly species.*
+> Monarch butterflies weight less than 1 gram but cover thousands of miles during their migration. It's considered an iconic pollinator and one of the most beautiful butterfly species.
 
 
 ## Features
 
 - [x] Navigating complex ViewControlles hierarchy and unwinding on path change.
+- [x] Parsing and passing route parameters to endpoints, following URL conventions.
 - [x] Deeplinking to handle Push Notifications, Shortcuts and Universal Links.
-- [x] Switching top-level app sections via changing the window's rootViewController.
-- [x] Navigating forks (tab bar like presenters).
+- [x] Navigating forks (tabbar-like presenters).
 - [x] Navigating stacks (i.e. navigation controller).
 - [x] Opening and dismissing modals, with their own hierarchy.
-- [x] Parsing and passing route parameters to endpoints, following URL conventions.
+- [x] Switching top-level app sections via changing the window's rootViewController.
 - [x] Scenes handling.
 - [ ] Handling navigation in universal apps. *(PRs welcome!)*
 - [ ] Properly abstracting Router layer to handle navigation in macOS apps.
-
 
 
 ## Glossary
@@ -51,6 +50,13 @@ Monarch Router is distributed via SPM and Cocoapods.
 - `RouterReducer`: a function to calculate a new State. Implements navigation via `RoutingNode`'s callback. Unwinds unused `RoutingNode`s.
 
 
+## Basic flow
+
+1. `RouteRequest` is dispatched on a `RouterStore`. The request is a URL, or URL-like structure. 
+2. The new State is calculated by a reducer, matching the request against a Coordinator hierarchy. Each Node in the hierarchy is associated with a `Route` (a matching rule) and a `Presenter`, that abstracts the UI.
+3. Unused nodes and corresponding presentables are being unwound, new presentables hierarchy remade based on caclulated State.
+
+
 ## Example
 
 The example project illustrates the basic usage of the router, as well as some not-trivial use cases, such as modals handling and deeplinking.
@@ -62,7 +68,7 @@ If you prefer using Cocoapods, rather than SPM, clone the repo, and run `pod ins
 
 ## How to use
 
-### 0. You may start with creating a `RouterStore`. 
+### 0. Start with creating a `RouterStore`. 
 Persist it in your App- or SceneDelegate.
 
 ```swift
@@ -75,7 +81,7 @@ self.appRouter = router
 
 
 ### 1. Define your App's `Routes`. 
-Routes are used to match against `RoutingRequest`s.
+Routes are rules used to match against `RoutingRequest`s. 
 
 ```swift
 /// Your app custom Routes
@@ -100,10 +106,10 @@ There are several ways to define a `Route`:
 - Constant components are just strings (i.e. `login`)
 - Parameter components are prefixed with `:`
 - To match anything for a component use `:_`
-- To match everything to the end of the string use `...`
+- To match everything to the end of the path use `...`
 
 
-#### Use built-in `RouteString` structure to create parametrized routes.
+#### Use built-in `RouteString` structure to create RegExp-validated routes.
 
 ```swift
 typealias ParameterValidation = (name: String, pattern: String)
@@ -134,12 +140,13 @@ enum RouteComponent
     
     /// Matches any path to the end
     case everything
+}
 ```
 
 
 ### 1.1. Optionally define a set of `RoutingRequest`s. 
 
-`RoutingRequest` is matched against `Route`s, associated with some `RoutingNode`. 
+`RoutingRequest` is matched against `Route`s associated with a `RoutingNode`. 
 
 To make things easy, Monarch Router uses  `URL`s or valid URL-like `String`s to trigger routing. 
 
@@ -188,7 +195,9 @@ func resolve(for route: RouteType) -> RoutingResolvedRequestType {
 }
 ```
 
-Matched Presenters can be parametrized with resolved `RouteParameters` object (see below).
+Matched Presenters can be parametrized with resolved `RouteParameters` object (see below). 
+
+> Only path parameters are used for matching, though you can configure your presentable based on query parameters and fragment.
 
 
 ### 1.2. Dispatch routing requests on the `RouterStore` object 
@@ -197,7 +206,7 @@ Matched Presenters can be parametrized with resolved `RouteParameters` object (s
 router.dispatch(.login)
 ```
 
-You may want to reveal your `RouterStore` to your app as some specialized `ProvidesRouteDispatch` protocol, i.e:
+You may want to hide your `RouterStore` implementation behind a specialized `ProvidesRouteDispatch` protocol, i.e:
 
 ```swift
 protocol ProvidesRouteDispatch: class
@@ -223,33 +232,33 @@ The Coordinator is a hierarchial `RoutingNode` structure.
 
 ```
 /// Creating the app's Coordinator hierarchy.
-func appCoordinator(...) -> RoutingNodeType
+func appCoordinator() -> RoutingNodeType
 {    
     return
     
     // Top level app sections' switcher
-    RoutingNode(sectionsSwitcherRoutePresenter(...)).switcher([
+    RoutingNode(sectionsSwitcherRoutePresenter()).switcher([
 
         // Login 
         // (section 0)
-        RoutingNode(lazyPresenter(for: .login, ...))
+        RoutingNode(lazyPresenter(for: .login))
             .endpoint(AppRoute.login),
 
         // Tabbar 
         // (section 1)
-        RoutingNode(lazyTabBarRoutePresenter(...)).fork([
+        RoutingNode(lazyTabBarRoutePresenter()).fork([
 
                 // Today nav stack
                 // (tab 0)
                 RoutingNode(lazyNavigationRoutePresenter()).stack([
 
                     // Today
-                    RoutingNode(lazyPresenter(for: .today, ...))
+                    RoutingNode(lazyPresenter(for: .today))
                         .endpoint(AppRoute.today, modals: [
 
                         // Story 
                         // (presented modally)
-                        RoutingNode(lazyPresenter(for: .story, ...))
+                        RoutingNode(lazyPresenter(for: .story))
                             .endpoint(AppRoute.story)
                     ])
                 ]),
@@ -260,12 +269,12 @@ func appCoordinator(...) -> RoutingNodeType
 
                     // Books
                     // (master)
-                    RoutingNode(lazyPresenter(for: .books, ...))
+                    RoutingNode(lazyPresenter(for: .books))
                         .endpoint(AppRoute.books, children: [
 
                         // Book
                         // (detail)
-                        RoutingNode(lazyPresenter(for: .book, ...))
+                        RoutingNode(lazyPresenter(for: .book))
                             .endpoint(AppRoute.book)
                         ])
                 ])
@@ -278,39 +287,88 @@ Depending on it's `Presenter`, a `RoutingNode` can execute one of four types of 
 - endpoint
 - stack (i.e. navigation tree)
 - fork (i.e. tabs)
-- switcher (uncoupled apps sections)
+- switcher (decoupled app's sections)
 
-Each `RoutingNode` either matches a `RoutingRequest` against it's `Route` (i.e. `.endpoint(AppRoute.today)`) or against it's childrens' routes (not-endpoint type nodes). The suitable sub-hierarchy is then selected, the `RouterState` is reduced to a new one. 
+Each `RoutingNode` either matches a `RoutingRequest` against it's `Route` (i.e. `.endpoint(AppRoute.today)`) or against its childrens' routes (not-endpoint type nodes). The suitable sub-hierarchy is then selected, the `RouterState` is reduced to a new one. 
 
 The new nodes stack's `Presenter`s are then instantiating their `Presentable`s (i.e. `UIViewController`s) if necessary, and the app's navigation hierarchy is rebuilt automatically. 
 
-For the magic to happen, you'll need to use or create some presenters first.
+UI magic is abstracted in the Presenters.
 
 
 ### 3. Create `Presenter`s
 
 #### Presentable configuration
 
-The main goal of presenters is to create a Presentable object. So, when you define a `Presenter` you have to pass a closure for the creation of a Presentable: `getPresentable: @escaping () -> (UIViewController)`. 
+The main goal of presenters is to create a `Presentable` object. So, when you define a `Presenter` you have to pass a closure for the creation of a Presentable: `getPresentable: () -> (UIViewController)`. 
 Currently, only `UIViewController` subtypes are supported.
 
 If a `Presenter` was called with some `RouteParameter`s, an optional closure allowing for the `Presentable` configuration is called: `setParameters: ((_ parameters: RouteParameters, _ presentable: UIViewController) -> ())`.
 
-*Note*: Conform your Presentable to `RouteParametrizedPresentable` to handle this automatically. 
+> *Note*: Conform your Presentable to `RouteParametrizedPresentable` to handle this automatically. 
 
 An optional closure `unwind: (_ presentable: UIViewController) -> ()` is called when the node is no longer selected. You can set it if your Presentable requires any special behavior. 
 
-The endpoint `Presenter` is able to present and dismiss modals with the hierarchy of their own. The corresponding closures are called: `presentModal: (_ modal: UIViewController, _ over: UIViewController) -> ()` and `dismissModal: ((_ modal: UIViewController)->())`. Modal presentation works out of the box, so you may want to use those for special behavior.
+**Important**: Every `Presenter` can be instantiated directly or lazily. It's advised to use lazy initialization in your Coordinator hierarchy, otherwise all the presentables will be instantiated on the app launch.
 
-**Important**: Every `Presenter` can be instantiated directly or lazily. It's advised to use lazy initialization in your Coordinator hierarchy, otherwise all the presenters will be instantiated on the app launch.
+
+#### Built-in Presenters
+
+##### `RoutePresenter` 
+is used for endpoint presentation.
+
+The endpoint Presenter is able to present and dismiss modals with the hierarchy of their own. The corresponding closures are called: 
+
+```swift
+/// Callback executed when a modal view is requested to be presented.
+presentModal: (_ modal: UIViewController, _ over: UIViewController) -> ()
+
+/// Callback executed when a presenter is required to close its modal.
+dismissModal: ((_ modal: UIViewController)->())
+```
+Modal presentation works out of the box, so you may want to use those for the special behavior only.
+
+##### `RoutePresenterFork` 
+is used for tabbar-style presentation. 
+
+Special closures are used to configurate a Presentable (i.e. `UITabBarController`) 
+```swift
+/// Sets the options for Router to choose from
+setOptions: (_ options: [UIViewController], _ container: UIViewController) -> ()
+
+/// Sets the specified option as currently selected.
+setOptionSelected: (_ option: UIViewController, _ container: UIViewController) -> ()
+```
+
+##### `RoutePresenterStack`
+is used to organize other Presenters in a navigation stack (i.e. `UINavigationController`).
+
+```swift
+/// Sets the navigation stack
+setStack: (_ stack: [UIViewController], _ container: UIViewController) -> ()
+
+/// Presets root Presentable when the stack's own Presentable is requested
+prepareRootPresentable: (_ rootPresentable: UIViewController, _ container: UIViewController) -> ()
+```
+
+##### `RoutePresenterSwitcher`
+is used to switch between decoupled app sections (i.e. login sequence, main sequence...)
+
+```swift
+/// Sets the specified option as currently selected.
+setOptionSelected: (_ option: UIViewController) -> ()
+```
+
+This Presenter may probably don't have a Presentable.
 
 
 #### Example Presenters
 
-The Example app contains several useful Presenters, not made part of the library. 
+The Example app contains several useful Presenters, not made part of the library, i.e: 
 
 - `UITabBarController` presenter built on `RoutePresenterFork` with a delegate to dispatch routing request on tap.
 - `UINavigationController` presenter built on `RoutePresenterStack` with relevant pop/push/etc behavior.
+- Sections switch presenter built on `RoutePresenterSwitcher`, with ability to set `window`'s `rootViewController`.
 
 
 ## Principle concepts
