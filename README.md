@@ -7,11 +7,11 @@
 ![Monarch Router](https://github.com/nikans/MonarchRouter/blob/master/Media/logo@2x.png)
 
 
-*A lightweight yet powerful functional state-based router written in Swift.* 
+*Powerful functional state-based router written in Swift.* 
 
-Monarch Router is a declarative routing handler that is capable of handling complex hierarchies automatically, decoupling ViewControllers from each other via Coordinator and Presenters. It fits right in with Redux style state flow and reactive frameworks.
+Monarch Router is a declarative routing handler that is capable of handling complex hierarchy transitions automatically, decoupling ViewControllers from each other via Coordinator and Presenters. It fits right in with Redux style state flow and reactive frameworks.
 
-The Coordinator is constructed by declaring a route hierarchy mapped with a URL structure. Presenters abstract UI creation and modification. Common URL conventions are used for routing. It's designed for you to feel at home if you ever developed a server-side app routing.
+The Coordinator is constructed by declaring a route hierarchy mapped with a URL structure. Presenters abstract UI creation and modification. Common URL-handling conventions are used for routing. It's designed for you to feel at home if you ever developed a server-side app routing.
 
 Monarch Router is distributed via SPM and Cocoapods.
 
