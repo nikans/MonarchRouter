@@ -53,8 +53,8 @@ Monarch Router is distributed via SPM and Cocoapods.
 ## Basic flow
 
 1. `RouteRequest` is dispatched on a `RouterStore`. The request is a URL, or URL-like structure. 
-2. The new State is calculated by a reducer, matching the request against a Coordinator hierarchy. Each Node in the hierarchy is associated with a `Route` (a matching rule) and a `Presenter`, that abstracts the UI.
-3. Unused nodes and corresponding presentables are being unwound, new presentables hierarchy remade based on caclulated State.
+2. The new State is calculated by a reducer, matching the request against a Coordinator hierarchy. Each Node in the hierarchy is associated with a `Route` (a matching rule) and a `Presenter` that abstracts the UI.
+3. Unused nodes and corresponding presentables are being unwound, presentables hierarchy reloaded based on caclulated State.
 
 
 ## Example
@@ -399,7 +399,7 @@ Using Xcode UI: go to your Project Settings -> Swift Packages and add `git@githu
 To integrate using Apple's Swift package manager, without Xcode integration, add the following as a dependency to your Package.swift:
 
 ```swift
-.package(url: "git@github.com:nikans/MonarchRouter.git", .upToNextMajor(from: "1.1.0"))
+.package(url: "git@github.com:nikans/MonarchRouter.git", .upToNextMajor(from: "1.1.2"))
 ```
 
 ### CocoaPods
@@ -407,7 +407,7 @@ To integrate using Apple's Swift package manager, without Xcode integration, add
 To install it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'MonarchRouter', '~> 1.1'
+pod 'MonarchRouter', '~> 1.1.2'
 ```
 
 You may find the last release version [here](https://github.com/nikans/MonarchRouter/releases).
