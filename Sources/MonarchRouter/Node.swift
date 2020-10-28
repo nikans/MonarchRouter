@@ -10,7 +10,6 @@ import UIKit
 
 
 
-
 /// Any `RoutingNode` object.
 /// Hierarchy of `RoutingNodeType` objects forms an app Coordinator.
 public protocol RoutingNodeType

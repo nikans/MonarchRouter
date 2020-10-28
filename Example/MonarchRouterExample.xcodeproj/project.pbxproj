@@ -19,7 +19,7 @@
 		1242C574254572FE00378E4C /* Collection+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1242C569254572FE00378E4C /* Collection+extension.swift */; };
 		1242C575254572FE00378E4C /* PresenterStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1242C56A254572FE00378E4C /* PresenterStack.swift */; };
 		1242C576254572FE00378E4C /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1242C56B254572FE00378E4C /* Request.swift */; };
-		1242C57A2545756A00378E4C /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 1242C5792545756A00378E4C /* SwiftPackageProductDependency */; };
+		1242C57A2545756A00378E4C /* Differ in Frameworks */ = {isa = PBXBuildFile; productRef = 1242C5792545756A00378E4C /* Differ */; };
 		D09228CC235B4AB30066E33B /* AppRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09228CB235B4AB30066E33B /* AppRoutes.swift */; };
 		D0A7B9D4219F322C00B44C3D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7B9D3219F322C00B44C3D /* AppDelegate.swift */; };
 		D0A7B9D6219F322C00B44C3D /* ViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A7B9D5219F322C00B44C3D /* ViewControllers.swift */; };
@@ -92,7 +92,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1242C57A2545756A00378E4C /* BuildFile in Frameworks */,
+				1242C57A2545756A00378E4C /* Differ in Frameworks */,
 				D0A7B9F1219F324200B44C3D /* MonarchRouter.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -146,7 +146,6 @@
 		D0A7B9EB219F324200B44C3D /* MonarchRouter */ = {
 			isa = PBXGroup;
 			children = (
-				1242C569254572FE00378E4C /* Collection+extension.swift */,
 				1242C567254572FE00378E4C /* Node.swift */,
 				1242C563254572FE00378E4C /* Parameters.swift */,
 				1242C568254572FE00378E4C /* Presenter.swift */,
@@ -156,6 +155,7 @@
 				1242C56B254572FE00378E4C /* Request.swift */,
 				1242C561254572FE00378E4C /* Route.swift */,
 				1242C565254572FE00378E4C /* State.swift */,
+				1242C569254572FE00378E4C /* Collection+extension.swift */,
 				1242C566254572FE00378E4C /* String+extension.swift */,
 				D0A7B9EC219F324200B44C3D /* MonarchRouter.h */,
 				D0A7B9ED219F324200B44C3D /* Info.plist */,
@@ -193,7 +193,7 @@
 			);
 			name = MonarchRouterExample;
 			packageProductDependencies = (
-				1242C5792545756A00378E4C /* SwiftPackageProductDependency */,
+				1242C5792545756A00378E4C /* Differ */,
 			);
 			productName = MonarchRouterExample;
 			productReference = D0A7B9D0219F322C00B44C3D /* MonarchRouterExample.app */;
@@ -247,7 +247,7 @@
 			);
 			mainGroup = D0A7B9C7219F322C00B44C3D;
 			packageReferences = (
-				1242C5782545756A00378E4C /* RemoteSwiftPackageReference */,
+				1242C5782545756A00378E4C /* XCRemoteSwiftPackageReference "Differ" */,
 			);
 			productRefGroup = D0A7B9D1219F322C00B44C3D /* Products */;
 			projectDirPath = "";
@@ -600,7 +600,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		1242C5782545756A00378E4C /* RemoteSwiftPackageReference */ = {
+		1242C5782545756A00378E4C /* XCRemoteSwiftPackageReference "Differ" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "git@github.com:tonyarnold/Differ.git";
 			requirement = {
@@ -611,9 +611,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		1242C5792545756A00378E4C /* SwiftPackageProductDependency */ = {
+		1242C5792545756A00378E4C /* Differ */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 1242C5782545756A00378E4C /* RemoteSwiftPackageReference */;
+			package = 1242C5782545756A00378E4C /* XCRemoteSwiftPackageReference "Differ" */;
 			productName = Differ;
 		};
 /* End XCSwiftPackageProductDependency section */

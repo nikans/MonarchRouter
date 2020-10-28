@@ -24,6 +24,7 @@ The Coordinator is constructed by declaring a route hierarchy mapped with a URL 
 - [x] Navigating stacks (i.e. navigation controller).
 - [x] Opening and dismissing modals, with their own hierarchy.
 - [x] Parsing and passing route parameters to endpoints.
+- [x] Scenes handling.
 - [ ] Handling navigation in universal apps. *(PRs welcome!)*
 - [ ] Properly abstracting Router layer to handle navigation in macOS apps.
 
@@ -36,7 +37,9 @@ Using Xcode UI: go to your Project Settings -> Swift Packages and add `git@githu
 
 To integrate using Apple's Swift package manager, without Xcode integration, add the following as a dependency to your Package.swift:
 
+```swift
 .package(url: "git@github.com:nikans/MonarchRouter.git", .upToNextMajor(from: "1.1.0"))
+```
 
 ### CocoaPods
 
@@ -57,112 +60,200 @@ Currently only iOS/iPhone 8.0+ is properly supported, but theoretically it's eas
 - [ ] iOS/Universal
 - [ ] macOS
 
+
 ## Example
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+The example project illustrates the basic usage of the router, as well as some not-trivial use cases, such as modals handling and deeplinking.
+
+If you prefer using Cocoapods, rather than SPM, clone the repo, and run `pod install` from the Example directory first.
 
 
 ## Glossary
 
-- **Router:** your app's routing Coordinator (root RoutingUnit with children); or more broadly speaking, this whole thing. 
-- **RoutingUnit:** a structure that collects functions together that are related to the same endpoint or intermidiate routing point. Each RoutingUnit also requires a Presenter, to which any required changes are passed.
-- **RoutePresenter** or simply a Presenter: a structure used to create and configure a Presentable.
-- **Lazy presenter:** a lazy wrapper around a presenter creation function that wraps presenter scope, but the Presentable does not get created until invoked.
-- **Presentable:** an actual object to be displayed (i.e. UIViewController).
-- **Path:** a string used to define the endpoint you want to navigate to.
-- **Route:** your app's decorator for Path (i.e. enum)
-- **RouterStore:** holds the State for the Router. Provides a method to dispatch (change) Path and modify State via a Reducer.
-- **RouterState:** holds the RoutingUnits stack for current Path
-- **RouterReducer:** a function to calculate a new State. Implements navigation via RoutingUnit's callback. Unwinds unused RoutingUnits.
+- `Router`: your app's routing Coordinator (root `RoutingNode` with children); or more broadly speaking, this whole thing. 
+- `RoutingNode`: a structure that collects functions together that are related to the same endpoint or intermidiate routing point with children. Each `RoutingNode` also requires a `Presenter`, to which any required changes are passed.
+- `RoutePresenter`: a structure used to create and configure a `Presentable` (i.e. `UIViewController`). There're several types of presenters: endpoint, stack (for navigation tree), fork (for tabs), switcher (for inconsequent apps sections).
+- `Lazy presenter`: a lazy wrapper around a presenter creation function that wraps presenter scope, but the `Presentable` does not get created until invoked.
+- `Presentable`: an actual object to be displayed (i.e. `UIViewController`).
+
+- `RoutingRequest`: a URL or URL-like structure used to define the endpoint you want to navigate to.
+- `Route`: a structure that defines matching rules for a `RoutingRequest` to trigger routing to a certain `RoutingNode`.
+
+- `RouterStore`: holds the State for the router. Provides a method to dispatch a `RoutingRequest` and modify the State via a Reducer.
+- `RouterState`: holds the stack of active `RoutingNode`s.
+- `RouterReducer`: a function to calculate a new State. Implements navigation via `RoutingNode`'s callback. Unwinds unused `RoutingNode`s.
 
 
 ## How to use
 
 **See [Example App](https://github.com/nikans/MonarchRouter/tree/master/Example).**
 
-You may start with creating a enum for your app Routes.
+### 0. You may start with creating a `RouterStore`. 
+Persist it in your App- or SceneDelegate.
 
+```swift
+// Initializing Router and setting root VC
+var coordinator: RoutingNodeType!
+let router = RouterStore(router: coordinator)
+coordinator = appCoordinator(router: router, setRootView: setRootViewControllerCallback)
+
+self.appRouter = router
 ```
-enum AppRoute
+
+### 1. Define your App's `Routes`. 
+They are used to match against `RoutingRequest`s.
+
+```swift
+/// Your app custom Routes
+enum AppRoute: String, RouteType
 {
-    case first
-    case second(id: String)
-    
-    var path: String {
+    case login = "login"
+    case today = "today"
+    case story = "today/story/:type/:id"
+    case books = "books"
+    case book  = "books/:id"
+}
+```
+
+#### 1.1. Optionally define a set of `RoutingRequest`s. 
+
+You may prefer to simply use URLs or valid URL-like strings to trigger routing. 
+
+Alternatively you can create a custom enum:
+
+```swift
+enum AppRoutingRequest: RoutingRequestType
+{
+    case login
+    case today
+    case story(type: String, id: Int, title: String)
+    case books
+    case book(id: Int, title: String?)
+    case booksCategory(id: Int)
+
+    var request: String {
         switch self {
-        case .first: return "first" 
-        case .second(let id): return "second/" + id
-        }
+        case .login:
+        return "login"
+
+        case .today:
+        return "today"
+
+        case .story(let type, let id, let title):
+        return "today/story/\(type)/\(id)?title=\(title)"
+
+        case .books:
+        return "books"
+
+        case .book(let id, let title):
+        return "books/\(id)?title=\(title ?? "")"
     }
 }
 ```
 
-Create your app's Coordinator
+If for your convenience you've decided to define a custom `RoutingRequestType` enum, you'll need a resolver function. Since here we're mapping our requests to a String, we'll use it's built-in resolver.
+
+```swift
+func resolve(for route: RouteType) -> RoutingResolvedRequestType {
+    return request.resolve(for: route)
+}
+```
+
+
+#### 1.2. You may dispatch routing requests on the `RouterStore` object 
+
+```swift
+router.dispatch(.login)
+```
+
+You may want to reveal your `RouterStore` to your app as some specialized `ProvidesRouteDispatch` protocol, i.e:
+
+```swift
+protocol ProvidesRouteDispatch: class
+{
+    /// Extension method to change the Route.
+    /// - parameter request: `AppRoutingRequest` to navigate to.
+    func dispatch(_ request: AppRoutingRequest)
+}
+
+extension RouterStore: ProvidesRouteDispatch { 
+    func dispatch(_ request: AppRoutingRequest) {
+        dispatch(request.request)
+    }
+}
+```
+
+But first we need to create a Coordinator.
+
+
+### 2. Create your app's Coordinator
+
+The Coordinator is a hierarchial `RoutingNode` structure. 
 
 ```
 /// Creating the app's Coordinator hierarchy.
-func createCoordinator() -> RoutingUnitType
-{
-    // Navigation Presenter
-    return RoutingUnit(lazyNavigationRoutePresenter()).stack([
-        
-        // First
-        RoutingUnit(lazyMockPresenter(for: .first))
-            .endpoint(
-                predicate: { $0 == AppRoute.first.path },
-                children: [
-            
-            // Second
-            RoutingUnit(lazyParametrizedPresenter())
-                .endpoint(
-                    predicate: { path in
-                        path.matches("second/(?<id>[\\w\\-\\.]+)") },
-                    parameters: { (path) -> RouteParameters in
-                        var arguments = RouteParameters()
-                        if let id = path.capturedGroups(withRegex: "second/(?<id>[\\w\\-\\.]+)").first { 
-                            arguments["id"] = id 
-                        }
-                        return arguments
-                    }
-                )
-        ])
+func appCoordinator(...) -> RoutingNodeType
+{    
+    return
+    
+    // Top level app sections' switcher
+    RoutingNode(sectionsSwitcherRoutePresenter(...)).switcher([
+
+        // Login 
+        // (section 0)
+        RoutingNode(lazyPresenter(for: .login, ...))
+            .endpoint(AppRoute.login),
+
+        // Tabbar 
+        // (section 1)
+        RoutingNode(lazyTabBarRoutePresenter(...)).fork([
+
+                // Today nav stack
+                // (tab 0)
+                RoutingNode(lazyNavigationRoutePresenter()).stack([
+
+                    // Today
+                    RoutingNode(lazyPresenter(for: .today, ...))
+                        .endpoint(AppRoute.today, modals: [
+
+                        // Story 
+                        // (presented modally)
+                        RoutingNode(lazyPresenter(for: .story, ...))
+                            .endpoint(AppRoute.story)
+                    ])
+                ]),
+
+                // Books nav stack
+                // (tab 1)
+                RoutingNode(lazyNavigationRoutePresenter()).stack([
+
+                    // Books
+                    // (master)
+                    RoutingNode(lazyPresenter(for: .books, ...))
+                        .endpoint(AppRoute.books, children: [
+
+                        // Book
+                        // (detail)
+                        RoutingNode(lazyPresenter(for: .book, ...))
+                            .endpoint(AppRoute.book)
+                        ])
+                ])
+            ])
     ])
 }
 ```
 
-Create Presenters
+Each `RoutingNode` either matches a `RoutingRequest` against it's `Route` (i.e. `.endpoint(AppRoute.today)`) or against it's childrens' (not-endpoint type nodes). The suitable sub-hierarchy is then selected, the `RouterState` is reduced to a new one. 
 
-```
-/// Lazy Presenter for a VC that is configured based on a Route.
-func lazyParametrizedPresenter() -> RoutePresenter
-{
-    var presenter = RoutePresenter.lazyPresenter({
-        mockVC()
-    },
-    setParameters: { parameters, presentable in
-        if let presentable = presentable as? MockViewController, let id = parameters["id"] as? String
-        {
-            presentable.configure(id: id)
-        }
-    })
-    return presenter
-}
-```
+The new nodes stack's `Presenter`s are then instantiating their `Presentable`s (i.e. `UIViewController`s) if necessary, and the App's navigation hierarchy is rebuilt automatically. 
 
-Create a Store, Coordinator and dispatch your first Route.
+For the magic to happen, you'll need to use or create some presenters first.
 
-```
-var router: RoutingUnitType!
-    
-// creating a Store for the Router and passing a callback to get a Coordinator (RoutingUnits hierarchy) to it
-let store = RouterStore(router: router)
 
-// creating a Coordinator hierarchy for the Router
-router = createCoordinator(dispatcher: store, setRootView: setRootView)
+### 3. Create Presenters
 
-// presenting the default Route
-store.dispatchRoute(.login)
-```
+TBA (see Example app)
+
 
 
 ## Principle concepts
@@ -170,20 +261,17 @@ store.dispatchRoute(.login)
 ### UI is a representation of State
 
 As the State changes over time, so will the UI projection of that State.
-
 Given any State value the UI must be predictable and repeatable.
 
-### Device dependent state should be separate from the Application State.
+### Device dependent state should be separate from the router State.
 
 Displaying the same State on a phone and tablet for example, can result in different UIs. The device dependent state should remain on that device. An OS X and iOS app can use the same State and logic classes and interchange Routers for representing the State.
 
 *Not fully implemented yet. PRs welcome!*
 
-### UI can generate actions to update Path values in the State
+### UI can generate actions to update the nodes stack in the State
 
-The user tapping a back button is easy to capture and generate and action that updates the State Path which causes the UI change. But a user 'swiping' back a view is harder to capture. It should instead generate an action on completion to update the State Path. Then, if the current UI already matches the new State no UI changes are necessary.
-
-*Not fully implemented yet. PRs welcome!*
+The user tapping a back button is easy to capture and generate an action that updates the State, which causes the UI change. But a user 'swiping' back a view is harder to capture. It should instead generate an action on completion to update the State. Then, if the current UI already matches the new State no UI changes are necessary.
 
 
 ## Author
@@ -191,6 +279,7 @@ The user tapping a back button is easy to capture and generate and action that u
 Eliah Snakin: eliah@nikans.com
 
 Monarch Router emerged from crysalis of Featherweight Router.
+
 
 ## License
 
