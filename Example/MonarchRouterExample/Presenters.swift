@@ -24,7 +24,7 @@ func sectionsSwitcherRoutePresenter(_ setRootView: @escaping (UIViewController)-
     return RoutePresenterSwitcher(
         getPresentable: {
             guard let vc = rootPresentable
-                else { fatalError("Cannot get Presentable for the Switcher type root RoutingNode. Probably there's no other RoutingNode resolving the Request?") }
+                else { fatalError("Impossible to get Presentable for the Switcher type root RoutingNode. Probably there's no other RoutingNode resolving the Request?") }
             return vc
         },
         setOptionSelected: { option in

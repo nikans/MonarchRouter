@@ -77,7 +77,7 @@ public struct RoutingNode<Presenter: RoutePresenterType>: RoutingNodeType
     
     public func dismissSubstack() {
         dispatchOnMainThreadIfNeeded {
-            if let modal = self.substack?.first?.getPresentable(), let presenter = self.presenter as? RoutePresenterCapableOfModalsPresentationType {
+            if let modal = self.substack?.first?.getPresentable(), let presenter = self.presenter as? RoutePresenterCapableOfModalPresentationType {
                 presenter.dismissModal(modal)
             }
         }

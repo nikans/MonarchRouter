@@ -6,7 +6,8 @@
 
 ![Monarch Router](https://github.com/nikans/MonarchRouter/blob/master/Media/logo@2x.png)
 
-A lightweight yet powerful state-based router written in Swift. 
+
+A lightweight yet powerful functional state-based router written in Swift. 
 
 Common URL conventions are used for routing. It's designed for you feel at home if you ever developed a server-side app routing. 
 
@@ -38,9 +39,9 @@ Monarch Router is distributed via SPM and Cocoapods.
 
 - `Router`: your app's routing Coordinator (root `RoutingNode` with children); or more broadly speaking, this whole thing. 
 - `RoutingNode`: a structure that collects functions together that are related to the same endpoint or intermidiate routing point with children. Each `RoutingNode` also requires a `Presenter`, to which any required changes are passed.
-- `RoutePresenter`: a structure used to create and configure a `Presentable` (i.e. `UIViewController`). There're several types of presenters: endpoint, stack (for navigation tree), fork (for tabs), switcher (for inconsequent apps sections).
-- `Lazy presenter`: a lazy wrapper around a presenter creation function that wraps presenter scope, but the `Presentable` does not get created until invoked.
+- `RoutePresenter`: a structure used to create and configure a `Presentable` (i.e. `UIViewController`). There're several types of presenters: endpoint, stack (for navigation tree), fork (for tabs), switcher (for uncoupled apps sections).
 - `Presentable`: an actual object to be displayed (i.e. `UIViewController`).
+- Lazy Presenter: a lazy wrapper around a presenter creation function that wraps presenter scope, but the `Presentable` does not get created until invoked.
 
 - `RoutingRequest`: a URL or URL-like structure used to define the endpoint you want to navigate to.
 - `Route`: a structure that defines matching rules for a `RoutingRequest` to trigger routing to a certain `RoutingNode`.
@@ -273,17 +274,43 @@ func appCoordinator(...) -> RoutingNodeType
 }
 ```
 
-Each `RoutingNode` either matches a `RoutingRequest` against it's `Route` (i.e. `.endpoint(AppRoute.today)`) or against it's childrens' (not-endpoint type nodes). The suitable sub-hierarchy is then selected, the `RouterState` is reduced to a new one. 
+Depending on it's `Presenter`, a `RoutingNode` can execute one of four types of behavior: 
+- endpoint
+- stack (i.e. navigation tree)
+- fork (i.e. tabs)
+- switcher (uncoupled apps sections)
+
+Each `RoutingNode` either matches a `RoutingRequest` against it's `Route` (i.e. `.endpoint(AppRoute.today)`) or against it's childrens' routes (not-endpoint type nodes). The suitable sub-hierarchy is then selected, the `RouterState` is reduced to a new one. 
 
 The new nodes stack's `Presenter`s are then instantiating their `Presentable`s (i.e. `UIViewController`s) if necessary, and the app's navigation hierarchy is rebuilt automatically. 
 
 For the magic to happen, you'll need to use or create some presenters first.
 
 
-### 3. Create Presenters
+### 3. Create `Presenter`s
 
-TBA (see Example app)
+#### Presentable configuration
 
+The main goal of presenters is to create a Presentable object. So, when you define a `Presenter` you have to pass a closure for the creation of a Presentable: `getPresentable: @escaping () -> (UIViewController)`. 
+Currently, only `UIViewController` subtypes are supported.
+
+If a `Presenter` was called with some `RouteParameter`s, an optional closure allowing for the `Presentable` configuration is called: `setParameters: ((_ parameters: RouteParameters, _ presentable: UIViewController) -> ())`.
+
+*Note*: Conform your Presentable to `RouteParametrizedPresentable` to handle this automatically. 
+
+An optional closure `unwind: (_ presentable: UIViewController) -> ()` is called when the node is no longer selected. You can set it if your Presentable requires any special behavior. 
+
+The endpoint `Presenter` is able to present and dismiss modals with the hierarchy of their own. The corresponding closures are called: `presentModal: (_ modal: UIViewController, _ over: UIViewController) -> ()` and `dismissModal: ((_ modal: UIViewController)->())`. Modal presentation works out of the box, so you may want to use those for special behavior.
+
+**Important**: Every `Presenter` can be instantiated directly or lazily. It's advised to use lazy initialization in your Coordinator hierarchy, otherwise all the presenters will be instantiated on the app launch.
+
+
+#### Example Presenters
+
+The Example app contains several useful Presenters, not made part of the library. 
+
+- `UITabBarController` presenter built on `RoutePresenterFork` with a delegate to dispatch routing request on tap.
+- `UINavigationController` presenter built on `RoutePresenterStack` with relevant pop/push/etc behavior.
 
 
 ## Principle concepts
