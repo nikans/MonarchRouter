@@ -13,6 +13,7 @@ import Foundation
 public enum DispatchRouteOption
 {
     /// Keeps presented VCs if only need to switch the junction option
+    /// i.e.: when switching to a tab by it's root Route, when the tab already contains presented stack
     case junctionsOnly
 }
 

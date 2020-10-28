@@ -339,6 +339,7 @@ setOptions: (_ options: [UIViewController], _ container: UIViewController) -> ()
 /// Sets the specified option as currently selected.
 setOptionSelected: (_ option: UIViewController, _ container: UIViewController) -> ()
 ```
+> Use `.junctionsOnly` dispatch option when switching to a tab by it's root Route, when the tab already contains presented stack.
 
 ##### `RoutePresenterStack`
 is used to organize other Presenters in a navigation stack (i.e. `UINavigationController`).
