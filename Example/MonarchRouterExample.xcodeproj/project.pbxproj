@@ -146,7 +146,6 @@
 		D0A7B9EB219F324200B44C3D /* MonarchRouter */ = {
 			isa = PBXGroup;
 			children = (
-				1242C569254572FE00378E4C /* Collection+extension.swift */,
 				1242C567254572FE00378E4C /* Node.swift */,
 				1242C563254572FE00378E4C /* Parameters.swift */,
 				1242C568254572FE00378E4C /* Presenter.swift */,
@@ -156,6 +155,7 @@
 				1242C56B254572FE00378E4C /* Request.swift */,
 				1242C561254572FE00378E4C /* Route.swift */,
 				1242C565254572FE00378E4C /* State.swift */,
+				1242C569254572FE00378E4C /* Collection+extension.swift */,
 				1242C566254572FE00378E4C /* String+extension.swift */,
 				D0A7B9EC219F324200B44C3D /* MonarchRouter.h */,
 				D0A7B9ED219F324200B44C3D /* Info.plist */,

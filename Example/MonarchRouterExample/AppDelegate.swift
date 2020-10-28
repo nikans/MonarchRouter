@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate
             window?.makeKeyAndVisible()
             
             // Callback to set root VC. You can extend it with animations, etc.
-            let setRootViewController: (_ vc: UIViewController) -> () = { vc in
+            let setRootViewControllerCallback: (_ vc: UIViewController) -> () = { vc in
                 guard
                     let window = self.window,
                     vc != window.rootViewController
@@ -47,7 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate
             // Initializing Router and setting root VC
             var coordinator: RoutingNodeType!
             let router = RouterStore(router: coordinator)
-            coordinator = appCoordinator(router: router, setRootView: setRootViewController)
+            coordinator = appCoordinator(router: router, setRootView: setRootViewControllerCallback)
             
             appRouter = router
             
