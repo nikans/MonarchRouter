@@ -1,12 +1,14 @@
 Pod::Spec.new do |s|
   s.name             = 'MonarchRouter'
-  s.version          = '1.1.1'
+  s.version          = '1.1.2'
   s.summary          = 'A lightweight yet powerful state-based router written in Swift.'
 
   s.description      = <<-DESC
-A lightweight yet powerful state-based router written in Swift.
+A lightweight yet powerful functional state-based router written in Swift.
 
-Monarch Router is a declarative routing handler that decouples ViewControllers from each other via Coordinator and Presenters. Monarch Router fits right in with Redux style State Flow and Reactive frameworks.
+Common URL conventions are used for routing. It's designed for you to feel at home if you ever developed a server-side app routing.
+
+Monarch Router is a declarative routing handler that decouples ViewControllers from each other via Coordinator and Presenters. It fits right in with Redux style state flow and reactive frameworks.
 
 The Coordinator is constructed by declaring a route hierarchy mapped with a URL structure. Presenters abstract UI creation and modification.
 
@@ -15,19 +17,20 @@ Monarch butterflies weight less than 1 gram but cover thousands of miles during 
 Features:
 
 - [x] Navigating complex ViewControlles hierarchy and unwinding on path change.
-- [+] Switching top-level app sections via setting the window's rootViewController.
-- [+] Navigating forks (tab bar like presenters).
-- [+] Navigating stacks (i.e. navigation controller).
-- [+] Opening and dismissing modals.
-- [+] Passing and parsing route parameters to endpoints.
-- [+] Scenes support
-- [ ] Handling navigation in universal apps. (PRs welcome!)
+- [x] Parsing and passing route parameters to endpoints, following URL conventions.
+- [x] Deeplinking to handle Push Notifications, Shortcuts and Universal Links.
+- [x] Navigating forks (tabbar-like presenters).
+- [x] Navigating stacks (i.e. navigation controller).
+- [x] Opening and dismissing modals, with their own hierarchy.
+- [x] Switching top-level app sections via changing the window's rootViewController.
+- [x] Scenes handling.
+- [ ] Handling navigation in universal apps. *(PRs welcome!)*
 - [ ] Properly abstracting Router layer to handle navigation in macOS apps.
                        DESC
 
   s.homepage         = 'https://github.com/nikans/MonarchRouter'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'nikans' => 'ilya@nikans.com' }
+  s.author           = { 'nikans' => 'eliah@nikans.com' }
   s.source           = { :git => 'https://github.com/nikans/MonarchRouter.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '8.0'
