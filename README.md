@@ -424,7 +424,7 @@ Currently only iOS/iPhone 8.0+ is properly supported, but theoretically it's eas
 
 Eliah Snakin: eliah@nikans.com
 
-Monarch Router emerged from crysalis of Featherweight Router.
+Monarch Router emerged from crysalis of [Featherweight Router](https://github.com/FeatherweightLabs/FeatherweightRouter).
 
 
 ## License
