@@ -228,7 +228,7 @@ But first we need to create a Coordinator.
 
 The Coordinator is a hierarchial `RoutingNode` structure. 
 
-```
+```swift
 /// Creating the app's Coordinator hierarchy.
 func appCoordinator() -> RoutingNodeType
 {    
