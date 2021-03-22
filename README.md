@@ -13,7 +13,7 @@ Monarch Router is a declarative routing handler that is capable of managing comp
 
 The Coordinator is constructed by declaring a route hierarchy mapped with a URL structure. Presenters abstract UI creation and modification. Common URL-handling conventions are used for routing. It's designed for you to feel at home if you ever developed a server-side app routing.
 
-Monarch Router is distributed via [SPM](https://github.com/nikans/MonarchRouter#swift-package-manager) and [Cocoapods](https://github.com/nikans/MonarchRouter#cocoapods).
+Monarch Router is distributed via [SPM](#swift-package-manager) and [Cocoapods](#cocoapods).
 
 > Monarch butterflies weight less than 1 gram but cover thousands of miles during their migration. It's considered an iconic pollinator and one of the most beautiful butterfly species.
 
